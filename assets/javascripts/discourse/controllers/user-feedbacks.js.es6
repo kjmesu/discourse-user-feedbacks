@@ -8,7 +8,7 @@ export default Controller.extend({
   rating: 0,
   review: "",
   readOnly: false,
-  placeholder: I18n.t(""),
+  placeholder: I18n.t("discourse_user_scores.user_feedbacks.user_review.placeholder"),
 
   @discourseComputed("feedback_to_id")
   canGiveFeedback(feedback_to_id) {

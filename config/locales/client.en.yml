@@ -7,3 +7,5 @@ en:
       user_feedbacks:
         user_ratings_count: "%{count} ratings"
         add_rating: "Add your rating: "
+        user_review:
+          placeholder: "Include your review to the user (optional)"
