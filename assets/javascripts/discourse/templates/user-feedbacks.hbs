@@ -1,0 +1,38 @@
+<div class="user-feedbacks-left"></div>
+<div class="user-feedbacks-right">
+  {{#if canGiveFeedback}}
+    <div class="ratings-input">
+      <strong>{{i18n "discourse_user_scores.user_feedbacks.add_rating"}}</strong>
+      {{rating-input value=rating readOnly=readOnly}}
+    </div>
+    <div class="review-input">
+      {{textarea
+        rows="5"
+        placeholder=placeholder
+        value=review
+        disabled=readOnly
+        class="review-textarea"
+      }}
+      {{d-button
+        label="admin.api.undo_revoke"
+        action=(action "createFeedback")
+        disabled=readOnly
+        type="submit"
+        class="btn-primary create-feedback"
+      }}
+    </div>
+    <hr>
+  {{/if}}
+  {{#if model.feedbacks.length}}
+    {{#each model.feedbacks as |feedback index|}}
+      {{feedback-list-item feedback=feedback}}
+    {{/each}}
+  {{else}}
+    <div class="empty-state">
+      <span class="empty-state-title">{{i18n "discourse_rewards.transaction.empty_state_title"}}</span>
+      <div class="empty-state-body">
+        <p>{{i18n "discourse_rewards.transaction.empty_state_body"}}</p>
+      </div>
+    </div>
+  {{/if}}
+</div>

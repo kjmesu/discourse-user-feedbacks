@@ -1,0 +1,126 @@
+.user-ratings {
+  .rating {
+    display: inline-block;
+    height: 1em;
+    line-height: 1em;
+    font-size: $font-up-1;
+    align-items: center;
+    cursor: default;
+    margin-left: 0.25em;
+  }
+
+  .icon {
+    cursor: pointer;
+    color: var(--primary-low-mid);
+    font-size: $font-0;
+    position: relative;
+  }
+
+  .icon.read-only {
+    cursor: default;
+  }
+
+  .icon.checked::before {
+    color: var(--quaternary) !important;
+    content: "\2605";
+    position: absolute;
+    left: 0;
+  }
+
+  .partial-fill {
+    display: none !important;
+  }
+
+  .icon.partial .partial-fill {
+    display: inline-block !important;
+    color: var(--quaternary);
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+  }
+}
+
+.user-feedbacks-right {
+  width: 100%;
+  max-width: 750px;
+  margin-right: auto;
+  .ratings-input {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+
+    strong {
+      font-size: $font-0;
+    }
+  }
+  .review-input {
+    .review-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      display: block;
+      resize: none;
+      margin-bottom: 1em;
+    }
+
+    display: flex;
+    flex-direction: column;
+
+    .create-feedback {
+      width: 20%;
+    }
+  }
+}
+
+.feedback-list-item {
+  .user-rating {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+    .user-data {
+      display: inline-flex;
+
+      .rating-data {
+        .username {
+          margin-left: 0.5em;
+        }
+      }
+    }
+  }
+}
+
+.average-ratings {
+  display: inline-flex;
+
+  .rating-count {
+    margin-left: 1em;
+  }
+
+  .rating-count a {
+    color: var(--tertiary);
+    text-decoration: underline;
+  }
+}
+
+.topic-meta-data .average-ratings .user-ratings {
+  span.icon {
+    margin: 0;
+  }
+}
+.user-profile-primary-outlet {
+  .icon.partial .partial-fill {
+    top: unset;
+  }
+}
+
+.user-card-post-names-outlet {
+  padding: 0;
+  .average-ratings {
+    padding: 0;
+    .rating {
+      margin-left: 0;
+      display: inline-flex;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+en:
+  js:
+    user:
+      feedback:
+        title: "Feedback"
+    discourse_user_scores:
+      user_feedbacks:
+        user_ratings_count: "%{count} ratings"
+        add_rating: "Add your rating: "
