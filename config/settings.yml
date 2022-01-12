@@ -1,39 +1,4 @@
 plugins:
-  user_scores_enabled:
+  user_feedbacks_enabled:
     client: true
     default: true
-  user_scores_like_received_points:
-    client: true
-    default: 1
-    max: 1000
-    min: 0
-  user_scores_like_given_points:
-    client: true
-    default: 1
-    max: 1000
-    min: 0
-  user_scores_topic_points:
-    client: true
-    default: 1
-    max: 1000
-    min: 0
-  user_scores_topic_entered_points:
-    client: true
-    default: 1
-    max: 1000
-    min: 0
-  user_scores_post_points:
-    client: true
-    default: 1
-    max: 1000
-    min: 0
-  user_scores_post_read_points:
-    client: true
-    default: 1
-    max: 1000
-    min: 0
-  user_scores_day_visited_points:
-    client: true
-    default: 1
-    max: 1000
-    min: 0

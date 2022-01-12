@@ -8,11 +8,16 @@ export default Controller.extend({
   rating: 0,
   review: "",
   readOnly: false,
-  placeholder: I18n.t("discourse_user_scores.user_feedbacks.user_review.placeholder"),
+  placeholder: I18n.t("discourse_user_feedbacks.user_feedbacks.user_review.placeholder"),
 
   @discourseComputed("feedback_to_id")
   canGiveFeedback(feedback_to_id) {
     return feedback_to_id !== this.currentUser.id;
+  },
+
+  @discourseComputed("rating")
+  disabled(rating) {
+    return !parseInt(rating) > 0;
   },
 
   @action

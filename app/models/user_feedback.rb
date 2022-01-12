@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DiscourseUserScores
+module DiscourseUserFeedbacks
   class UserFeedback < ActiveRecord::Base
     self.table_name = 'discourse_user_feedbacks'
 

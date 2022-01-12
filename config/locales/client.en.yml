@@ -3,9 +3,12 @@ en:
     user:
       feedback:
         title: "Feedback"
-    discourse_user_scores:
+    discourse_user_feedbacks:
       user_feedbacks:
+        add_user_feedback: "Add Feedback"
         user_ratings_count: "%{count} ratings"
         add_rating: "Add your rating: "
         user_review:
           placeholder: "Include your review to the user (optional)"
+        empty_state_title: "There are no feedbacks yet"
+        empty_state_body: "Feedbacks will be displayed once you get feedback from your fellow community members"
