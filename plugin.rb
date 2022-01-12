@@ -42,14 +42,6 @@ after_initialize do
     User.class_eval { prepend DiscourseUserFeedbacks::UserExtension }
   end
 
-  # Monkey patch ActiveModel::Serializer to allow us
-  # reload child serializers attributes after parent is modified
-  class ::ActiveModel::Serializer
-    def self.reload
-      self._attributes = _attributes.merge(superclass._attributes)
-    end
-  end
-
   add_to_serializer(:basic_user, :feedbacks_to) do
     user = object
     user = object[:user] if object.class != User
