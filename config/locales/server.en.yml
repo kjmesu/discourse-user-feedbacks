@@ -1,3 +1,4 @@
 en:
   site_settings:
     user_feedbacks_enabled: "Enable user Feedbacks"
+    user_feedbacks_allow_reviews: "Allow users to review each others"

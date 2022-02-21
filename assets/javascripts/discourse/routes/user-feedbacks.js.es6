@@ -16,9 +16,9 @@ export default DiscourseRoute.extend({
   setupController(controller, model) {
     controller.setProperties({
       feedback_to_id: this.modelFor("user").get("id"),
-      readOnly: this.currentUser.feedbacks_to.includes(
-        this.modelFor("user").get("id")
-      ),
+      readOnly:
+        this.currentUser &&
+        this.currentUser.feedbacks_to.includes(this.modelFor("user").get("id")),
       model: model,
     });
   },

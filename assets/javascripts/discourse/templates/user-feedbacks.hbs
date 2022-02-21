@@ -7,13 +7,15 @@
       {{rating-input value=rating readOnly=readOnly}}
     </div>
     <div class="review-input">
-      {{textarea
-        rows="5"
-        placeholder=placeholder
-        value=review
-        disabled=readOnly
-        class="review-textarea"
-      }}
+      {{#if siteSettings.user_feedbacks_allow_reviews}}
+        {{textarea
+          rows="5"
+          placeholder=placeholder
+          value=review
+          disabled=readOnly
+          class="review-textarea"
+        }}
+      {{/if}}
       {{d-button
         label="discourse_user_feedbacks.user_feedbacks.add_user_feedback"
         action=(action "createFeedback")

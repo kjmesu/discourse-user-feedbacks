@@ -2,3 +2,6 @@ plugins:
   user_feedbacks_enabled:
     client: true
     default: true
+  user_feedbacks_allow_reviews:
+    client: true
+    default: true
