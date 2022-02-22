@@ -23,20 +23,21 @@ after_initialize do
     end
   end
 
+  [
+    "../app/controllers/user_feedbacks_controller.rb",
+    "../app/serializers/user_feedback_serializer.rb",
+    "../app/models/user_feedback.rb",
+    "../lib/discourse_user_feedbacks/user_extension.rb",
+    "../lib/discourse_user_feedbacks/user_feedbacks_constraint.rb",
+    "../config/routes"
+  ].each { |path| require File.expand_path(path, __FILE__) }
+
   Discourse::Application.routes.append do
     %w{users u}.each do |root_path|
       get "#{root_path}/:username/feedbacks" => "users#preferences", constraints: { username: RouteFormat.username }
     end
     mount ::DiscourseUserFeedbacks::Engine, at: '/'
   end
-
-  [
-    "../app/controllers/user_feedbacks_controller.rb",
-    "../app/serializers/user_feedback_serializer.rb",
-    "../app/models/user_feedback.rb",
-    "../config/routes",
-    "../lib/discourse_user_feedbacks/user_extension.rb"
-  ].each { |path| require File.expand_path(path, __FILE__) }
 
   reloadable_patch do |plugin|
     User.class_eval { prepend DiscourseUserFeedbacks::UserExtension }

@@ -67,6 +67,8 @@ module DiscourseUserFeedbacks
 
       feedbacks = feedbacks.where(feedback_to_id: params[:feedback_to_id]) if params[:feedback_to_id]
 
+      feedbacks = feedbacks.where(user_id: current_user.id) if SiteSetting.user_feedbacks_hide_feedbacks_from_user && !current_user.admin
+
       count = feedbacks.length
 
       feedbacks = feedbacks.offset(page * PAGE_SIZE).limit(PAGE_SIZE)

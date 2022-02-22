@@ -3,12 +3,16 @@ import ComponentConnector from "discourse/widgets/component-connector";
 
 function initializeDiscourseUserFeedbacks(api) {
   const site = api.container.lookup("site:main");
+  const siteSettings = api.container.lookup("site-settings:main");
 
   api.includePostAttributes("user_average_rating", "user_rating_count");
 
   const loc = site && site.mobileView ? "before" : "after";
 
-  if (!site.mobileView) {
+  if (
+    !site.mobileView &&
+    siteSettings.user_feedbacks_display_average_ratings_beside_username_on_post
+  ) {
     api.decorateWidget(`poster-name:${loc}`, (helper) => {
       const value = helper.attrs.user_average_rating;
       if (helper.attrs.user_id <= 0) {

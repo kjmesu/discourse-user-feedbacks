@@ -2,3 +2,7 @@ en:
   site_settings:
     user_feedbacks_enabled: "Enable user Feedbacks"
     user_feedbacks_allow_reviews: "Allow users to review each others"
+    user_feedbacks_display_average_ratings_beside_username_on_post: "Display average user rating beside username on every post of the user"
+    user_feedbacks_display_average_ratings_on_profile: "Display average user rating on user's profile"
+    user_feedbacks_display_average_ratings_on_user_card: "Display average user rating on user card"
+    user_feedbacks_hide_feedbacks_from_user: "Hide feedbacks from the user"
