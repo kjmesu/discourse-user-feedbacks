@@ -47,12 +47,18 @@ after_initialize do
     user = object
     user = object[:user] if object.class != User
 
+    return nil if !user
+
+    return nil if !user.feedbacks
+
     user.feedbacks.pluck(:feedback_to_id)
   end
 
   add_to_serializer(:basic_user, :average_rating) do
     user = object
     user = object[:user] if object.class != User
+
+    return nil if !user
 
     count = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
     count = 1 if count <= 0
@@ -62,6 +68,8 @@ after_initialize do
   add_to_serializer(:basic_user, :rating_count) do
     user = object
     user = object[:user] if object.class != User
+
+    return nil if !user
 
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
   end
