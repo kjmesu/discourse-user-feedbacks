@@ -54,20 +54,19 @@ function initializeDiscourseUserFeedbacks(api) {
         <div class="average-ratings">
           <RatingInput
             @readOnly={{true}}
-            @checkedOne={{this.checkedOne}}
-            @checkedTwo={{this.checkedTwo}}
-            @checkedThree={{this.checkedThree}}
-            @checkedFour={{this.checkedFour}}
-            @checkedFive={{this.checkedFive}}
-            @percentageOne={{this.percentageOne}}
-            @percentageTwo={{this.percentageTwo}}
-            @percentageThree={{this.percentageThree}}
-            @percentageFour={{this.percentageFour}}
-            @percentageFive={{this.percentageFive}}
+            @checkedOne={{@outletArgs.post.user_average_rating >= 1}}
+            @checkedTwo={{@outletArgs.post.user_average_rating >= 2}}
+            @checkedThree={{@outletArgs.post.user_average_rating >= 3}}
+            @checkedFour={{@outletArgs.post.user_average_rating >= 4}}
+            @checkedFive={{@outletArgs.post.user_average_rating >= 5}}
+            @percentageOne={{if (and (gt @outletArgs.post.user_average_rating 0) (lt @outletArgs.post.user_average_rating 1)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
+            @percentageTwo={{if (and (gt @outletArgs.post.user_average_rating 1) (lt @outletArgs.post.user_average_rating 2)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
+            @percentageThree={{if (and (gt @outletArgs.post.user_average_rating 2) (lt @outletArgs.post.user_average_rating 3)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
+            @percentageFour={{if (and (gt @outletArgs.post.user_average_rating 3) (lt @outletArgs.post.user_average_rating 4)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
+            @percentageFive={{if (and (gt @outletArgs.post.user_average_rating 4) (lt @outletArgs.post.user_average_rating 5)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
           />
-  
           <span class="rating-count">
-            <a href="{{@post.usernameUrl}}/feedbacks">{{@post.user_rating_count}} Trades</a>
+            <a href="{{@outletArgs.post.usernameUrl}}/feedbacks">{{@outletArgs.post.user_rating_count}} Trades</a>
           </span>
         </div>
       </template>
