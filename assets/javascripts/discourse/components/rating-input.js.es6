@@ -17,7 +17,7 @@ export default Component.extend({
     this.changeRating();
   },
 
-  changeRating(value): action(function() {
+  changeRating: action(function(value) {
     if (value && this.readOnly) return;
 
     if (value > 0) {
