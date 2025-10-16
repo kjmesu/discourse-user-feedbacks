@@ -18,17 +18,37 @@ function initializeDiscourseUserFeedbacks(api) {
         return post.user_id > 0;
       }
 
-      const checkedOne = post.user_average_rating >= 1;
-      const checkedTwo = post.user_average_rating >= 2;
-      const checkedThree = post.user_average_rating >= 3;
-      const checkedFour = post.user_average_rating >= 4;
-      const checkedFive = post.user_average_rating >= 5;
+      get checkedOne() {
+        return post.user_average_rating >= 1;
+      }
+      get checkedTwo() {
+        return post.user_average_rating >= 2;
+      }
+      get checkedThree() {
+        return post.user_average_rating >= 3;
+      }
+      get checkedFour() {
+        return post.user_average_rating >= 4;
+      }
+      get checkedFive() {
+        return post.user_average_rating >= 5;
+      }
 
-      const percentageOne = post.user_average_rating > 0 && post.user_average_rating < 1 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
-      const percentageTwo = post.user_average_rating > 1 && post.user_average_rating < 2 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
-      const percentageThree = post.user_average_rating > 2 && post.user_average_rating < 3 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
-      const percentageFour = post.user_average_rating > 3 && post.user_average_rating < 4 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
-      const percentageFive = post.user_average_rating > 4 && post.user_average_rating < 5 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      get percentageOne() {
+        return post.user_average_rating > 0 && post.user_average_rating < 1 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      }
+      get percentageTwo() {
+        return post.user_average_rating > 1 && post.user_average_rating < 2 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      }
+      get percentageThree() {
+        return post.user_average_rating > 2 && post.user_average_rating < 3 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      }
+      get percentageFour() {
+        return post.user_average_rating > 3 && post.user_average_rating < 4 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      }
+      get percentageFive() {
+        return post.user_average_rating > 4 && post.user_average_rating < 5 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      }
 
       <template>
         <div class="average-ratings">
