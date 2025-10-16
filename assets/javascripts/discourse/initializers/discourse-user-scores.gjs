@@ -22,7 +22,7 @@ function initializeDiscourseUserFeedbacks(api) {
         <span class="average-ratings">
           <RatingInput @value={{@post.user_average_rating}} @readOnly={{true}} />
           <span class="rating-count">
-            <a href="{{@post.username_url}}/feedbacks">{{@post.user_rating_count}}</a>
+            <a href="{{@post.usernameUrl}}/feedbacks">{{@post.user_rating_count}}</a>
           </span>
         </span>
       </template>
