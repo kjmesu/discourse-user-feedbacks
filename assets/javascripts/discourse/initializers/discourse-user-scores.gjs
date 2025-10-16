@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import RatingInput from "../components/rating-input";
 
 function initializeDiscourseUserFeedbacks(api) {
   const site = api.container.lookup("site:main");
