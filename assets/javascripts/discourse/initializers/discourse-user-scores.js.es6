@@ -10,7 +10,7 @@ function initializeDiscourseUserFeedbacks(api) {
   if (
     siteSettings.user_feedbacks_display_average_ratings_beside_username_on_post
   ) {
-    api.decorateWidget(`poster-name:${loc}`, (helper) => {
+    api.decorateWidget(`poster-name:after`, (helper) => {
       const value = helper.attrs.user_average_rating;
       if (helper.attrs.user_id <= 0) {
         return;
