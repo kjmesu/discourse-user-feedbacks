@@ -18,20 +18,71 @@ function initializeDiscourseUserFeedbacks(api) {
           return args.post.user_id > 0;
         }
 
+        get checkedOne() {
+          return this.args.outletArgs.post.user_average_rating >= 1;
+        }
+        get checkedTwo() {
+          return this.args.outletArgs.post.user_average_rating >= 2;
+        }
+        get checkedThree() {
+          return this.args.outletArgs.post.user_average_rating >= 3;
+        }
+        get checkedFour() {
+          return this.args.outletArgs.post.user_average_rating >= 4;
+        }
+        get checkedFive() {
+          return this.args.outletArgs.post.user_average_rating >= 5;
+        }
+        get percentageOne() {
+          const rating = this.args.outletArgs.post.user_average_rating;
+          if (rating > 0 && rating < 1) {
+            return ((Math.round(rating * 100) / 100) % 1) * 100;
+          }
+          return 0;
+        }
+        get percentageTwo() {
+          const rating = this.args.outletArgs.post.user_average_rating;
+          if (rating > 1 && rating < 2) {
+            return ((Math.round(rating * 100) / 100) % 1) * 100;
+          }
+          return 0;
+        }
+        get percentageThree() {
+          const rating = this.args.outletArgs.post.user_average_rating;
+          if (rating > 2 && rating < 3) {
+            return ((Math.round(rating * 100) / 100) % 1) * 100;
+          }
+          return 0;
+        }
+        get percentageFour() {
+          const rating = this.args.outletArgs.post.user_average_rating;
+          if (rating > 3 && rating < 4) {
+            return ((Math.round(rating * 100) / 100) % 1) * 100;
+          }
+          return 0;
+        }
+        get percentageFive() {
+          const rating = this.args.outletArgs.post.user_average_rating;
+          if (rating > 4 && rating < 5) {
+            return ((Math.round(rating * 100) / 100) % 1) * 100;
+          }
+          return 0;
+        }        
+
         <template>
           <div class="average-ratings">
             <RatingInput
               @readOnly={{true}}
-              @checkedOne={{@outletArgs.post.user_average_rating >= 1}}
-              @checkedTwo={{@outletArgs.post.user_average_rating >= 2}}
-              @checkedThree={{@outletArgs.post.user_average_rating >= 3}}
-              @checkedFour={{@outletArgs.post.user_average_rating >= 4}}
-              @checkedFive={{@outletArgs.post.user_average_rating >= 5}}
-              @percentageOne={{if (and (gt @outletArgs.post.user_average_rating 0) (lt @outletArgs.post.user_average_rating 1)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
-              @percentageTwo={{if (and (gt @outletArgs.post.user_average_rating 1) (lt @outletArgs.post.user_average_rating 2)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
-              @percentageThree={{if (and (gt @outletArgs.post.user_average_rating 2) (lt @outletArgs.post.user_average_rating 3)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
-              @percentageFour={{if (and (gt @outletArgs.post.user_average_rating 3) (lt @outletArgs.post.user_average_rating 4)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
-              @percentageFive={{if (and (gt @outletArgs.post.user_average_rating 4) (lt @outletArgs.post.user_average_rating 5)) (mul (mod (div (round (mul @outletArgs.post.user_average_rating 100)) 100) 1) 100) 0}}
+              @checkedOne={{this.checkedOne}}
+              @checkedTwo={{this.checkedTwo}}
+              @checkedThree={{this.checkedThree}}
+              @checkedFour={{this.checkedFour}}
+              @checkedFive={{this.checkedFive}}
+              @percentageOne={{this.percentageOne}}
+              @percentageTwo={{this.percentageTwo}}
+              @percentageThree={{this.percentageThree}}
+              @percentageFour={{this.percentageFour}}
+              @percentageFive={{this.percentageFive}}
             />
             <span class="rating-count">
               <a href="{{@outletArgs.post.usernameUrl}}/feedbacks">{{@outletArgs.post.user_rating_count}} Trades</a>
