@@ -19,35 +19,35 @@ function initializeDiscourseUserFeedbacks(api) {
       }
 
       get checkedOne() {
-        return post.user_average_rating >= 1;
+        return this.args.post.user_average_rating >= 1;
       }
       get checkedTwo() {
-        return post.user_average_rating >= 2;
+        return this.args.post.user_average_rating >= 2;
       }
       get checkedThree() {
-        return post.user_average_rating >= 3;
+        return this.args.post.user_average_rating >= 3;
       }
       get checkedFour() {
-        return post.user_average_rating >= 4;
+        return this.args.post.user_average_rating >= 4;
       }
       get checkedFive() {
-        return post.user_average_rating >= 5;
+        return this.args.post.user_average_rating >= 5;
       }
 
       get percentageOne() {
-        return post.user_average_rating > 0 && post.user_average_rating < 1 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+        return this.args.post.user_average_rating > 0 && this.args.post.user_average_rating < 1 ? ((Math.round(this.args.post.user_average_rating * 100) / 100) % 1) * 100 : 0;
       }
       get percentageTwo() {
-        return post.user_average_rating > 1 && post.user_average_rating < 2 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+        return this.args.post.user_average_rating > 1 && this.args.post.user_average_rating < 2 ? ((Math.round(this.args.post.user_average_rating * 100) / 100) % 1) * 100 : 0;
       }
       get percentageThree() {
-        return post.user_average_rating > 2 && post.user_average_rating < 3 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+        return this.args.post.user_average_rating > 2 && this.args.post.user_average_rating < 3 ? ((Math.round(this.args.post.user_average_rating * 100) / 100) % 1) * 100 : 0;
       }
       get percentageFour() {
-        return post.user_average_rating > 3 && post.user_average_rating < 4 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+        return this.args.post.user_average_rating > 3 && this.args.post.user_average_rating < 4 ? ((Math.round(this.args.post.user_average_rating * 100) / 100) % 1) * 100 : 0;
       }
       get percentageFive() {
-        return post.user_average_rating > 4 && post.user_average_rating < 5 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+        return this.args.post.user_average_rating > 4 && this.args.post.user_average_rating < 5 ? ((Math.round(this.args.post.user_average_rating * 100) / 100) % 1) * 100 : 0;
       }
 
       <template>
