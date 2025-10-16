@@ -13,13 +13,17 @@ function initializeDiscourseUserFeedbacks(api) {
     api.renderAfterWrapperOutlet(
     "post-meta-data-poster-name",
     class extends Component {
-      static shouldRender(args) {
-        return args.post.user_id > 0;
+      static shouldRender({ post }) {
+        return post.user_id > 0;
       }
 
       <template>
-        <div>THIS IS A TEST</div>
-      </template>
+        <span class="average-ratings">
+          <RatingInput @value={{@post.user_average_rating}} @readOnly={{true}} />
+          <span class="rating-count">
+            <a href="{{@post.username_url}}/feedbacks>{{@post.user_rating_count}}</a>
+          </span>
+        </template>
     });
   }
 }
