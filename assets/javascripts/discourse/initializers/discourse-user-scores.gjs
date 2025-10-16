@@ -14,7 +14,7 @@ function initializeDiscourseUserFeedbacks(api) {
     "post-meta-data-poster-name",
     class extends Component {
       static shouldRender(args) {
-        return args.attrs.user_id <= 0;
+        return args.post.user_id > 0;
       }
 
       <template>
