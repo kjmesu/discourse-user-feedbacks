@@ -17,8 +17,7 @@ export default Component.extend({
     this.changeRating();
   },
 
-  @action
-  changeRating(value) {
+  changeRating(value): action(function() {
     if (value && this.readOnly) return;
 
     if (value > 0) {
@@ -26,7 +25,7 @@ export default Component.extend({
     } else {
       this.set("value", this.value);
     }
-  },
+  }),
 
   @discourseComputed("value")
   checkedOne(value) {
