@@ -5,7 +5,7 @@ function initializeDiscourseUserFeedbacks(api) {
   const site = api.container.lookup("site:main");
   const siteSettings = api.container.lookup("site-settings:main");
 
-  api.includePostAttributes("user_average_rating", "user_rating_count");
+  api.addTrackedPostProperties("user_average_rating", "user_rating_count");
 
   const loc = site && site.mobileView ? "before" : "after";
 
