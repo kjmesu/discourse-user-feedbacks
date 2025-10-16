@@ -38,8 +38,8 @@ function initializeDiscourseUserFeedbacks(api) {
             </span>
           </div>
         </template>
-      });
-    }
+      }
+    );
   }
 }
 
