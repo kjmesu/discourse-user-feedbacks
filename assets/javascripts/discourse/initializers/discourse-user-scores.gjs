@@ -18,13 +18,38 @@ function initializeDiscourseUserFeedbacks(api) {
         return post.user_id > 0;
       }
 
+      const checkedOne = post.user_average_rating >= 1;
+      const checkedTwo = post.user_average_rating >= 2;
+      const checkedThree = post.user_average_rating >= 3;
+      const checkedFour = post.user_average_rating >= 4;
+      const checkedFive = post.user_average_rating >= 5;
+
+      const percentageOne = post.user_average_rating > 0 && post.user_average_rating < 1 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      const percentageTwo = post.user_average_rating > 1 && post.user_average_rating < 2 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      const percentageThree = post.user_average_rating > 2 && post.user_average_rating < 3 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      const percentageFour = post.user_average_rating > 3 && post.user_average_rating < 4 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+      const percentageFive = post.user_average_rating > 4 && post.user_average_rating < 5 ? ((Math.round(post.user_average_rating * 100) / 100) % 1) * 100 : 0;
+
       <template>
-        <span class="average-ratings">
-          <RatingInput @value={{@post.user_average_rating}} @readOnly={{true}} />
+        <div class="average-ratings">
+          <RatingInput
+            @readOnly={{true}}
+            @checkedOne={{@checkedOne}}
+            @checkedTwo={{@checkedTwo}}
+            @checkedThree={{@checkedThree}}
+            @checkedFour={{@checkedFour}}
+            @checkedFive={{@checkedFive}}
+            @percentageOne={{@percentageOne}}
+            @percentageTwo={{@percentageTwo}}
+            @percentageThree={{@percentageThree}}
+            @percentageFour={{@percentageFour}}
+            @percentageFive={{@percentageFive}}
+          />
+
           <span class="rating-count">
-            <a href="{{@post.usernameUrl}}/feedbacks">{{@post.user_rating_count}}</a>
+            <a href="{{@post.usernameUrl}}/feedbacks">{{@post.user_rating_count}} Trades</a>
           </span>
-        </span>
+        </div>
       </template>
     });
   }
