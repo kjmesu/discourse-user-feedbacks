@@ -19,50 +19,50 @@ function initializeDiscourseUserFeedbacks(api) {
         }
 
         get checkedOne() {
-          return this.outletArgs.post.user_average_rating >= 1;
+          return this.args.post.user_average_rating >= 1;
         }
         get checkedTwo() {
-          return this.outletArgs.post.user_average_rating >= 2;
+          return this.args.post.user_average_rating >= 2;
         }
         get checkedThree() {
-          return this.outletArgs.post.user_average_rating >= 3;
+          return this.args.post.user_average_rating >= 3;
         }
         get checkedFour() {
-          return this.outletArgs.post.user_average_rating >= 4;
+          return this.args.post.user_average_rating >= 4;
         }
         get checkedFive() {
-          return this.outletArgs.post.user_average_rating >= 5;
+          return this.args.post.user_average_rating >= 5;
         }
         get percentageOne() {
-          const rating = this.outletArgs.post.user_average_rating;
+          const rating = this.args.post.user_average_rating;
           if (rating > 0 && rating < 1) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
           return 0;
         }
         get percentageTwo() {
-          const rating = this.outletArgs.post.user_average_rating;
+          const rating = this.args.post.user_average_rating;
           if (rating > 1 && rating < 2) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
           return 0;
         }
         get percentageThree() {
-          const rating = this.outletArgs.post.user_average_rating;
+          const rating = this.args.post.user_average_rating;
           if (rating > 2 && rating < 3) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
           return 0;
         }
         get percentageFour() {
-          const rating = this.outletArgs.post.user_average_rating;
+          const rating = this.args.post.user_average_rating;
           if (rating > 3 && rating < 4) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
           return 0;
         }
         get percentageFive() {
-          const rating = this.outletArgs.post.user_average_rating;
+          const rating = this.args.post.user_average_rating;
           if (rating > 4 && rating < 5) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
