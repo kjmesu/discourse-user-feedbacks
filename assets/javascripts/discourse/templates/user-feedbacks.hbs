@@ -26,7 +26,7 @@
     <hr>
   {{/if}}
   {{#if this.model.feedbacks.length}}
-    {{#each this.model.feedbacks as |feedback index|}}
+    {{#each this.model.feedbacks as |feedback|}}
       {{feedback-list-item feedback=feedback}}
     {{/each}}
   {{else}}
