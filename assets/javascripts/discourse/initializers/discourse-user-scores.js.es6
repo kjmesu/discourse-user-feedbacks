@@ -7,10 +7,7 @@ function initializeDiscourseUserFeedbacks(api) {
 
   api.addTrackedPostProperties("user_average_rating", "user_rating_count");
 
-  const loc = site && site.mobileView ? "before" : "after";
-
   if (
-    !site.mobileView &&
     siteSettings.user_feedbacks_display_average_ratings_beside_username_on_post
   ) {
     api.decorateWidget(`poster-name:${loc}`, (helper) => {
@@ -18,6 +15,12 @@ function initializeDiscourseUserFeedbacks(api) {
       if (helper.attrs.user_id <= 0) {
         return;
       }
+
+      const site = helper.widget.site;
+      if (site && site.mobileView) {
+        return;
+      }
+
       return helper.h("div.average-ratings", [
         new ComponentConnector(
           helper.widget,
