@@ -54,16 +54,16 @@ function initializeDiscourseUserFeedbacks(api) {
         <div class="average-ratings">
           <RatingInput
             @readOnly={{true}}
-            @checkedOne={{@checkedOne}}
-            @checkedTwo={{@checkedTwo}}
-            @checkedThree={{@checkedThree}}
-            @checkedFour={{@checkedFour}}
-            @checkedFive={{@checkedFive}}
-            @percentageOne={{@percentageOne}}
-            @percentageTwo={{@percentageTwo}}
-            @percentageThree={{@percentageThree}}
-            @percentageFour={{@percentageFour}}
-            @percentageFive={{@percentageFive}}
+            @checkedOne={{this.checkedOne}}
+            @checkedTwo={{this.checkedTwo}}
+            @checkedThree={{this.checkedThree}}
+            @checkedFour={{this.checkedFour}}
+            @checkedFive={{this.checkedFive}}
+            @percentageOne={{this.percentageOne}}
+            @percentageTwo={{this.percentageTwo}}
+            @percentageThree={{this.percentageThree}}
+            @percentageFour={{this.percentageFour}}
+            @percentageFive={{this.percentageFive}}
           />
 
           <span class="rating-count">
