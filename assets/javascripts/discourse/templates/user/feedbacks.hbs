@@ -17,7 +17,7 @@
       {{/if}}
       {{d-button
         label="discourse_user_feedbacks.user_feedbacks.add_user_feedback"
-        action=(action "createFeedback")
+        action=this.createFeedback
         disabled=this.disabled
         type="submit"
         class="btn-primary create-feedback"
