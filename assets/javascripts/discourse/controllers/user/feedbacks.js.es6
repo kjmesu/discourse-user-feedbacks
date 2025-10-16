@@ -22,8 +22,7 @@ export default Controller.extend({
     return !parseInt(rating) > 0;
   },
 
-  @action
-  createFeedback() {
+  createFeedback: action(function() {
     this.set("readOnly", true);
     ajax("/user_feedbacks", {
       type: "POST",
@@ -37,5 +36,5 @@ export default Controller.extend({
       this.set("rating", 0);
       this.set("review", "");
     });
-  },
+  }),
 });
