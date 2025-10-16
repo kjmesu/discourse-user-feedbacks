@@ -1,18 +1,18 @@
 <div class="feedback-list-item">
   <div class="user-rating">
     <div class="user-data">
-      <a href={{this.feedback.user.path}} data-user-card={{this.feedback.user.username}}>
-        {{avatar this.feedback.user imageSize="large"}}
+      <a href={{feedback.user.path}} data-user-card={{feedback.user.username}}>
+        {{avatar feedback.user imageSize="large"}}
       </a>
       <div class="rating-data">
-        <span class="username">{{this.feedback.user.username}}</span>
-        {{rating-input value=this.feedback.rating readOnly=true}}
+        <span class="username">{{feedback.user.username}}</span>
+        {{rating-input value=feedback.rating readOnly=true}}
       </div>
     </div>
-    {{format-date this.feedback.created_at format="medium"}}
+    {{format-date feedback.created_at format="medium"}}
   </div>
   <p>
-    {{html-safe this.feedback.review}}
+    {{html-safe feedback.review}}
   </p>
   <hr>
 </div>
