@@ -51,12 +51,12 @@
                 title="{{@discourse_user_feedbacks.user_feedbacks.feedback_date}}"
               >
                 <span class="relative-date">
-                  {{relative-time @feedback.created_at format="tiny"}}
+                  {{relative-time this.createdAtDate format="tiny"}}
                 </span>
               </a>
             </div>
           </div>
-        </div> <!-- ✅ properly closed topic-meta-data -->
+        </div>
 
         <!-- Feedback body -->
         <div class="post__regular regular post__contents contents">
