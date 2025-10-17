@@ -66,11 +66,12 @@
             <nav class="post-controls collapsed">
               <div class="actions">
                 <button
-                  class="btn no-text btn-icon btn-flat"
-                  title="Copy permalink"
+                  class="btn no-text btn-icon btn-flat permalink-button"
+                  title={{i18n "post.share.share_link"}}
                   {{on "click" (fn this.copyPermalink @feedback.id)}}
                 >
                   {{d-icon "link"}}
+                  <span aria-hidden="true">&#8203;</span>
                 </button>
                 
                 {{#if this.currentUser.staff}}
