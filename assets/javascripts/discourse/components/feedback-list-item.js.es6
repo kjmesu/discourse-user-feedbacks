@@ -2,7 +2,9 @@ import Component from "@ember/component";
 import { service } from "@ember/service";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import { sharedBehaviorOnClick } from "discourse/components/post/menu/button-wrapper";
+import Clipboard from "discourse/lib/clipboard";
+import I18n from "I18n";
+import { later } from "@ember/runloop";
 
 export default Component.extend({
   router: service(),
@@ -27,11 +29,15 @@ export default Component.extend({
     const element = event.currentTarget;
     const url = `${window.location.origin}${this.router.urlFor("feedback", id)}`;
 
-    sharedBehaviorOnClick({
-      id: id,
-      element,
-      type: "share",
-      shareUrl: url,
-    });
+    Clipboard.copy(url, element);
+
+    const originalTitle = element.getAttribute("title");
+    element.setAttribute("title", I18n.t("post.share.link_copied"));
+    element.classList.add("link-copied");
+
+    later(() => {
+      element.setAttribute("title", originalTitle);
+      element.classList.remove("link-copied");
+    }, 2000);
   },
 });
