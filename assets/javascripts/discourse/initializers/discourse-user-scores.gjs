@@ -16,73 +16,12 @@ function initializeDiscourseUserFeedbacks(api) {
       class extends Component {
         static shouldRender(args) {
           return args.post.user_id > 0;
-        }
-
-        get checkedOne() {
-          return outletArgs.post.user_average_rating >= 1;
-        }
-        get checkedTwo() {
-          return outletArgs.post.user_average_rating >= 2;
-        }
-        get checkedThree() {
-          return outletArgs.post.user_average_rating >= 3;
-        }
-        get checkedFour() {
-          return outletArgs.post.user_average_rating >= 4;
-        }
-        get checkedFive() {
-          return outletArgs.post.user_average_rating >= 5;
-        }
-        get percentageOne() {
-          const rating = outletArgs.post.user_average_rating;
-          if (rating > 0 && rating < 1) {
-            return ((Math.round(rating * 100) / 100) % 1) * 100;
-          }
-          return 0;
-        }
-        get percentageTwo() {
-          const rating = outletArgs.post.user_average_rating;
-          if (rating > 1 && rating < 2) {
-            return ((Math.round(rating * 100) / 100) % 1) * 100;
-          }
-          return 0;
-        }
-        get percentageThree() {
-          const rating = outletArgs.post.user_average_rating;
-          if (rating > 2 && rating < 3) {
-            return ((Math.round(rating * 100) / 100) % 1) * 100;
-          }
-          return 0;
-        }
-        get percentageFour() {
-          const rating = outletArgs.post.user_average_rating;
-          if (rating > 3 && rating < 4) {
-            return ((Math.round(rating * 100) / 100) % 1) * 100;
-          }
-          return 0;
-        }
-        get percentageFive() {
-          const rating = outletArgs.post.user_average_rating;
-          if (rating > 4 && rating < 5) {
-            return ((Math.round(rating * 100) / 100) % 1) * 100;
-          }
-          return 0;
-        }        
+        }  
 
         <template>
           <div class="average-ratings">
             <RatingInput
               @readOnly={{true}}
-              @checkedOne={{this.checkedOne}}
-              @checkedTwo={{this.checkedTwo}}
-              @checkedThree={{this.checkedThree}}
-              @checkedFour={{this.checkedFour}}
-              @checkedFive={{this.checkedFive}}
-              @percentageOne={{this.percentageOne}}
-              @percentageTwo={{this.percentageTwo}}
-              @percentageThree={{this.percentageThree}}
-              @percentageFour={{this.percentageFour}}
-              @percentageFive={{this.percentageFive}}
             />
             <span class="rating-count">
               <a href="{{@outletArgs.post.usernameUrl}}/feedbacks">{{@outletArgs.post.user_rating_count}} Trades</a>
