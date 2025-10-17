@@ -56,6 +56,7 @@
               </a>
             </div>
           </div>
+        </div> <!-- ✅ properly closed topic-meta-data -->
 
         <!-- Feedback body -->
         <div class="post__regular regular post__contents contents">
@@ -81,12 +82,12 @@
                     </span>
                     <span aria-hidden="true">&#8203;</span>
                   </button>
-                
+
                   <div class="permalink-message">
                     {{i18n "discourse_user_feedbacks.user_feedbacks.link_copied"}}
                   </div>
                 </div>
-                
+
                 {{#if this.currentUser.staff}}
                   <button
                     class="btn no-text btn-flat btn-icon btn-danger delete-feedback-button"
