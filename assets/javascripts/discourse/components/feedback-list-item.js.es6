@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { service } from "@ember/service";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import showShareLink from "discourse/lib/show-share-link";
+import { dispatch } from "discourse/lib/dispatcher";
 
 export default Component.extend({
   router: service(),
