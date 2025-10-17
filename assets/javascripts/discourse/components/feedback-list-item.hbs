@@ -68,7 +68,7 @@
                 <button
                   class="btn no-text btn-icon btn-flat permalink-button"
                   title={{i18n "post.share.share_link"}}
-                  {{on "click" (fn this.copyPermalink @feedback.id)}}
+                  {{on "click" (fn this.triggerShare @feedback.id)}}
                 >
                   {{d-icon "link"}}
                   <span aria-hidden="true">&#8203;</span>
