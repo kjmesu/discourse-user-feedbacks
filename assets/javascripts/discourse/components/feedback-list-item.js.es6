@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { service } from "@ember/service";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import { dispatch } from "discourse/lib/dispatcher";
+import { sharedBehaviorOnClick } from "discourse/components/post/menu/button-wrapper";
 
 export default Component.extend({
   router: service(),
@@ -21,13 +21,17 @@ export default Component.extend({
   },
 
   @action
-  deleteFeedback(id) {
-    if (!confirm("Are you sure you want to delete this feedback?")) return;
+  copyPermalink(id, event) {
+    event.preventDefault();
 
-    ajax(`/user_feedbacks/${id}`, {
-      type: "DELETE",
-    }).then(() => {
-      this.onDelete?.(id);
+    const element = event.currentTarget;
+    const url = `${window.location.origin}${this.router.urlFor("feedback", id)}`;
+
+    sharedBehaviorOnClick({
+      id: id,
+      element,
+      type: "share",
+      shareUrl: url,
     });
   },
 });
