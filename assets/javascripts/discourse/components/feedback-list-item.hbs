@@ -1,32 +1,34 @@
-{{log this.currentUser}}
-
-<div class="feedback-list-item">
-  <div class="user-rating">
-    <div class="user-data">
+<article class="feedback-post">
+  <header class="feedback-post-header">
+    <div class="feedback-post-user">
       <a href={{@feedback.user.path}} data-user-card={{@feedback.user.username}}>
-        {{avatar @feedback.user imageSize="large"}}
+        {{avatar @feedback.user imageSize="medium"}}
       </a>
-      <div class="rating-data">
+      <div class="feedback-post-meta">
         <span class="username">{{@feedback.user.username}}</span>
         {{rating-input value=@feedback.rating readOnly=true}}
       </div>
     </div>
-    {{format-date @feedback.created_at format="medium"}}
-  </div>
-  <p>
+
+    <time class="feedback-post-date">
+      {{format-date @feedback.created_at format="medium"}}
+    </time>
+  </header>
+
+  <div class="feedback-post-body">
     {{html-safe @feedback.review}}
-  </p>
-  
-  {{#if this.currentUser.staff}}
-    <button
-      type="button"
-      class="btn-flat delete-feedback"
-      title={{i18n "discourse_user_feedbacks.user_feedbacks.delete_tooltip"}}
-      {{on "click" (fn this.deleteFeedback @feedback.id)}}
-    >
-      {{d-icon "trash-can"}}
-    </button>
-  {{/if}}
-  
-  <hr>
-</div>
+  </div>
+
+  <footer class="feedback-post-actions">
+    {{#if this.currentUser.staff}}
+      <button
+        type="button"
+        class="btn-flat delete-feedback"
+        title={{i18n "discourse_user_feedbacks.user_feedbacks.delete_tooltip"}}
+        {{on "click" (fn this.deleteFeedback @feedback.id)}}
+      >
+        {{d-icon "trash-can"}}
+      </button>
+    {{/if}}
+  </footer>
+</article>
