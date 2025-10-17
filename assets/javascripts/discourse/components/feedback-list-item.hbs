@@ -45,14 +45,17 @@
 
           <div class="post-infos">
             <div class="post-info post-date">
-              <a class="post-date" title="Feedback date">
+              <a
+                class="post-date"
+                href="#"
+                title="{{@discourse_user_feedbacks.user_feedbacks.feedback_date}}"
+              >
                 <span class="relative-date">
-                  {{format-date @feedback.created_at format="tiny"}}
+                  {{relative-time @feedback.created_at format="tiny"}}
                 </span>
               </a>
             </div>
           </div>
-        </div>
 
         <!-- Feedback body -->
         <div class="post__regular regular post__contents contents">
