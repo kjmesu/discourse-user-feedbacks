@@ -1,65 +1,38 @@
 .feedback-post {
-  padding: 0.75em 0;
-  border-bottom: 1px solid var(--primary-low);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-
-  .feedback-post-header {
-    display: flex;
-    justify-content: space-between;
+  .average-ratings {
+    display: inline-flex;
     align-items: center;
+    margin-left: 0.5em;
 
-    .feedback-post-user {
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-
-      .username {
-        font-weight: bold;
-      }
-
-      .feedback-post-meta {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 0.1em;
-      }
+    .rating {
+      display: inline-flex;
+      margin-left: 0;
     }
 
-    .feedback-post-date {
-      font-size: $font-down-1;
-      color: var(--primary-medium);
+    .rating-count {
+      margin-left: 0.5em;
     }
   }
 
-  .feedback-post-body {
-    font-size: $font-0;
-    color: var(--primary);
-    padding-left: 2.5em; // indent to align with avatar
-    white-space: pre-line;
-  }
-
-  .feedback-post-actions {
+  .post__menu-area .actions {
     display: flex;
     justify-content: flex-end;
-    gap: 0.75em;
-    padding-left: 2.5em;
+  }
 
-    button.btn-flat {
-      background: transparent;
-      border: none;
-      color: var(--primary-medium);
-      cursor: pointer;
+  .post__menu-area .btn-icon {
+    color: var(--primary-medium);
 
-      &:hover {
-        color: var(--danger);
-      }
-
-      svg.d-icon {
-        font-size: $font-down-1;
-      }
+    &:hover {
+      color: var(--danger);
     }
+
+    svg.d-icon {
+      font-size: $font-down-1;
+    }
+  }
+
+  .cooked p {
+    margin: 0;
   }
 }
 
