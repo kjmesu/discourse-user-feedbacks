@@ -50,12 +50,13 @@ module DiscourseUserFeedbacks
 
     def destroy
       params.require(:id)
+      guardian.ensure_can_delete_feedback!
 
-      feedback = DiscourseUserFeedbacks::UserFeedback.find(params[:id]).destroy
+      feedback = DiscourseUserFeedbacks::UserFeedback.find(params[:id])
 
-      feedback = feedback.destroy
+      feedback.update!(deleted_at: Time.zone.now)
 
-      render_serialized(feedback, UserFeedbackSerializer)
+      render_json_dump(success: true)
     end
 
     def index
