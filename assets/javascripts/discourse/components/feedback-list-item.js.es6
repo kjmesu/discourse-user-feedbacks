@@ -8,13 +8,16 @@ export default Component.extend({
   router: service(),
 
   @action
-  copyPermalink(id, event) {
+  triggerShare(id, event) {
     event.preventDefault();
 
     const url = `${window.location.origin}${this.router.urlFor("feedback", id)}`;
 
-    // This handles copying, tooltip text change, green checkmark, etc.
-    showShareLink(url, event.currentTarget);
+    dispatch("post:share", {
+      postId: null,
+      url,
+      element: event.currentTarget
+    });
   },
 
   @action
