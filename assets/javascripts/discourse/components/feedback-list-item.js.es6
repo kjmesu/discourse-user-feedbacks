@@ -8,11 +8,14 @@ import { later } from "@ember/runloop";
 export default Component.extend({
   router: service(),
 
-  didReceiveAttrs() {
-    this._super(...arguments);
+  get createdAtDate() {
+    const ts = this.get("feedback.created_at");
+    if (!ts) {
+      return null;
+    }
 
-    const createdAt = this.get("feedback.created_at");
-    this.set("createdAtDate", createdAt ? new Date(createdAt) : null);
+    const parsed = new Date(ts);
+    return isNaN(parsed.getTime()) ? null : parsed;
   },
 
   @action
