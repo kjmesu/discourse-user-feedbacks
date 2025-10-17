@@ -65,15 +65,13 @@
           <section class="post__menu-area post-menu-area clearfix">
             <nav class="post-controls collapsed">
               <div class="actions">
-                <LinkTo
-                  @route="feedback"
-                  @model={{@feedback.id}}
+                <button
                   class="btn no-text btn-icon btn-flat"
                   title="Copy permalink"
+                  {{on "click" (fn this.copyPermalink @feedback.id)}}
                 >
                   {{d-icon "link"}}
-                  <span aria-hidden="true">&#8203;</span>
-                </LinkTo>
+                </button>
                 
                 {{#if this.currentUser.staff}}
                   <button
