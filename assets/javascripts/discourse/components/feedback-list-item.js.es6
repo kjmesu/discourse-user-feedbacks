@@ -2,7 +2,6 @@ import Component from "@ember/component";
 import { service } from "@ember/service";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import Clipboard from "discourse/lib/clipboard";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
 
@@ -21,13 +20,24 @@ export default Component.extend({
   },
 
   @action
-  copyPermalink(id, event) {
+  async copyPermalink(id, event) {
     event.preventDefault();
 
     const element = event.currentTarget;
     const url = `${window.location.origin}${this.router.urlFor("feedback", id)}`;
 
-    Clipboard.copy(url, element);
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch (e) {
+      const tempInput = document.createElement("input");
+      tempInput.style.position = "absolute";
+      tempInput.style.left = "-9999px";
+      tempInput.value = url;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+    }
 
     const originalTitle = element.getAttribute("title");
     element.setAttribute("title", I18n.t("post.share.link_copied"));
