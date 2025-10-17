@@ -10,7 +10,7 @@ export default Component.extend({
 
   @action
   deleteFeedback(id) {
-    if (!confirm(I18n.t("user_feedbacks.delete_confirm"))) return;
+    if (!confirm(I18n.t("discourse_user_feedbacks.user_feedbacks.delete_confirm"))) return;
 
     ajax(`/user_feedbacks/${id}`, {
       type: "DELETE",
