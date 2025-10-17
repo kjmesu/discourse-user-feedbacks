@@ -8,5 +8,9 @@ module DiscourseUserFeedbacks
     belongs_to :feedback_to, class_name: 'User'
 
     default_scope { where(deleted_at: nil) }
+
+    def soft_delete!
+      update!(deleted_at: Time.zone.now)
+    end
   end
 end
