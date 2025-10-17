@@ -36,6 +36,9 @@ after_initialize do
     %w{users u}.each do |root_path|
       get "#{root_path}/:username/feedbacks" => "users#preferences", constraints: { username: RouteFormat.username }
     end
+
+    get "/feedbacks/*path" => "list#latest"
+    
     mount ::DiscourseUserFeedbacks::Engine, at: '/'
   end
 
