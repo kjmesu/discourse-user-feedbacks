@@ -8,8 +8,10 @@ import { later } from "@ember/runloop";
 export default Component.extend({
   router: service(),
 
-  get createdAtDate() {
-    return new Date(this.get("feedback.created_at"));
+  init() {
+    this._super(...arguments);
+    const raw = this.get("feedback.created_at");
+    this.set("createdAtDate", raw ? new Date(raw) : null);
   },
 
   @action
