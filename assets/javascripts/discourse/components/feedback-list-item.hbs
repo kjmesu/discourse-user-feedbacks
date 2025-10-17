@@ -52,9 +52,11 @@
               >
                 {{log "feedback.created_at" @feedback.created_at}}
                 {{log "createdAtDate" this.createdAtDate}}
-                <span class="relative-date">
-                  {{format-date @feedback.created_at format="tiny"}}
-                </span>
+                {{#if this.createdAtDate}}
+                  <span class="relative-date">
+                    {{relative-time this.createdAtDate format="tiny"}}
+                  </span>
+                {{/if}}
               </a>
             </div>
           </div>
