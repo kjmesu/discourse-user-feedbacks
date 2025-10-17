@@ -10,15 +10,13 @@ export default Component.extend({
   router: service(),
 
   @action
-  triggerShare(id, event) {
-    event.preventDefault();
+  deleteFeedback(id) {
+    if (!confirm(I18n.t("user_feedbacks.delete_confirm"))) return;
 
-    const url = `${window.location.origin}${this.router.urlFor("feedback", id)}`;
-
-    dispatch("post:share", {
-      postId: null,
-      url,
-      element: event.currentTarget
+    ajax(`/user_feedbacks/${id}`, {
+      type: "DELETE",
+    }).then(() => {
+      this.onDelete?.(id);
     });
   },
 
