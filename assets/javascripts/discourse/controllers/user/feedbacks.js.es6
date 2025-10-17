@@ -37,4 +37,10 @@ export default Controller.extend({
       this.set("review", "");
     });
   }),
+
+  @action
+  handleFeedbackDeleted(id) {
+    const remaining = this.model.feedbacks.filter((f) => f.id !== id);
+    this.set("model.feedbacks", remaining);
+  },
 });
