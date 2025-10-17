@@ -12,3 +12,4 @@ en:
           placeholder: "Include your review to the user (optional)"
         empty_state_title: "There are no feedbacks yet"
         empty_state_body: "Feedbacks will be displayed once you get feedback from your fellow community members"
+        delete_tooltip: "Delete feedback"
