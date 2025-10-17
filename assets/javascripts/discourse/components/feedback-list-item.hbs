@@ -50,8 +50,10 @@
                 href="#"
                 title="{{@discourse_user_feedbacks.user_feedbacks.feedback_date}}"
               >
+                {{log "feedback.created_at" @feedback.created_at}}
+                {{log "createdAtDate" this.createdAtDate}}
                 <span class="relative-date">
-                  {{relative-time this.createdAtDate format="tiny"}}
+                  {{format-date @feedback.created_at format="tiny"}}
                 </span>
               </a>
             </div>
