@@ -68,7 +68,7 @@
                 <div class="permalink-button-wrapper">
                   <button
                     type="button"
-                    class="btn no-text btn-icon btn-flat permalink-button"
+                    class="btn no-text btn-flat btn-icon permalink-button"
                     title={{i18n "discourse_user_feedbacks.user_feedbacks.copy_title"}}
                     {{on "click" (fn this.copyPermalink @feedback.id)}}
                   >
@@ -86,7 +86,7 @@
                 
                 {{#if this.currentUser.staff}}
                   <button
-                    class="btn no-text btn-icon btn-flat delete-feedback-button"
+                    class="btn no-text btn-flat btn-icon delete-feedback-button"
                     title={{i18n "discourse_user_feedbacks.user_feedbacks.delete_tooltip"}}
                     {{on "click" (fn this.deleteFeedback @feedback.id)}}
                     type="button"
