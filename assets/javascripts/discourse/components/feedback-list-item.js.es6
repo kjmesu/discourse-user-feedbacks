@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
 export default Component.extend({
-  currentUser: null,
+  currentUser: service(),
 
   @action
   deleteFeedback(id) {
