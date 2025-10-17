@@ -231,3 +231,25 @@
   }
 }
 
+.delete-feedback-button {
+  --danger-bg: var(--danger); // Uses Discourse's built-in danger red
+  --danger-icon: #fff;
+
+  svg {
+    color: var(--primary-medium); // default gray icon
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: var(--danger-bg);
+    border-radius: 4px;
+  }
+
+  &:hover svg,
+  &:focus svg {
+    color: var(--danger-icon);
+  }
+}
+
+
