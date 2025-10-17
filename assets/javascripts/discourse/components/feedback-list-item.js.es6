@@ -22,10 +22,10 @@ export default Component.extend({
   @action
   async copyPermalink(id, event) {
     event.preventDefault();
-
+  
     const element = event.currentTarget;
     const url = `${window.location.origin}${this.router.urlFor("feedback", id)}`;
-
+  
     try {
       await navigator.clipboard.writeText(url);
     } catch (e) {
@@ -38,14 +38,20 @@ export default Component.extend({
       document.execCommand("copy");
       document.body.removeChild(tempInput);
     }
-
+  
+    const icon = element.querySelector("svg use");
+    const originalIcon = icon.getAttribute("href");
+    icon.setAttribute("href", "#check");
+  
     const originalTitle = element.getAttribute("title");
     element.setAttribute("title", I18n.t("post.share.link_copied"));
     element.classList.add("link-copied");
-
+  
     later(() => {
+      icon.setAttribute("href", originalIcon);
+
       element.setAttribute("title", originalTitle);
       element.classList.remove("link-copied");
     }, 2000);
-  },
+  }
 });
