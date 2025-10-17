@@ -3,8 +3,6 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
 export default Component.extend({
-  currentUser: service(),
-
   @action
   deleteFeedback(id) {
     if (!confirm("Are you sure you want to delete this feedback?")) return;
