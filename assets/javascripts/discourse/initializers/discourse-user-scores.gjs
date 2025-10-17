@@ -71,19 +71,6 @@ function initializeDiscourseUserFeedbacks(api) {
 
         <template>
           <div class="average-ratings">
-            <RatingInput
-              @readOnly={{true}}
-              @checkedOne={{this.checkedOne}}
-              @checkedTwo={{this.checkedTwo}}
-              @checkedThree={{this.checkedThree}}
-              @checkedFour={{this.checkedFour}}
-              @checkedFive={{this.checkedFive}}
-              @percentageOne={{this.percentageOne}}
-              @percentageTwo={{this.percentageTwo}}
-              @percentageThree={{this.percentageThree}}
-              @percentageFour={{this.percentageFour}}
-              @percentageFive={{this.percentageFive}}
-            />
             <span class="rating-count">
               <a href="{{@outletArgs.post.usernameUrl}}/feedbacks">{{@outletArgs.post.user_rating_count}} Trades</a>
             </span>
