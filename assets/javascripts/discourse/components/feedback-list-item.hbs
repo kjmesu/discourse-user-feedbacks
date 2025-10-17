@@ -14,5 +14,10 @@
   <p>
     {{html-safe @feedback.review}}
   </p>
+
+  {{#if this.currentUser.staff}}
+    <a href=#" class="delete-feedback" {{on "click" (fn this.deleteFeedback @feedback.id}}>[del]</a>
+  {{/if}}
+  
   <hr>
 </div>
