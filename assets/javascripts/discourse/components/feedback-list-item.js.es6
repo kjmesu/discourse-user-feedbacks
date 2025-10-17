@@ -9,13 +9,7 @@ export default Component.extend({
   router: service(),
 
   get createdAtDate() {
-    const ts = this.get("feedback.created_at");
-    if (!ts) {
-      return null;
-    }
-
-    const parsed = new Date(ts);
-    return isNaN(parsed.getTime()) ? null : parsed;
+    return new Date(this.get("feedback.created_at"));
   },
 
   @action
