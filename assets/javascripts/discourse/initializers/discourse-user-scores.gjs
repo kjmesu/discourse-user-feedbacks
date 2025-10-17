@@ -19,50 +19,50 @@ function initializeDiscourseUserFeedbacks(api) {
         }
 
         get checkedOne() {
-          return this.args.post.user_average_rating >= 1;
+          return outletArgs.post.user_average_rating >= 1;
         }
         get checkedTwo() {
-          return this.args.post.user_average_rating >= 2;
+          return outletArgs.post.user_average_rating >= 2;
         }
         get checkedThree() {
-          return this.args.post.user_average_rating >= 3;
+          return outletArgs.post.user_average_rating >= 3;
         }
         get checkedFour() {
-          return this.args.post.user_average_rating >= 4;
+          return outletArgs.post.user_average_rating >= 4;
         }
         get checkedFive() {
-          return this.args.post.user_average_rating >= 5;
+          return outletArgs.post.user_average_rating >= 5;
         }
         get percentageOne() {
-          const rating = this.args.post.user_average_rating;
+          const rating = outletArgs.post.user_average_rating;
           if (rating > 0 && rating < 1) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
           return 0;
         }
         get percentageTwo() {
-          const rating = this.args.post.user_average_rating;
+          const rating = outletArgs.post.user_average_rating;
           if (rating > 1 && rating < 2) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
           return 0;
         }
         get percentageThree() {
-          const rating = this.args.post.user_average_rating;
+          const rating = outletArgs.post.user_average_rating;
           if (rating > 2 && rating < 3) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
           return 0;
         }
         get percentageFour() {
-          const rating = this.args.post.user_average_rating;
+          const rating = outletArgs.post.user_average_rating;
           if (rating > 3 && rating < 4) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
           return 0;
         }
         get percentageFive() {
-          const rating = this.args.post.user_average_rating;
+          const rating = outletArgs.post.user_average_rating;
           if (rating > 4 && rating < 5) {
             return ((Math.round(rating * 100) / 100) % 1) * 100;
           }
@@ -71,6 +71,19 @@ function initializeDiscourseUserFeedbacks(api) {
 
         <template>
           <div class="average-ratings">
+            <RatingInput
+              @readOnly={{true}}
+              @checkedOne={{this.checkedOne}}
+              @checkedTwo={{this.checkedTwo}}
+              @checkedThree={{this.checkedThree}}
+              @checkedFour={{this.checkedFour}}
+              @checkedFive={{this.checkedFive}}
+              @percentageOne={{this.percentageOne}}
+              @percentageTwo={{this.percentageTwo}}
+              @percentageThree={{this.percentageThree}}
+              @percentageFour={{this.percentageFour}}
+              @percentageFive={{this.percentageFive}}
+            />
             <span class="rating-count">
               <a href="{{@outletArgs.post.usernameUrl}}/feedbacks">{{@outletArgs.post.user_rating_count}} Trades</a>
             </span>
