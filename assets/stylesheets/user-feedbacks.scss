@@ -88,6 +88,20 @@
       }
     }
   }
+  .delete-feedback {
+    margin-left: 0.5em;
+    color: var(--danger);
+    opacity: 0.8;
+    transition: opacity 0.15s;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    svg.d-icon {
+      font-size: $font-down-1;
+    }
+  }
 }
 
 .average-ratings {
