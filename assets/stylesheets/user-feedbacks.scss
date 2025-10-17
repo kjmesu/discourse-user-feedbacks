@@ -1,3 +1,6 @@
+// ==========================
+// RATING DISPLAY
+// ==========================
 .feedback-post {
   .average-ratings {
     display: inline-flex;
@@ -14,23 +17,6 @@
     }
   }
 
-  .post__menu-area .actions {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .post__menu-area .btn-icon {
-    color: var(--primary-medium);
-  
-    &:hover {
-      color: var(--primary);
-    }
-  
-    svg.d-icon {
-      font-size: $font-down-1;
-    }
-  }
-
   .cooked p {
     margin: 0;
   }
@@ -42,47 +28,50 @@
     height: 1em;
     line-height: 1.2em;
     font-size: $font-up-1;
-    align-items: center;
-    cursor: default;
     margin-left: 0.25em;
+    cursor: default;
   }
 
   .icon {
+    position: relative;
     cursor: pointer;
     color: var(--primary-low-mid);
     font-size: $font-0;
-    position: relative;
-  }
 
-  .icon.read-only {
-    cursor: default;
-  }
+    &.read-only {
+      cursor: default;
+    }
 
-  .icon.checked::before {
-    color: var(--quaternary) !important;
-    content: "\2605";
-    position: absolute;
-    left: 0;
+    &.checked::before {
+      content: "\2605";
+      position: absolute;
+      left: 0;
+      color: var(--quaternary) !important;
+    }
+
+    &.partial .partial-fill {
+      display: inline-block !important;
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: var(--quaternary);
+      overflow: hidden;
+    }
   }
 
   .partial-fill {
     display: none !important;
   }
-
-  .icon.partial .partial-fill {
-    display: inline-block !important;
-    color: var(--quaternary);
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-  }
 }
 
+// ==========================
+// INPUTS
+// ==========================
 .user-feedbacks-right {
   width: 100%;
   max-width: 750px;
   margin-right: auto;
+
   .ratings-input {
     display: inline-flex;
     align-items: center;
@@ -92,18 +81,18 @@
       font-size: $font-0;
     }
   }
+
   .review-input {
+    display: flex;
+    flex-direction: column;
+
     .review-textarea {
       width: 100%;
-      box-sizing: border-box;
       padding: 10px;
-      display: block;
+      box-sizing: border-box;
       resize: none;
       margin-bottom: 1em;
     }
-
-    display: flex;
-    flex-direction: column;
 
     .create-feedback {
       width: 20%;
@@ -111,33 +100,21 @@
   }
 }
 
+// ==========================
+// USER CARD + META
+// ==========================
 .feedback-list-item {
   .user-rating {
     width: 100%;
     display: inline-flex;
     justify-content: space-between;
+
     .user-data {
       display: inline-flex;
 
-      .rating-data {
-        .username {
-          margin-left: 0.5em;
-        }
+      .rating-data .username {
+        margin-left: 0.5em;
       }
-    }
-  }
-  .delete-feedback {
-    margin-left: 0.5em;
-    color: var(--danger);
-    opacity: 0.8;
-    transition: opacity 0.15s;
-
-    &:hover {
-      opacity: 1;
-    }
-
-    svg.d-icon {
-      font-size: $font-down-1;
     }
   }
 }
@@ -147,29 +124,28 @@
 
   .rating-count {
     margin-left: 1em;
-  }
 
-  .rating-count a {
-    color: var(--tertiary);
-    text-decoration: underline;
+    a {
+      color: var(--tertiary);
+      text-decoration: underline;
+    }
   }
 }
 
-.topic-meta-data .average-ratings .user-ratings {
-  span.icon {
-    margin: 0;
-  }
+.topic-meta-data .average-ratings .user-ratings span.icon {
+  margin: 0;
 }
-.user-profile-primary-outlet {
-  .icon.partial .partial-fill {
-    top: unset;
-  }
+
+.user-profile-primary-outlet .icon.partial .partial-fill {
+  top: unset;
 }
 
 .user-card-post-names-outlet {
   padding: 0;
+
   .average-ratings {
     padding: 0;
+
     .rating {
       margin-left: 0;
       display: inline-flex;
@@ -177,10 +153,9 @@
   }
 }
 
-.permalink-button.link-copied svg {
-  color: var(--success);
-}
-
+// ==========================
+// PERMALINK BUTTON UX
+// ==========================
 .permalink-button-wrapper {
   position: relative;
   display: inline-block;
@@ -201,11 +176,11 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
     opacity: 0;
     transition: opacity 0.15s ease-out;
-  }
 
-  .permalink-message.visible {
-    display: block;
-    opacity: 1;
+    &.visible {
+      display: block;
+      opacity: 1;
+    }
   }
 
   .permalink-check {
@@ -215,42 +190,61 @@
     right: 2px;
     font-size: 0.7em;
     color: var(--success);
-  }
 
-  .permalink-check svg {
-    width: 0.8em;
-    height: 0.8em;
+    svg {
+      width: 0.8em;
+      height: 0.8em;
+    }
+
+    &.visible {
+      display: block;
+    }
   }
 
   .permalink-button.link-copied svg {
     color: var(--success);
   }
-
-  .permalink-button.link-copied .permalink-check.visible {
-    display: block;
-  }
 }
 
-.feedback-post .post__menu-area .actions .delete-feedback-button {
-  padding: 0.4em;
-  border-radius: 4px;
-  line-height: 1;
+// ==========================
+// POST MENU ACTIONS
+// ==========================
+.feedback-post .post__menu-area {
+  .actions {
+    display: flex;
+    justify-content: flex-end;
 
-  svg {
-    color: var(--primary-medium);
-    transition: color 0.15s ease, background-color 0.15s ease;
-  }
+    .btn {
+      padding: 0.4em;
+      margin: 0 0.15em;
+      line-height: 1;
+      border-radius: var(--d-button-border-radius);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  &:hover,
-  &:focus {
-    background: var(--danger) !important;
-  }
+    .btn-icon {
+      min-width: 2em;
+      height: 2em;
+      box-sizing: border-box;
 
-  &:hover svg,
-  &:focus svg {
-    color: #fff !important;
+      svg.d-icon {
+        font-size: $font-down-1;
+      }
+    }
+
+    .btn-danger {
+      background-color: transparent;
+
+      &:hover,
+      &:focus-visible {
+        background-color: var(--d-button-danger-bg-color);
+
+        .d-icon {
+          color: var(--d-button-danger-text-color);
+        }
+      }
+    }
   }
 }
-
-
-
