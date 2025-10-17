@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { service } from "@ember/service";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import showShareLink from "discourse/lib/show-share-link";
 
 export default Component.extend({
   router: service(),
@@ -9,12 +10,11 @@ export default Component.extend({
   @action
   copyPermalink(id, event) {
     event.preventDefault();
+
     const url = `${window.location.origin}${this.router.urlFor("feedback", id)}`;
-    navigator.clipboard.writeText(url);
-    this.appEvents?.trigger("composer:show-notification", {
-      message: I18n.t("discourse_user_feedbacks.user_feedbacks.link_copied"),
-      type: "success",
-    });
+
+    // This handles copying, tooltip text change, green checkmark, etc.
+    showShareLink(url, event.currentTarget);
   },
 
   @action
