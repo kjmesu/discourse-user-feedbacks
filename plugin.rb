@@ -85,4 +85,14 @@ after_initialize do
   add_to_serializer(:post, :user_rating_count) do
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: object.user.id).count
   end
+
+  Guardian.class_eval do
+    def can_delete_feedback?
+      user&.staff?
+    end
+
+    def ensure_can_delete_feedback!
+      raise Discourse::InvalidAccess.new unless can_delete_feedback?
+    end
+  end
 end
