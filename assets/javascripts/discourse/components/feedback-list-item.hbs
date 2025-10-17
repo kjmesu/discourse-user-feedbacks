@@ -65,14 +65,24 @@
           <section class="post__menu-area post-menu-area clearfix">
             <nav class="post-controls collapsed">
               <div class="actions">
-                <button
-                  class="btn no-text btn-icon btn-flat permalink-button"
-                  title={{i18n "post.share.share_link"}}
-                  {{on "click" (fn this.copyPermalink @feedback.id)}}
-                >
-                  {{d-icon "link"}}
-                  <span aria-hidden="true">&#8203;</span>
-                </button>
+                <div class="permalink-button-wrapper">
+                  <button
+                    type="button"
+                    class="btn no-text btn-icon btn-flat permalink-button"
+                    title={{i18n "post.share.share_link"}}
+                    {{on "click" (fn this.copyPermalink @feedback.id)}}
+                  >
+                    {{d-icon "link"}}
+                    <span class="permalink-check">
+                      {{d-icon "check"}}
+                    </span>
+                    <span aria-hidden="true">&#8203;</span>
+                  </button>
+                
+                  <div class="permalink-message">
+                    {{i18n "post.share.link_copied"}}
+                  </div>
+                </div>
                 
                 {{#if this.currentUser.staff}}
                   <button
