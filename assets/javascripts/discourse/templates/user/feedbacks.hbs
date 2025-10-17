@@ -27,7 +27,7 @@
   {{/if}}
   {{#if this.model.feedbacks.length}}
     {{#each this.model.feedbacks as |feedback index|}}
-      {{feedback-list-item feedback=feedback}}
+      {{feedback-list-item feedback=feedback onDelete=this.handleFeedbackDeleted}}
     {{/each}}
   {{else}}
     <div class="empty-state">
