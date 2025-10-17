@@ -21,11 +21,11 @@
 
   .post__menu-area .btn-icon {
     color: var(--primary-medium);
-
+  
     &:hover {
-      color: var(--danger);
+      color: var(--primary);
     }
-
+  
     svg.d-icon {
       font-size: $font-down-1;
     }
@@ -231,25 +231,26 @@
   }
 }
 
-.delete-feedback-button {
-  --danger-bg: var(--danger); // Uses Discourse's built-in danger red
-  --danger-icon: #fff;
+.feedback-post .post__menu-area .actions .delete-feedback-button {
+  padding: 0.4em;
+  border-radius: 4px;
+  line-height: 1;
 
   svg {
-    color: var(--primary-medium); // default gray icon
+    color: var(--primary-medium);
     transition: color 0.15s ease, background-color 0.15s ease;
   }
 
   &:hover,
   &:focus {
-    background-color: var(--danger-bg);
-    border-radius: 4px;
+    background: var(--danger) !important;
   }
 
   &:hover svg,
   &:focus svg {
-    color: var(--danger-icon);
+    color: #fff !important;
   }
 }
+
 
 
