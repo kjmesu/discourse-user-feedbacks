@@ -50,10 +50,11 @@
                 href="#"
                 title={{i18n "discourse_user_feedbacks.user_feedbacks.feedback_date"}}
               >
-                <span class="relative-date">
-                  {{log "feedback.created_at changed" @feedback.created_at}}
-                  <RelativeDate @date={{this.createdAtString}} @format="tiny" />
-                </span>
+                {{#if this.createdAtString}}
+                  <span class="relative-date">
+                    <RelativeDate @date={{this.createdAtString}} @format="tiny" />
+                  </span>
+                {{/if}}
               </a>
             </div>
           </div>
