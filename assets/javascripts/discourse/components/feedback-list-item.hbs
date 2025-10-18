@@ -51,6 +51,7 @@
                 title={{i18n "discourse_user_feedbacks.user_feedbacks.feedback_date"}}
               >
                 <span class="relative-date">
+                  {{log "feedback.created_at changed" @feedback.created_at}}
                   <RelativeDate @date={{@feedback.created_at}} @format="tiny" />
                 </span>
               </a>
