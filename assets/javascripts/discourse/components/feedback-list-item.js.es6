@@ -12,7 +12,6 @@ export default Component.extend({
     this._super(...arguments);
     const createdAt = this.feedback?.created_at;
     this.set("createdAtString", createdAt ? new Date(createdAt).toISOString() : null);
-    setInterval(() => console.log("date value", this.createdAtString), 30000);
   },
 
   @action
