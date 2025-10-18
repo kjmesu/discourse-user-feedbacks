@@ -10,12 +10,9 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    this.set("createdAtString", this.feedback?.created_at ?? null);
-  },
-
-  didUpdateAttrs() {
-    this._super(...arguments);
-    this.set("createdAtString", this.feedback?.created_at ?? null);
+    const createdAt = this.feedback?.created_at;
+    this.set("createdAtString", createdAt ? new Date(createdAt).toISOString() : null);
+    setInterval(() => console.log("date value", this.createdAtString), 30000);
   },
 
   @action
