@@ -11,7 +11,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const createdAt = this.feedback?.created_at;
-    this.set("createdAtString", createdAt ? new Date(createdAt).toISOString() : null);
+    this.set("createdAtDate", createdAt ? new Date(createdAt) : null);
   },
 
   @action
