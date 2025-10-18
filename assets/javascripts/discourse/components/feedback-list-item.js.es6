@@ -8,6 +8,16 @@ import { later } from "@ember/runloop";
 export default Component.extend({
   router: service(),
 
+  init() {
+    this._super(...arguments);
+    this.set("createdAtString", this.feedback?.created_at ?? null);
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+    this.set("createdAtString", this.feedback?.created_at ?? null);
+  },
+
   @action
   deleteFeedback(id) {
     if (!confirm(I18n.t("discourse_user_feedbacks.user_feedbacks.delete_confirm"))) {
