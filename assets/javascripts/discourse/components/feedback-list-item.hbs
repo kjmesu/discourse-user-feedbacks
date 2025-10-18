@@ -52,7 +52,7 @@
               >
                 <span class="relative-date">
                   {{log "feedback.created_at changed" @feedback.created_at}}
-                  <RelativeDate @date={{@feedback.created_at}} @format="tiny" />
+                  <RelativeDate @date={{this.createdAtString}} @format="tiny" />
                 </span>
               </a>
             </div>
