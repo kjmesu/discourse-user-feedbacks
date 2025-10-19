@@ -51,7 +51,7 @@
                 title={{i18n "discourse_user_feedbacks.user_feedbacks.feedback_date"}}
               >
                 <span class="relative-date">
-                  <RelativeDate @date={{this.createdAtDate}} @format="tiny" />
+                  <RelativeDate @date={{this.createdAtDate}} @format="tiny" @key={{@feedback.id}} />
                 </span>
               </a>
             </div>
