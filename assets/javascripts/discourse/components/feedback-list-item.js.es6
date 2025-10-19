@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { service } from "@ember/service";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
@@ -8,11 +8,10 @@ import { later } from "@ember/runloop";
 export default Component.extend({
   router: service(),
 
-  init() {
-    this._super(...arguments);
+  createdAtDate: computed("feedback.created_at", function() {
     const createdAt = this.feedback?.created_at;
-    this.set("createdAtDate", createdAt ? new Date(createdAt) : null);
-  },
+    return createdAt ? new Date(createdAt) : null;
+  }),
 
   @action
   deleteFeedback(id) {
