@@ -99,8 +99,14 @@ after_initialize do
     object.custom_fields["user_feedbacks_legacy_trade_count"].to_i
   end
 
+  register_editable_user_custom_field :user_feedbacks_legacy_trade_count
+  
   add_to_class(:user, :legacy_trade_count) do
     self.custom_fields["user_feedbacks_legacy_trade_count"].to_i
+  end
+
+  add_to_serializer(:admin_user, :legacy_trade_count) do
+    object.custom_fields["user_feedbacks_legacy_trade_count"].to_i
   end
 
   User.register_custom_field_type("user_feedbacks_legacy_trade_count", :integer)
