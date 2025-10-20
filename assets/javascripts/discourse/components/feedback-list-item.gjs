@@ -116,7 +116,7 @@ export default class FeedbackListItem extends Component {
                     title={{i18n "discourse_user_feedbacks.user_feedbacks.feedback_date"}}
                   >
                     <span class="relative-date">
-                      <RelativeDate @date={{this.createdAtDate}} @format="tiny" @key={{@feedback.id}} />
+                     {{relative-date this.createdAtDate format="tiny"}}
                     </span>
                   </a>
                 </div>
