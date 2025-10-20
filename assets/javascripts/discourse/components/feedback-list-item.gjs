@@ -13,8 +13,6 @@ import RatingInput from "discourse/plugins/discourse-user-feedbacks/discourse/co
 import I18n from "I18n";
 import { later } from "@ember/runloop";
 
-const relativeDate = getHelper("relative-date");
-
 export default class FeedbackListItem extends Component {
   @service router;
   @service currentUser;
