@@ -17,7 +17,7 @@
       {{/if}}
       {{d-button
         label="discourse_user_feedbacks.user_feedbacks.add_user_feedback"
-        action=(action "createFeedback")
+        action=this.createFeedback
         disabled=this.disabled
         type="submit"
         class="btn-primary create-feedback"
@@ -27,7 +27,7 @@
   {{/if}}
   {{#if this.model.feedbacks.length}}
     {{#each this.model.feedbacks as |feedback index|}}
-      {{feedback-list-item feedback=feedback}}
+      {{feedback-list-item feedback=feedback onDelete=this.handleFeedbackDeleted}}
     {{/each}}
   {{else}}
     <div class="empty-state">

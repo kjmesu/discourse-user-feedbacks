@@ -1,21 +1,21 @@
 <div class="rating">
-  <span class="icon {{if this.checkedOne "checked"}} {{if this.percentageOne "partial"}} {{if this.readOnly "read-only"}}" {{action "changeRating" 1}}>
+  <span class="icon {{if this.checkedOne "checked"}} {{if this.percentageOne "partial"}} {{if this.readOnly "read-only"}}" {{on "click" (fn this.changeRating 1)}}>
     ☆
     <span class="partial-fill" style="width:{{this.percentageOne}}%;">★</span>
   </span>
-  <span class="icon {{if this.checkedTwo "checked"}} {{if this.percentageTwo "partial"}} {{if this.readOnly "read-only"}}" {{action "changeRating" 2}}>
+  <span class="icon {{if this.checkedTwo "checked"}} {{if this.percentageTwo "partial"}} {{if this.readOnly "read-only"}}" {{on "click" (fn this.changeRating 2)}}>
     ☆
     <span class="partial-fill" style="width:{{this.percentageTwo}}%;">★</span>
   </span>
-  <span class="icon {{if this.checkedThree "checked"}} {{if this.percentageThree "partial"}} {{if this.readOnly "read-only"}}" {{action "changeRating" 3}}>
+  <span class="icon {{if this.checkedThree "checked"}} {{if this.percentageThree "partial"}} {{if this.readOnly "read-only"}}" {{on "click" (fn this.changeRating 3)}}>
     ☆
     <span class="partial-fill" style="width:{{this.percentageThree}}%;">★</span>
   </span>
-  <span class="icon {{if this.checkedFour "checked"}} {{if this.percentageFour "partial"}} {{if this.readOnly "read-only"}}" {{action "changeRating" 4}}>
+  <span class="icon {{if this.checkedFour "checked"}} {{if this.percentageFour "partial"}} {{if this.readOnly "read-only"}}" {{on "click" (fn this.changeRating 4)}}>
     ☆
     <span class="partial-fill" style="width:{{this.percentageFour}}%;">★</span>
   </span>
-  <span class="icon {{if this.checkedFive "checked"}} {{if this.percentageFive "partial"}} {{if this.readOnly "read-only"}}" {{action "changeRating" 5}}>
+  <span class="icon {{if this.checkedFive "checked"}} {{if this.percentageFive "partial"}} {{if this.readOnly "read-only"}}" {{on "click" (fn this.changeRating 5)}}>
     ☆
     <span class="partial-fill" style="width:{{this.percentageFive}}%;">★</span>
   </span>
