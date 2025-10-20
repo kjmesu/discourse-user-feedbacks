@@ -8,7 +8,7 @@ import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import RelativeDate from "discourse/components/relative-date";
+import relativeDate from "discourse/helpers/relative-date";
 import RatingInput from "discourse/plugins/discourse-user-feedbacks/discourse/components/rating-input";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
@@ -116,7 +116,7 @@ export default class FeedbackListItem extends Component {
                     title={{i18n "discourse_user_feedbacks.user_feedbacks.feedback_date"}}
                   >
                     <span class="relative-date">
-                     {{relative-date this.createdAtDate format="tiny"}}
+                     {{relativeDate this.createdAtDate format="tiny"}}
                     </span>
                   </a>
                 </div>
