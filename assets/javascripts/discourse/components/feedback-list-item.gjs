@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
