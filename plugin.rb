@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 # name: discourse-user-feedbacks
-# about: allow user to give feedback to fellow users
+# about: Allow users to give feedback and track legacy trade counts
 # version: 1.0.0
 # authors: Ahmed Gagan
 # url: https://github.com/Ahmedgagan/discourse-user-feedbacks
@@ -11,11 +11,11 @@ if respond_to?(:register_svg_icon)
   register_svg_icon "fas fa-star"
 end
 
-register_asset 'stylesheets/user-feedbacks.scss'
+register_asset "stylesheets/user-feedbacks.scss"
 
 after_initialize do
   module ::DiscourseUserFeedbacks
-    PLUGIN_NAME ||= 'discourse-user-feedbacks'
+    PLUGIN_NAME ||= "discourse-user-feedbacks"
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -23,6 +23,9 @@ after_initialize do
     end
   end
 
+  # =========================================================
+  # Load plugin files
+  # =========================================================
   [
     "../app/controllers/user_feedbacks_controller.rb",
     "../app/serializers/user_feedback_serializer.rb",
@@ -32,36 +35,40 @@ after_initialize do
     "../config/routes"
   ].each { |path| require File.expand_path(path, __FILE__) }
 
+  # =========================================================
+  # Routing
+  # =========================================================
   Discourse::Application.routes.append do
     %w{users u}.each do |root_path|
       get "#{root_path}/:username/feedbacks" => "users#preferences", constraints: { username: RouteFormat.username }
     end
 
     get "/feedbacks/*path" => "list#latest"
-    
-    mount ::DiscourseUserFeedbacks::Engine, at: '/'
+
+    put "/legacy_trades/:id" => "legacy_trades#update"
+
+    mount ::DiscourseUserFeedbacks::Engine, at: "/"
   end
 
+  # =========================================================
+  # Patch User model
+  # =========================================================
   reloadable_patch do |plugin|
     User.class_eval { prepend DiscourseUserFeedbacks::UserExtension }
   end
 
+  # =========================================================
+  # Feedback Serializer Extensions
+  # =========================================================
   add_to_serializer(:basic_user, :feedbacks_to) do
-    user = object
-    user = object[:user] if object.class != User
-
-    return nil if !user
-
-    return nil if !user.feedbacks
-
+    user = object.is_a?(User) ? object : object[:user]
+    return nil unless user && user.feedbacks
     user.feedbacks.pluck(:feedback_to_id)
   end
 
   add_to_serializer(:basic_user, :average_rating) do
-    user = object
-    user = object[:user] if object.class != User
-
-    return nil if !user
+    user = object.is_a?(User) ? object : object[:user]
+    return nil unless user
 
     count = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
     count = 1 if count <= 0
@@ -69,11 +76,8 @@ after_initialize do
   end
 
   add_to_serializer(:basic_user, :rating_count) do
-    user = object
-    user = object[:user] if object.class != User
-
-    return nil if !user
-
+    user = object.is_a?(User) ? object : object[:user]
+    return nil unless user
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
   end
 
@@ -81,7 +85,6 @@ after_initialize do
     user = object.user
     count = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
     count = 1 if count <= 0
-
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).sum(:rating) / count.to_f
   end
 
@@ -89,6 +92,9 @@ after_initialize do
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: object.user.id).count
   end
 
+  # =========================================================
+  # Legacy Trade Count: User Custom Field
+  # =========================================================
   add_to_serializer(:user, :legacy_trade_count, false) do
     object.custom_fields["user_feedbacks_legacy_trade_count"].to_i
   end
@@ -98,9 +104,11 @@ after_initialize do
   end
 
   User.register_custom_field_type("user_feedbacks_legacy_trade_count", :integer)
-
   DiscoursePluginRegistry.serialized_current_user_fields << "user_feedbacks_legacy_trade_count"
-  
+
+  # =========================================================
+  # Guardian extensions (moderation permissions)
+  # =========================================================
   Guardian.class_eval do
     def can_delete_feedback?
       user&.staff?
