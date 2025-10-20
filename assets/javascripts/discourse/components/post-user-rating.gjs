@@ -23,7 +23,7 @@ export default class PostUserRating extends Component {
       <RatingInput @readOnly={{true}} @value={{this.avgRating}} />
       <span class="rating-count">
         <a href={{this.feedbacksUrl}}>
-          {{this.ratingCount}} Trades
+          {{this.totalTrades}} Trades
         </a>
       </span>
     </div>
