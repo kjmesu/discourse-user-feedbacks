@@ -1,9 +1,9 @@
 <div class="average-ratings">
-  {{rating-input value=this.user.average_rating readOnly=true}}
+  {{rating-input value=(or this.user.average_rating 0) readOnly=true}}
   <span class="rating-count">
     <a href="{{this.model.path}}/feedbacks">
       {{i18n "discourse_user_feedbacks.user_feedbacks.user_ratings_count"
-        count=(add this.model.rating_count this.model.legacy_trade_count)
+        count=(add (or this.model.rating_count 0) (or this.model.legacy_trade_count 0))
       }}
     </a>
   </span>
