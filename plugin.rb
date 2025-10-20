@@ -89,6 +89,18 @@ after_initialize do
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: object.user.id).count
   end
 
+  add_to_serializer(:user, :legacy_trade_count, false) do
+    object.custom_fields["user_feedbacks_legacy_trade_count"].to_i
+  end
+
+  add_to_class(:user, :legacy_trade_count) do
+    self.custom_fields["user_feedbacks_legacy_trade_count"].to_i
+  end
+
+  User.register_custom_field_type("user_feedbacks_legacy_trade_count", :integer)
+
+  DiscoursePluginRegistry.serialized_current_user_fields << "user_feedbacks_legacy_trade_count"
+  
   Guardian.class_eval do
     def can_delete_feedback?
       user&.staff?
