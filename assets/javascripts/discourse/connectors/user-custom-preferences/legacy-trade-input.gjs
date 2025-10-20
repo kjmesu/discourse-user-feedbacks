@@ -3,6 +3,7 @@ import { service } from "@ember/service";
 import Component from "@glimmer/component";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
+import i18n from "discourse-common/helpers/i18n";
 
 export default class LegacyTradeInput extends Component {
   @service currentUser;
