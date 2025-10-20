@@ -4,7 +4,7 @@ en:
       feedback:
         title: "Feedback"
     discourse_user_feedbacks:
-        legacy_trade_count: "Legacy Trades"
+      legacy_trade_count: "Legacy Trades"
       user_feedbacks:
         add_user_feedback: "Add Feedback"
         user_ratings_count: "%{count} ratings"
