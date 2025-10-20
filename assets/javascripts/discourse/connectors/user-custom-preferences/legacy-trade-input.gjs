@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Component from "@glimmer/component";
 import { ajax } from "discourse/lib/ajax";
-import I18n from "I18n";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class LegacyTradeInput extends Component {
@@ -11,6 +10,10 @@ export default class LegacyTradeInput extends Component {
 
   get isStaff() {
     return this.currentUser?.staff;
+  }
+
+  get legacyTradeCount() {
+    return this.args.model?.legacy_trade_count ?? 0;
   }
 
   @action
@@ -36,7 +39,7 @@ export default class LegacyTradeInput extends Component {
         <input
           id="legacy-trade-count"
           type="number"
-          value={{this.args.model.legacy_trade_count}}
+          value={{this.legacyTradeCount}}
           {{on "change" this.updateLegacyTradeCount}}
         />
       </div>
