@@ -8,10 +8,12 @@ import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import relativeDate from "discourse/helpers/relative-date";
+import { getHelper } from "@ember/component/template-only";
 import RatingInput from "discourse/plugins/discourse-user-feedbacks/discourse/components/rating-input";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
+
+const relativeDate = getHelper("relative-date");
 
 export default class FeedbackListItem extends Component {
   @service router;
