@@ -22,7 +22,7 @@ function initializeDiscourseUserFeedbacks(api) {
           <div class="average-ratings">
             <RatingInput
               @readOnly={{true}}
-              @value={{@outletArgs.post.user_average_rating}}
+              @value={{(or @outletArgs.post.user_average_rating 0)}}
             />
             <span class="rating-count">
               <a href="{{@outletArgs.post.usernameUrl}}/feedbacks">{{@outletArgs.post.user_rating_count}} Trades</a>
