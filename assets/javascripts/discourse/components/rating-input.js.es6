@@ -1,119 +1,79 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  classNames: ["user-ratings"],
-  value: 0,
-  checkedOne: false,
-  checkedTwo: false,
-  checkedThree: false,
-  checkedFour: false,
-  checkedFive: false,
-  percentageOne: 68,
+export default class RatingInput extends Component {
+  @tracked value = 0;
 
-  didReceiveAttrs() {
-    this._super(...arguments);
-    this.changeRating();
-  },
-
-  changeRating: action(function(value) {
-    if (value && this.readOnly) return;
-
-    if (value > 0) {
-      this.set("value", value);
-    } else {
-      this.set("value", this.value);
+  constructor() {
+    super(...arguments);
+    // Initialize value (may be a float for average ratings)
+    if (this.args.value !== undefined) {
+      this.value = Number(this.args.value);
     }
-  }),
+    this.readOnly = this.args.readOnly ?? false;
+  }
 
-  @discourseComputed("value")
-  checkedOne(value) {
-    if (parseInt(value) >= 1) {
-      return true;
-    }
+  get checkedOne() {
+    return parseInt(this.value, 10) >= 1;
+  }
+  get checkedTwo() {
+    return parseInt(this.value, 10) >= 2;
+  }
+  get checkedThree() {
+    return parseInt(this.value, 10) >= 3;
+  }
+  get checkedFour() {
+    return parseInt(this.value, 10) >= 4;
+  }
+  get checkedFive() {
+    return parseInt(this.value, 10) >= 5;
+  }
 
-    return false;
-  },
-
-  @discourseComputed("value")
-  checkedTwo(value) {
-    if (parseInt(value) >= 2) {
-      return true;
-    }
-
-    return false;
-  },
-
-  @discourseComputed("value")
-  checkedThree(value) {
-    if (parseInt(value) >= 3) {
-      return true;
-    }
-
-    return false;
-  },
-
-  @discourseComputed("value")
-  checkedFour(value) {
-    if (parseInt(value) >= 4) {
-      return true;
-    }
-
-    return false;
-  },
-
-  @discourseComputed("value")
-  checkedFive(value) {
-    if (parseInt(value) >= 5) {
-      return true;
-    }
-
-    return false;
-  },
-
-  @discourseComputed("value")
-  percentageOne(value) {
+  get percentageOne() {
     if (!this.checkedOne) {
-      return ((Math.round(value * 100) / 100) % 1) * 100;
+      return ((Math.round(this.value * 100) / 100) % 1) * 100;
     }
-
     return 0;
-  },
-
-  @discourseComputed("value")
-  percentageTwo(value) {
+  }
+  get percentageTwo() {
     if (this.checkedOne && !this.checkedTwo) {
-      return ((Math.round(value * 100) / 100) % 1) * 100;
+      return ((Math.round(this.value * 100) / 100) % 1) * 100;
     }
-
     return 0;
-  },
-
-  @discourseComputed("value")
-  percentageThree(value) {
+  }
+  get percentageThree() {
     if (this.checkedTwo && !this.checkedThree) {
-      return ((Math.round(value * 100) / 100) % 1) * 100;
+      return ((Math.round(this.value * 100) / 100) % 1) * 100;
     }
-
     return 0;
-  },
-
-  @discourseComputed("value")
-  percentageFour(value) {
+  }
+  get percentageFour() {
     if (this.checkedThree && !this.checkedFour) {
-      return ((Math.round(value * 100) / 100) % 1) * 100;
+      return ((Math.round(this.value * 100) / 100) % 1) * 100;
     }
-
     return 0;
-  },
-
-  @discourseComputed("value")
-  percentageFive(value) {
+  }
+  get percentageFive() {
     if (this.checkedFour && !this.checkedFive) {
-      return ((Math.round(value * 100) / 100) % 1) * 100;
+      return ((Math.round(this.value * 100) / 100) % 1) * 100;
     }
-
     return 0;
-  },
-});
+  }
+
+  @action
+  changeRating(newRating) {
+    // Do nothing if read-only
+    if (newRating && this.readOnly) {
+      return;
+    }
+    // Update the rating value (if newRating is provided)
+    if (newRating > 0) {
+      this.value = newRating;
+    }
+    // Propagate the change to parent if onChange callback is provided
+    if (typeof this.args.onChange === "function") {
+      this.args.onChange(this.value);
+    }
+  }
+}
