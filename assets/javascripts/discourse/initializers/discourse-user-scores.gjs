@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import PostUserFeedbackBadge from "../components/post-user-feedback-badge";
+import PostUserRating from "../components/post-user-rating";
 
 function initializeDiscourseUserFeedbacks(api) {
   const siteSettings = api.container.lookup("site-settings:main");
@@ -13,7 +13,7 @@ function initializeDiscourseUserFeedbacks(api) {
   if (siteSettings.user_feedbacks_display_average_ratings_beside_username_on_post) {
     api.renderAfterWrapperOutlet(
       "post-meta-data-poster-name",
-      PostUserFeedbackBadge
+      PostUserRating
     );
   }
 }
