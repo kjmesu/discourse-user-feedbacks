@@ -92,6 +92,10 @@ after_initialize do
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: object.user.id).count
   end
 
+  add_to_serializer(:post, :legacy_trade_count, false) do
+    object.user.custom_fields["user_feedbacks_legacy_trade_count"].to_i
+  end
+
   # =========================================================
   # Legacy Trade Count: User Custom Field
   # =========================================================
