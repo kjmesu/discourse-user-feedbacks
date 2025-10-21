@@ -18,7 +18,7 @@ module DiscourseUserFeedbacks
       reviewable.present? && reviewable.pending?
     end
 
-    def flag_for_review!(created_by_user, reason: nil)
+    def flag_for_review!(created_by_user, reason: nil, message: nil)
       return reviewable if flagged?
 
       ::ReviewableUserFeedback.needs_review!(
@@ -31,7 +31,8 @@ module DiscourseUserFeedbacks
           feedback_to_id: feedback_to_id,
           rating: rating,
           review: review,
-          reason: reason
+          reason: reason || 'inappropriate',
+          message: message
         }
       )
     end

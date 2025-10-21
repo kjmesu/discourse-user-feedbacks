@@ -87,12 +87,16 @@ module DiscourseUserFeedbacks
 
     def flag
       params.require(:id)
-      params.permit(:reason)
+      params.permit(:reason, :message)
 
       feedback = DiscourseUserFeedbacks::UserFeedback.unscoped.find(params[:id])
       guardian.ensure_can_flag_user_feedback!(feedback)
 
-      reviewable = feedback.flag_for_review!(current_user, reason: params[:reason])
+      reviewable = feedback.flag_for_review!(
+        current_user,
+        reason: params[:reason] || 'inappropriate',
+        message: params[:message]
+      )
 
       render_json_dump(
         success: true,

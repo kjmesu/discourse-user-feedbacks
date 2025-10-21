@@ -246,5 +246,80 @@
         }
       }
     }
+
+    .flag-feedback-button.flagged {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ==========================
+// FLAG MODAL
+// ==========================
+.flag-feedback-modal {
+  .flag-modal-description {
+    margin-bottom: 1em;
+    color: var(--primary-medium);
+  }
+
+  .flag-reasons {
+    margin-bottom: 1.5em;
+
+    .flag-reason-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.75em;
+    }
+
+    .flag-reason-option {
+      margin-bottom: 0.5em;
+
+      label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 0.5em;
+        border-radius: 4px;
+        transition: background-color 0.15s ease;
+
+        &:hover {
+          background-color: var(--primary-very-low);
+        }
+
+        input[type="radio"] {
+          margin-right: 0.5em;
+        }
+
+        .reason-text {
+          font-size: $font-0;
+        }
+      }
+    }
+  }
+
+  .flag-message {
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+    }
+
+    .flag-message-input {
+      width: 100%;
+      padding: 0.75em;
+      border: 1px solid var(--primary-low);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: $font-0;
+      resize: vertical;
+      min-height: 80px;
+
+      &:focus {
+        outline: none;
+        border-color: var(--tertiary);
+        box-shadow: 0 0 0 2px var(--tertiary-low);
+      }
+    }
   }
 }

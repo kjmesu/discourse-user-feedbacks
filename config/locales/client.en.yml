@@ -20,3 +20,34 @@ en:
         feedback_date: "Feedback date"
         flag_tooltip: "Flag this feedback for moderator review"
         flag_confirm: "Are you sure you want to flag this feedback as inappropriate?"
+    reviewables:
+      types:
+        reviewable_user_feedback:
+          title: "Flagged User Feedback"
+      reasons:
+        inappropriate: "Inappropriate"
+        fraudulent_transaction: "Fraudulent Transaction"
+        other: "Other (please specify)"
+    flag_modal:
+      title: "Flag Feedback"
+      description: "Why are you flagging this feedback?"
+      reason_label: "Reason"
+      message_label: "Additional details (optional)"
+      message_placeholder: "Provide any additional context..."
+      submit: "Submit Flag"
+      cancel: "Cancel"
+      other_requires_message: "Please provide details when selecting 'Other' as the reason."
+    reviewables:
+      actions:
+        agree_and_delete:
+          title: "Agree and Delete"
+        agree_and_restore:
+          title: "Agree and Restore"
+        agree_and_keep:
+          title: "Agree and Keep"
+        reject_and_keep:
+          title: "Reject and Keep"
+        delete:
+          title: "Delete"
+        ignore:
+          title: "Ignore"

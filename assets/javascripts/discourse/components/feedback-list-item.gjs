@@ -12,12 +12,14 @@ import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import RelativeDate from "discourse/components/relative-date";
 import RatingInput from "discourse/plugins/discourse-user-feedbacks/discourse/components/rating-input";
+import FlagFeedbackModal from "discourse/plugins/discourse-user-feedbacks/discourse/components/flag-feedback-modal";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
 
 export default class FeedbackListItem extends Component {
   @service router;
   @service currentUser;
+  @service modal;
   @tracked isFlagged = false;
 
   constructor() {
@@ -71,24 +73,19 @@ export default class FeedbackListItem extends Component {
   }
 
   @action
-  async flagFeedback(id) {
+  showFlagModal(id) {
     if (this.isFlagged) {
       return;
     }
 
-    if (!confirm(I18n.t("discourse_user_feedbacks.user_feedbacks.flag_confirm"))) {
-      return;
-    }
-
-    try {
-      await ajax(`/user_feedbacks/${id}/flag`, {
-        type: "POST",
-        data: { reason: "inappropriate" }
-      });
-      this.isFlagged = true;
-    } catch (error) {
-      popupAjaxError(error);
-    }
+    this.modal.show(FlagFeedbackModal, {
+      model: {
+        feedbackId: id,
+        onSuccess: () => {
+          this.isFlagged = true;
+        }
+      }
+    });
   }
 
   get canFlag() {
@@ -192,7 +189,7 @@ export default class FeedbackListItem extends Component {
                         type="button"
                         class="btn no-text btn-flat btn-icon flag-feedback-button {{if this.isFlagged 'flagged'}}"
                         title={{i18n "discourse_user_feedbacks.user_feedbacks.flag_tooltip"}}
-                        {{on "click" (fn this.flagFeedback @feedback.id)}}
+                        {{on "click" (fn this.showFlagModal @feedback.id)}}
                         disabled={{this.isFlagged}}
                       >
                         {{dIcon "flag"}}
