@@ -7,8 +7,13 @@ class UserFeedbackSerializer < ApplicationSerializer
              :review,
              :rating,
              :created_at,
-             :deleted_at
+             :deleted_at,
+             :flagged
 
   has_one :user, serializer: GroupPostUserSerializer, embed: :object
   has_one :feedback_to, serializer: GroupPostUserSerializer, embed: :object
+
+  def flagged
+    object.flagged?
+  end
 end

@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
@@ -16,11 +18,13 @@ import { later } from "@ember/runloop";
 export default class FeedbackListItem extends Component {
   @service router;
   @service currentUser;
+  @tracked isFlagged = false;
 
   constructor() {
     super(...arguments);
     const createdAt = this.args.feedback?.created_at;
     this.createdAtDate = createdAt ? new Date(createdAt) : null;
+    this.isFlagged = this.args.feedback?.flagged || false;
   }
   
   @action
@@ -41,7 +45,7 @@ export default class FeedbackListItem extends Component {
     const message = wrapper.querySelector(".permalink-message");
     const check = element.querySelector(".permalink-check");
     const url = `${window.location.origin}${this.router.urlFor("feedback", id)}`;
-    
+
     try {
       await navigator.clipboard.writeText(url);
     } catch {
@@ -54,16 +58,51 @@ export default class FeedbackListItem extends Component {
       document.execCommand("copy");
       document.body.removeChild(tempInput);
     }
-    
+
     check.classList.add("visible");
     element.classList.add("link-copied");
     message.classList.add("visible");
-    
+
     later(() => {
       check.classList.remove("visible");
       element.classList.remove("link-copied");
       message.classList.remove("visible");
     }, 2000);
+  }
+
+  @action
+  async flagFeedback(id) {
+    if (this.isFlagged) {
+      return;
+    }
+
+    if (!confirm(I18n.t("discourse_user_feedbacks.user_feedbacks.flag_confirm"))) {
+      return;
+    }
+
+    try {
+      await ajax(`/user_feedbacks/${id}/flag`, {
+        type: "POST",
+        data: { reason: "inappropriate" }
+      });
+      this.isFlagged = true;
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  get canFlag() {
+    if (!this.currentUser) {
+      return false;
+    }
+    if (this.isFlagged) {
+      return false;
+    }
+    // Can't flag own feedback
+    if (this.args.feedback.user.id === this.currentUser.id) {
+      return false;
+    }
+    return true;
   }
   
   <template>
@@ -148,6 +187,18 @@ export default class FeedbackListItem extends Component {
                         {{i18n "discourse_user_feedbacks.user_feedbacks.link_copied"}}
                       </div>
                     </div>
+                    {{#if this.canFlag}}
+                      <button
+                        type="button"
+                        class="btn no-text btn-flat btn-icon flag-feedback-button {{if this.isFlagged 'flagged'}}"
+                        title={{i18n "discourse_user_feedbacks.user_feedbacks.flag_tooltip"}}
+                        {{on "click" (fn this.flagFeedback @feedback.id)}}
+                        disabled={{this.isFlagged}}
+                      >
+                        {{dIcon "flag"}}
+                        <span aria-hidden="true">&#8203;</span>
+                      </button>
+                    {{/if}}
                     {{#if this.currentUser.staff}}
                       <button
                         class="btn no-text btn-flat btn-icon btn-danger delete-feedback-button"

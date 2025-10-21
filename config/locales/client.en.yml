@@ -18,3 +18,5 @@ en:
         copy_title: "copy a link to this feedback to clipboard"
         link_copied: "Link copied!"
         feedback_date: "Feedback date"
+        flag_tooltip: "Flag this feedback for moderator review"
+        flag_confirm: "Are you sure you want to flag this feedback as inappropriate?"

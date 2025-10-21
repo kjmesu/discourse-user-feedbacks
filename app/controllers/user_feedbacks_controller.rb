@@ -84,5 +84,23 @@ module DiscourseUserFeedbacks
 
       render_serialized(feedback, UserFeedbackSerializer)
     end
+
+    def flag
+      params.require(:id)
+      params.permit(:reason)
+
+      feedback = DiscourseUserFeedbacks::UserFeedback.unscoped.find(params[:id])
+      guardian.ensure_can_flag_user_feedback!(feedback)
+
+      reviewable = feedback.flag_for_review!(current_user, reason: params[:reason])
+
+      render_json_dump(
+        success: true,
+        reviewable_id: reviewable.id,
+        message: I18n.t('user_feedbacks.flag.success')
+      )
+    rescue Discourse::InvalidAccess => e
+      render_json_error(e.message, status: 403)
+    end
   end
 end

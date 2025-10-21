@@ -27,6 +27,7 @@ after_initialize do
     "../app/controllers/user_feedbacks_controller.rb",
     "../app/serializers/user_feedback_serializer.rb",
     "../app/models/user_feedback.rb",
+    "../app/models/reviewable_user_feedback.rb",
     "../lib/discourse_user_feedbacks/user_extension.rb",
     "../lib/discourse_user_feedbacks/user_feedbacks_constraint.rb",
     "../config/routes"
@@ -96,6 +97,21 @@ after_initialize do
 
     def ensure_can_delete_feedback!
       raise Discourse::InvalidAccess.new unless can_delete_feedback?
+    end
+
+    def can_flag_user_feedback?(feedback)
+      return false unless authenticated?
+      return false if feedback.user_id == user.id # Can't flag own feedback
+      return false if feedback.flagged? # Already flagged
+      true
+    end
+
+    def ensure_can_flag_user_feedback!(feedback)
+      raise Discourse::InvalidAccess.new unless can_flag_user_feedback?(feedback)
+    end
+
+    def can_delete_user_feedback?(feedback)
+      user&.staff?
     end
   end
 end

@@ -6,3 +6,6 @@ en:
     user_feedbacks_display_average_ratings_on_profile: "Display average user rating on user's profile"
     user_feedbacks_display_average_ratings_on_user_card: "Display average user rating on user card"
     user_feedbacks_hide_feedbacks_from_user: "Hide feedbacks from the user"
+  user_feedbacks:
+    flag:
+      success: "Feedback has been flagged for moderator review"
