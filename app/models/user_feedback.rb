@@ -9,8 +9,15 @@ module DiscourseUserFeedbacks
 
     default_scope { where(deleted_at: nil) }
 
+    # Soft-delete feedback by setting deleted_at
     def soft_delete!
       update!(deleted_at: Time.zone.now)
     end
+
+    # Validations to ensure data integrity
+    validates :user_id, presence: true
+    validates :feedback_to_id, presence: true, uniqueness: { scope: :user_id }
+    validates :rating, presence: true,
+                       numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 5 }
   end
 end
