@@ -3,6 +3,9 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import TopicTimeline from "discourse/components/topic-timeline";
+
+console.log("✅ TopicTimeline exists:", TopicTimeline);
 
 export default Controller.extend({
   rating: 0,
