@@ -6,7 +6,7 @@ module DiscourseUserFeedbacks
 
     belongs_to :user
     belongs_to :feedback_to, class_name: 'User'
-    has_one :reviewable, as: :target, class_name: 'ReviewableUserFeedback', dependent: :destroy
+    has_one :reviewable, as: :target, class_name: '::ReviewableUserFeedback', dependent: :destroy
 
     default_scope { where(deleted_at: nil) }
 
@@ -21,7 +21,7 @@ module DiscourseUserFeedbacks
     def flag_for_review!(created_by_user, reason: nil)
       return reviewable if flagged?
 
-      ReviewableUserFeedback.needs_review!(
+      ::ReviewableUserFeedback.needs_review!(
         target: self,
         created_by: created_by_user,
         reviewable_by_moderator: true,
