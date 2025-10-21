@@ -3,7 +3,7 @@ import RatingInput from "./rating-input";
 
 export default class PostUserRating extends Component {
   get post() {
-    return this.args.outletArgs.post;
+    return this.args.post;
   }
 
   get avgRating() {
