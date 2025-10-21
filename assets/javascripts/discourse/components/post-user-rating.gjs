@@ -10,8 +10,10 @@ export default class PostUserRating extends Component {
     return Number(this.post?.user_average_rating ?? 0);
   }
 
-  get ratingCount() {
-    return Number(this.post?.user_rating_count ?? 0);
+  get totalTrades() {
+    const legacy = Number(this.post?.legacy_trade_count ?? 0);
+    const ratings = Number(this.post?.user_rating_count ?? 0);
+    return legacy + ratings;
   }
 
   get feedbacksUrl() {
@@ -23,7 +25,7 @@ export default class PostUserRating extends Component {
       <RatingInput @readOnly={{true}} @value={{this.avgRating}} />
       <span class="rating-count">
         <a href={{this.feedbacksUrl}}>
-          {{this.ratingCount}} Trades
+          {{this.totalTrades}} Trades
         </a>
       </span>
     </div>
