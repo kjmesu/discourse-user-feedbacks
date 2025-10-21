@@ -34,6 +34,9 @@ after_initialize do
     "../config/routes"
   ].each { |path| require File.expand_path(path, __FILE__) }
 
+  # Register the reviewable type with this plugin
+  register_reviewable_type ReviewableUserFeedback
+
   Discourse::Application.routes.append do
     %w{users u}.each do |root_path|
       get "#{root_path}/:username/feedbacks" => "users#preferences", constraints: { username: RouteFormat.username }
