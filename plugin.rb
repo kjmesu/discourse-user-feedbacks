@@ -26,6 +26,7 @@ after_initialize do
   [
     "../app/controllers/user_feedbacks_controller.rb",
     "../app/serializers/user_feedback_serializer.rb",
+    "../app/serializers/reviewable_user_feedback_serializer.rb",
     "../app/models/user_feedback.rb",
     "../app/models/reviewable_user_feedback.rb",
     "../lib/discourse_user_feedbacks/user_extension.rb",

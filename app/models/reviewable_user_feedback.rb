@@ -2,6 +2,10 @@
 
 module DiscourseUserFeedbacks
   class ReviewableUserFeedback < Reviewable
+    def self.plugin_name
+      'discourse-user-feedbacks'
+    end
+
     def self.action_aliases
       { agree_and_keep: :agree_and_restore }
     end
