@@ -86,16 +86,23 @@ module DiscourseUserFeedbacks
     end
 
     def flag
-      Rails.logger.info("=== FLAG ENDPOINT CALLED ===")
-      Rails.logger.info("Params: #{params.inspect}")
-
+      # Add debug response in the JSON to see if we're reaching this code
       params.require(:id)
       params.permit(:reason, :message)
 
       feedback = DiscourseUserFeedbacks::UserFeedback.unscoped.find(params[:id])
-      Rails.logger.info("Found feedback: ID=#{feedback.id}, user_id=#{feedback.user_id}, rating=#{feedback.rating}")
-
       guardian.ensure_can_flag_user_feedback!(feedback)
+
+      # Create with string keys for JSON compatibility
+      payload_data = {
+        'feedback_id' => feedback.id,
+        'user_id' => feedback.user_id,
+        'feedback_to_id' => feedback.feedback_to_id,
+        'rating' => feedback.rating,
+        'review' => feedback.review,
+        'reason' => params[:reason] || 'inappropriate',
+        'message' => params[:message]
+      }
 
       reviewable = feedback.flag_for_review!(
         current_user,
@@ -103,22 +110,20 @@ module DiscourseUserFeedbacks
         message: params[:message]
       )
 
-      Rails.logger.info("Reviewable created successfully: ID=#{reviewable.id}")
-      Rails.logger.info("=== FLAG ENDPOINT COMPLETE ===")
+      # Check what was actually saved
+      reviewable.reload
+      actual_payload = reviewable.payload
 
       render_json_dump(
         success: true,
         reviewable_id: reviewable.id,
-        message: I18n.t('user_feedbacks.flag.success')
+        message: I18n.t('user_feedbacks.flag.success'),
+        debug_payload_sent: payload_data,
+        debug_payload_saved: actual_payload
       )
     rescue Discourse::InvalidAccess => e
-      Rails.logger.error("=== FLAG ENDPOINT ERROR: InvalidAccess ===")
-      Rails.logger.error(e.message)
       render_json_error(e.message, status: 403)
     rescue => e
-      Rails.logger.error("=== FLAG ENDPOINT ERROR ===")
-      Rails.logger.error("Error: #{e.class} - #{e.message}")
-      Rails.logger.error(e.backtrace.join("\n"))
       render_json_error(e.message, status: 500)
     end
   end
