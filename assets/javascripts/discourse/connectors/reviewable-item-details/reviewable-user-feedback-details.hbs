@@ -2,33 +2,25 @@
   <div class="post-contents-wrapper">
     <div class="reviewable-user-feedback-info">
       <div class="feedback-meta">
-        <strong>Feedback from:</strong>
-        {{#if @outletArgs.reviewable.target_created_by}}
-          {{@outletArgs.reviewable.target_created_by.username}}
-        {{else}}
-          Unknown
-        {{/if}}
+        <strong>Feedback ID:</strong> #{{@outletArgs.reviewable.payload.feedback_id}}
+        <br>
+        <strong>User ID:</strong> {{@outletArgs.reviewable.payload.user_id}}
         →
-        <strong>About:</strong>
-        {{#if @outletArgs.reviewable.target_feedback_to}}
-          {{@outletArgs.reviewable.target_feedback_to.username}}
-        {{else}}
-          User
-        {{/if}}
+        <strong>About User ID:</strong> {{@outletArgs.reviewable.payload.feedback_to_id}}
       </div>
 
-      {{#if @outletArgs.reviewable.target.rating}}
+      {{#if @outletArgs.reviewable.payload.rating}}
         <div class="feedback-rating">
           <strong>Rating:</strong>
-          {{@outletArgs.reviewable.target.rating}}/5 stars
+          {{@outletArgs.reviewable.payload.rating}}/5 stars
         </div>
       {{/if}}
 
-      {{#if @outletArgs.reviewable.target.review}}
+      {{#if @outletArgs.reviewable.payload.review}}
         <div class="feedback-review">
           <strong>Review:</strong>
           <div class="feedback-review-text">
-            {{@outletArgs.reviewable.target.review}}
+            {{@outletArgs.reviewable.payload.review}}
           </div>
         </div>
       {{/if}}
