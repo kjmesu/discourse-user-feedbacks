@@ -79,9 +79,10 @@ class ReviewableUserFeedback < Reviewable
     create_result(:success, :ignored)
   end
 
-  def build_action(actions, id, icon:, bundle: nil, button_class: nil, confirm: false)
+  def build_action(actions, id, icon:, bundle: nil, button_class: nil, confirm: false, label: nil)
     actions.add(id, bundle: bundle) do |action|
       action.icon = icon
+      action.label = label || "reviewables.actions.#{id}.title"
       action.button_class = button_class
       action.confirm_message = 'reviewables.actions.delete.confirm' if confirm
     end

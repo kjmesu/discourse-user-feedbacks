@@ -41,13 +41,26 @@ en:
       actions:
         agree_and_delete:
           title: "Agree and Delete"
+          description: "Agree with the flag and delete the feedback"
         agree_and_restore:
           title: "Agree and Restore"
+          description: "Agree with the flag and restore the feedback"
         agree_and_keep:
           title: "Agree and Keep"
+          description: "Agree with the flag but keep the feedback"
         reject_and_keep:
           title: "Reject and Keep"
+          description: "Reject the flag and keep the feedback"
         delete:
           title: "Delete"
+          description: "Delete the feedback"
         ignore:
           title: "Ignore"
+          description: "Ignore this flag"
+      action_type_3:
+        title: "Custom"
+      action_type_4:
+        title: "Spam"
+      action_type_8:
+        title: "Illegal"
+      edit_content: "Edit Content"
