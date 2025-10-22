@@ -71,6 +71,8 @@ after_initialize do
     count = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
     count = 1 if count <= 0
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).sum(:rating) / count.to_f
+    return 0.0 if count == 0
+    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).average(:rating).to_f
   end
 
   add_to_serializer(:basic_user, :rating_count) do
@@ -88,6 +90,7 @@ after_initialize do
     count = 1 if count <= 0
 
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).sum(:rating) / count.to_f
+    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: object.user_id).average(:rating).to_f
   end
 
   add_to_serializer(:post, :user_rating_count) do
