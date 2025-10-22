@@ -37,7 +37,13 @@ export default class FlagFeedbackModal extends Component {
 
   @action
   async submitFlag() {
+    console.log("=== FLAG MODAL: submitFlag called ===");
+    console.log("Feedback ID:", this.args.model.feedbackId);
+    console.log("Selected reason:", this.selectedReason);
+    console.log("Message:", this.message);
+
     if (this.isSubmitting) {
+      console.log("Already submitting, returning");
       return;
     }
 
@@ -50,7 +56,10 @@ export default class FlagFeedbackModal extends Component {
     this.isSubmitting = true;
 
     try {
-      await ajax(`/user_feedbacks/${this.args.model.feedbackId}/flag`, {
+      const url = `/user_feedbacks/${this.args.model.feedbackId}/flag`;
+      console.log("Making POST request to:", url);
+
+      const response = await ajax(url, {
         type: "POST",
         data: {
           reason: this.selectedReason,
@@ -58,9 +67,12 @@ export default class FlagFeedbackModal extends Component {
         }
       });
 
+      console.log("Flag response:", response);
       this.args.model.onSuccess?.();
       this.modal.close();
     } catch (error) {
+      console.error("=== FLAG MODAL ERROR ===");
+      console.error(error);
       popupAjaxError(error);
     } finally {
       this.isSubmitting = false;
