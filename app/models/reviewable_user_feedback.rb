@@ -5,6 +5,10 @@ class ReviewableUserFeedback < Reviewable
     { agree_and_keep: :agree_and_restore }
   end
 
+  def self.humanize_type
+    I18n.t("reviewables.types.reviewable_user_feedback.title", default: "Flagged Feedback")
+  end
+
   # Override target to load even soft-deleted feedbacks
   def target
     @target ||= begin

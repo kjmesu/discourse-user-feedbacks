@@ -12,7 +12,7 @@ en:
   reviewables:
     types:
       reviewable_user_feedback:
-        title: "Flagged User Feedback"
+        title: "Flagged Feedback"
         flagged_by: "Flagged by"
     actions:
       agree_and_delete:
