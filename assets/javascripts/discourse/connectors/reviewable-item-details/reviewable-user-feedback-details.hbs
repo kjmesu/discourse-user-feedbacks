@@ -2,37 +2,37 @@
   <div class="post-contents-wrapper">
     <div class="reviewable-user-feedback-info">
       <div class="feedback-meta">
-        <div><strong>Feedback ID:</strong> #{{@outletArgs.reviewable.feedback_id}}</div>
-        <div><strong>User ID:</strong> {{@outletArgs.reviewable.user_id_val}}</div>
-        <div><strong>About User ID:</strong> {{@outletArgs.reviewable.feedback_to_id}}</div>
+        <div><strong>Feedback ID:</strong> #{{@outletArgs.reviewable.payload.feedback_id}}</div>
+        <div><strong>User ID:</strong> {{@outletArgs.reviewable.payload.user_id}}</div>
+        <div><strong>About User ID:</strong> {{@outletArgs.reviewable.payload.feedback_to_id}}</div>
 
-        {{#if @outletArgs.reviewable.rating}}
+        {{#if @outletArgs.reviewable.payload.rating}}
           <div class="feedback-rating">
-            <strong>Rating:</strong> {{@outletArgs.reviewable.rating}}/5 stars
+            <strong>Rating:</strong> {{@outletArgs.reviewable.payload.rating}}/5 stars
           </div>
         {{/if}}
 
-        {{#if @outletArgs.reviewable.review}}
+        {{#if @outletArgs.reviewable.payload.review}}
           <div class="feedback-review">
             <strong>Review:</strong>
             <div class="feedback-review-text">
-              {{@outletArgs.reviewable.review}}
+              {{@outletArgs.reviewable.payload.review}}
             </div>
           </div>
         {{/if}}
 
-        {{#if @outletArgs.reviewable.reason}}
+        {{#if @outletArgs.reviewable.payload.reason}}
           <div class="flag-reason">
             <strong>Flag Reason:</strong>
-            <span class="reason-badge">{{@outletArgs.reviewable.reason}}</span>
+            <span class="reason-badge">{{@outletArgs.reviewable.payload.reason}}</span>
           </div>
         {{/if}}
 
-        {{#if @outletArgs.reviewable.message}}
+        {{#if @outletArgs.reviewable.payload.message}}
           <div class="flag-message">
             <strong>Additional Details:</strong>
             <div class="flag-message-text">
-              {{@outletArgs.reviewable.message}}
+              {{@outletArgs.reviewable.payload.message}}
             </div>
           </div>
         {{/if}}
