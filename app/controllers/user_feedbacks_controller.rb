@@ -86,10 +86,15 @@ module DiscourseUserFeedbacks
     end
 
     def flag
+      Rails.logger.info("=== FLAG ENDPOINT CALLED ===")
+      Rails.logger.info("Params: #{params.inspect}")
+
       params.require(:id)
       params.permit(:reason, :message)
 
       feedback = DiscourseUserFeedbacks::UserFeedback.unscoped.find(params[:id])
+      Rails.logger.info("Found feedback: ID=#{feedback.id}, user_id=#{feedback.user_id}, rating=#{feedback.rating}")
+
       guardian.ensure_can_flag_user_feedback!(feedback)
 
       reviewable = feedback.flag_for_review!(
@@ -98,13 +103,23 @@ module DiscourseUserFeedbacks
         message: params[:message]
       )
 
+      Rails.logger.info("Reviewable created successfully: ID=#{reviewable.id}")
+      Rails.logger.info("=== FLAG ENDPOINT COMPLETE ===")
+
       render_json_dump(
         success: true,
         reviewable_id: reviewable.id,
         message: I18n.t('user_feedbacks.flag.success')
       )
     rescue Discourse::InvalidAccess => e
+      Rails.logger.error("=== FLAG ENDPOINT ERROR: InvalidAccess ===")
+      Rails.logger.error(e.message)
       render_json_error(e.message, status: 403)
+    rescue => e
+      Rails.logger.error("=== FLAG ENDPOINT ERROR ===")
+      Rails.logger.error("Error: #{e.class} - #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      render_json_error(e.message, status: 500)
     end
   end
 end
