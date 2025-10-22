@@ -28,6 +28,11 @@ export default class ReviewableUserFeedback extends Component {
   }
 
   <template>
+    {{! Add the header like ReviewablePost does }}
+    <div class="flagged-post-header">
+      <span class="flagged-post-type">{{@reviewable.humanType}}</span>
+    </div>
+
     {{! Follow the same structure as ReviewablePost }}
     <div class="post-contents-wrapper">
       <ReviewableCreatedBy
