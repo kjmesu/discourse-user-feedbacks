@@ -1,4 +1,42 @@
-<div style="background: yellow; padding: 10px; border: 2px solid red;">
-  <h3>CONNECTOR IS WORKING!</h3>
-  <div>Type: {{@outletArgs.reviewable.type}}</div>
-</div>
+{{#if (eq @outletArgs.reviewable.type "ReviewableUserFeedback")}}
+  <div class="post-contents-wrapper">
+    <div class="reviewable-user-feedback-info">
+      <div class="feedback-meta">
+        <div><strong>Feedback ID:</strong> #{{@outletArgs.reviewable.feedback_id}}</div>
+        <div><strong>User ID:</strong> {{@outletArgs.reviewable.user_id_val}}</div>
+        <div><strong>About User ID:</strong> {{@outletArgs.reviewable.feedback_to_id}}</div>
+
+        {{#if @outletArgs.reviewable.rating}}
+          <div class="feedback-rating">
+            <strong>Rating:</strong> {{@outletArgs.reviewable.rating}}/5 stars
+          </div>
+        {{/if}}
+
+        {{#if @outletArgs.reviewable.review}}
+          <div class="feedback-review">
+            <strong>Review:</strong>
+            <div class="feedback-review-text">
+              {{@outletArgs.reviewable.review}}
+            </div>
+          </div>
+        {{/if}}
+
+        {{#if @outletArgs.reviewable.reason}}
+          <div class="flag-reason">
+            <strong>Flag Reason:</strong>
+            <span class="reason-badge">{{@outletArgs.reviewable.reason}}</span>
+          </div>
+        {{/if}}
+
+        {{#if @outletArgs.reviewable.message}}
+          <div class="flag-message">
+            <strong>Additional Details:</strong>
+            <div class="flag-message-text">
+              {{@outletArgs.reviewable.message}}
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+{{/if}}
