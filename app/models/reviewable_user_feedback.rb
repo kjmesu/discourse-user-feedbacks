@@ -8,12 +8,13 @@ class ReviewableUserFeedback < Reviewable
   # Override target to load even soft-deleted feedbacks
   def target
     @target ||= begin
-      if target_type == 'DiscourseUserFeedbacks::UserFeedback'
-        DiscourseUserFeedbacks::UserFeedback.unscoped.find_by(id: target_id)
-      else
-        super
-      end
+      return nil unless target_id
+      DiscourseUserFeedbacks::UserFeedback.unscoped.find_by(id: target_id)
     end
+  rescue => e
+    Rails.logger.error("Error loading target for ReviewableUserFeedback #{id}: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    nil
   end
 
   def build_actions(actions, guardian, args)
@@ -21,11 +22,11 @@ class ReviewableUserFeedback < Reviewable
 
     agree = actions.add_bundle("#{id}-agree", icon: 'thumbs-up', label: 'reviewables.actions.agree.title')
 
-    if guardian.can_delete_user_feedback?(target)
+    if target && guardian.can_delete_user_feedback?(target)
       build_action(actions, :agree_and_delete, icon: 'thumbs-up', bundle: agree)
     end
 
-    if target.deleted_at.present?
+    if target && target.deleted_at.present?
       build_action(actions, :agree_and_restore, icon: 'thumbs-up', bundle: agree)
     else
       build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
@@ -34,7 +35,7 @@ class ReviewableUserFeedback < Reviewable
     reject = actions.add_bundle("#{id}-reject", icon: 'thumbs-down', label: 'reviewables.actions.reject.title')
     build_action(actions, :reject_and_keep, icon: 'thumbs-down', bundle: reject)
 
-    if guardian.can_delete_user_feedback?(target)
+    if target && guardian.can_delete_user_feedback?(target)
       build_action(actions, :delete, icon: 'trash-alt')
     end
 
