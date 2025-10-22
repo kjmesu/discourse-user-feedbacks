@@ -5,13 +5,16 @@ class ReviewableUserFeedbackSerializer < ReviewableSerializer
 
   def attributes
     hash = super
+
+    # Debug: Check what's in the hash
     Rails.logger.info("=== ReviewableUserFeedbackSerializer#attributes ===")
-    Rails.logger.info("Object class: #{object.class}")
-    Rails.logger.info("Object ID: #{object.id}")
-    Rails.logger.info("Object type: #{object.type}")
-    Rails.logger.info("Raw payload: #{object.payload.inspect}")
-    Rails.logger.info("Serialized hash: #{hash.inspect}")
+    Rails.logger.info("_payload_for_serialization: #{self.class._payload_for_serialization.inspect}")
+    Rails.logger.info("Object payload: #{object.payload.inspect}")
+    Rails.logger.info("Hash keys: #{hash.keys.inspect}")
+    Rails.logger.info("Hash[:payload]: #{hash[:payload].inspect}")
+    Rails.logger.info("Full hash: #{hash.inspect}")
     Rails.logger.info("=== End Serializer ===")
+
     hash
   end
 end
