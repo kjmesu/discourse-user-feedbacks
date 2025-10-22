@@ -257,62 +257,39 @@
 // ==========================
 // REVIEWABLE DISPLAY
 // ==========================
-.reviewable-user-feedback {
-  .post-contents {
-    margin-bottom: 1em;
-    padding: 0.5em 0;
+.reviewable-meta-data {
+  background: var(--primary-very-low);
+  padding: 1em;
+  margin-top: 0.5em;
 
-    p {
-      margin: 0;
-      font-size: $font-0;
-      line-height: 1.5;
-      color: var(--primary);
-    }
-  }
-
-  .reviewable-meta-data {
-    background: var(--primary-very-low);
-    border-radius: 4px;
-    padding: 1em;
-    margin: 1em 0;
+  .reviewable-scores {
+    width: 100%;
+    border-collapse: collapse;
     font-size: $font-down-1;
 
-    .reviewable-field {
-      display: grid;
-      grid-template-columns: 150px 1fr;
-      gap: 1em;
-      padding: 0.6em 0;
-      border-bottom: 1px solid var(--primary-low);
-      align-items: baseline;
+    th {
+      text-align: left;
+      font-weight: 700;
+      color: var(--primary-medium);
+      padding: 0.5em 0.75em 0.5em 0;
+      border-bottom: 2px solid var(--primary-low);
+      white-space: nowrap;
+    }
 
-      &:first-child {
-        padding-top: 0;
-      }
+    td {
+      padding: 0.75em 0.75em 0.75em 0;
+      color: var(--primary);
+      vertical-align: top;
 
-      &:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-      }
-
-      .field-label {
+      .reason-badge {
+        display: inline-block;
+        padding: 0.25em 0.5em;
+        background: var(--danger);
+        color: var(--secondary);
+        border-radius: 3px;
+        font-size: $font-down-2;
         font-weight: 600;
-        color: var(--primary-medium);
-        white-space: nowrap;
-      }
-
-      .field-value {
-        color: var(--primary);
-        word-break: break-word;
-
-        &.reason-badge {
-          display: inline-block;
-          padding: 0.25em 0.75em;
-          background: var(--danger);
-          color: var(--secondary);
-          border-radius: 3px;
-          font-weight: 600;
-          text-transform: capitalize;
-        }
+        text-transform: capitalize;
       }
     }
   }

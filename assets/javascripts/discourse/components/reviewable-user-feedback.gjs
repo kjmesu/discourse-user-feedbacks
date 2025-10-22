@@ -11,53 +11,50 @@ export default class ReviewableUserFeedback extends Component {
 
   <template>
     <div class="post-body">
-      <div class="reviewable-user-feedback">
-        {{#if @reviewable.payload.review}}
-          <div class="post-contents">
-            <p>{{@reviewable.payload.review}}</p>
-          </div>
-        {{/if}}
+      {{#if @reviewable.payload.review}}
+        <p>{{@reviewable.payload.review}}</p>
+      {{/if}}
+    </div>
 
-        <div class="reviewable-meta-data">
-          {{#if @reviewable.payload.rating}}
-            <div class="reviewable-field">
-              <div class="field-label">Rating:</div>
-              <div class="field-value">{{@reviewable.payload.rating}}/5 stars</div>
-            </div>
-          {{/if}}
-
-          <div class="reviewable-field">
-            <div class="field-label">Feedback ID:</div>
-            <div class="field-value">#{{@reviewable.payload.feedback_id}}</div>
-          </div>
-
-          <div class="reviewable-field">
-            <div class="field-label">From User ID:</div>
-            <div class="field-value">{{@reviewable.payload.user_id}}</div>
-          </div>
-
-          <div class="reviewable-field">
-            <div class="field-label">About User ID:</div>
-            <div class="field-value">{{@reviewable.payload.feedback_to_id}}</div>
-          </div>
-
-          {{#if @reviewable.payload.reason}}
-            <div class="reviewable-field">
-              <div class="field-label">Reason:</div>
-              <div class="field-value">
+    <div class="post-body reviewable-meta-data">
+      <table class="reviewable-scores">
+        <thead>
+          <tr>
+            <th>Rating:</th>
+            <th>Feedback ID:</th>
+            <th>From User ID:</th>
+            <th>About User ID:</th>
+            <th>Reason:</th>
+            {{#if @reviewable.payload.message}}
+              <th>Additional details:</th>
+            {{/if}}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              {{#if @reviewable.payload.rating}}
+                {{@reviewable.payload.rating}}/5 stars
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>#{{@reviewable.payload.feedback_id}}</td>
+            <td>{{@reviewable.payload.user_id}}</td>
+            <td>{{@reviewable.payload.feedback_to_id}}</td>
+            <td>
+              {{#if @reviewable.payload.reason}}
                 <span class="reason-badge">{{this.reasonLabel}}</span>
-              </div>
-            </div>
-          {{/if}}
-
-          {{#if @reviewable.payload.message}}
-            <div class="reviewable-field">
-              <div class="field-label">Additional details:</div>
-              <div class="field-value">{{@reviewable.payload.message}}</div>
-            </div>
-          {{/if}}
-        </div>
-      </div>
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            {{#if @reviewable.payload.message}}
+              <td>{{@reviewable.payload.message}}</td>
+            {{/if}}
+          </tr>
+        </tbody>
+      </table>
     </div>
   </template>
 }
