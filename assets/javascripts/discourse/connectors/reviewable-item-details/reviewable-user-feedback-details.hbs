@@ -1,0 +1,53 @@
+{{#if (eq @outletArgs.reviewable.type "ReviewableUserFeedback")}}
+  <div class="post-contents-wrapper">
+    <div class="reviewable-user-feedback-info">
+      <div class="feedback-meta">
+        <strong>Feedback from:</strong>
+        {{#if @outletArgs.reviewable.target_created_by}}
+          {{@outletArgs.reviewable.target_created_by.username}}
+        {{else}}
+          Unknown
+        {{/if}}
+        →
+        <strong>About:</strong>
+        {{#if @outletArgs.reviewable.target_feedback_to}}
+          {{@outletArgs.reviewable.target_feedback_to.username}}
+        {{else}}
+          User
+        {{/if}}
+      </div>
+
+      {{#if @outletArgs.reviewable.target.rating}}
+        <div class="feedback-rating">
+          <strong>Rating:</strong>
+          {{@outletArgs.reviewable.target.rating}}/5 stars
+        </div>
+      {{/if}}
+
+      {{#if @outletArgs.reviewable.target.review}}
+        <div class="feedback-review">
+          <strong>Review:</strong>
+          <div class="feedback-review-text">
+            {{@outletArgs.reviewable.target.review}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if @outletArgs.reviewable.payload.reason}}
+        <div class="flag-reason">
+          <strong>Flag Reason:</strong>
+          <span class="reason-badge">{{@outletArgs.reviewable.payload.reason}}</span>
+        </div>
+      {{/if}}
+
+      {{#if @outletArgs.reviewable.payload.message}}
+        <div class="flag-message">
+          <strong>Additional Details:</strong>
+          <div class="flag-message-text">
+            {{@outletArgs.reviewable.payload.message}}
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+{{/if}}
