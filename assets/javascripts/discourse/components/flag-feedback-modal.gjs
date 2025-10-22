@@ -20,9 +20,9 @@ export default class FlagFeedbackModal extends Component {
   @tracked isSubmitting = false;
 
   flagReasons = [
-    { id: "inappropriate", labelKey: "js.reviewables.reasons.inappropriate" },
-    { id: "fraudulent_transaction", labelKey: "js.reviewables.reasons.fraudulent_transaction" },
-    { id: "other", labelKey: "js.reviewables.reasons.other" }
+    { id: "inappropriate", labelKey: "discourse_user_feedbacks.reviewables.reasons.inappropriate" },
+    { id: "fraudulent_transaction", labelKey: "discourse_user_feedbacks.reviewables.reasons.fraudulent_transaction" },
+    { id: "other", labelKey: "discourse_user_feedbacks.reviewables.reasons.other" }
   ];
 
   @action
@@ -69,17 +69,17 @@ export default class FlagFeedbackModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "js.flag_modal.title"}}
+      @title={{i18n "discourse_user_feedbacks.flag_modal.title"}}
       @closeModal={{@closeModal}}
       class="flag-feedback-modal"
     >
       <:body>
         <p class="flag-modal-description">
-          {{i18n "js.flag_modal.description"}}
+          {{i18n "discourse_user_feedbacks.flag_modal.description"}}
         </p>
 
         <div class="flag-reasons">
-          <label class="flag-reason-label">{{i18n "js.flag_modal.reason_label"}}</label>
+          <label class="flag-reason-label">{{i18n "discourse_user_feedbacks.flag_modal.reason_label"}}</label>
           {{#each this.flagReasons as |reason|}}
             <div class="flag-reason-option">
               <label>
@@ -96,11 +96,11 @@ export default class FlagFeedbackModal extends Component {
         </div>
 
         <div class="flag-message">
-          <label for="flag-message-input">{{i18n "js.flag_modal.message_label"}}</label>
+          <label for="flag-message-input">{{i18n "discourse_user_feedbacks.flag_modal.message_label"}}</label>
           <textarea
             id="flag-message-input"
             class="flag-message-input"
-            placeholder={{i18n "js.flag_modal.message_placeholder"}}
+            placeholder={{i18n "discourse_user_feedbacks.flag_modal.message_placeholder"}}
             value={{this.message}}
             {{on "input" this.updateMessage}}
             rows="4"
@@ -111,7 +111,7 @@ export default class FlagFeedbackModal extends Component {
       <:footer>
         <DButton
           @action={{this.submitFlag}}
-          @label="js.flag_modal.submit"
+          @label="discourse_user_feedbacks.flag_modal.submit"
           @disabled={{this.isSubmitting}}
           class="btn-primary"
         />
