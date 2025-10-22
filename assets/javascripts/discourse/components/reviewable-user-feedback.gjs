@@ -1,11 +1,13 @@
-import Component from "@glimmer/component";
+/* eslint-disable ember/no-classic-components */
+import Component from "@ember/component";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import { htmlSafe } from "@ember/template";
+import { i18n } from "discourse-i18n";
 
 export default class ReviewableUserFeedback extends Component {
   get reasonLabel() {
-    const reason = this.args.reviewable?.payload?.reason;
+    const reason = this.reviewable?.payload?.reason;
     if (reason === "inappropriate") return "Inappropriate";
     if (reason === "fraudulent_transaction") return "Fraudulent Transaction";
     if (reason === "other") return "Other";
@@ -14,7 +16,7 @@ export default class ReviewableUserFeedback extends Component {
 
   get cooked() {
     // Convert the plain text review to safe HTML
-    const review = this.args.reviewable?.payload?.review;
+    const review = this.reviewable?.payload?.review;
     if (!review) return htmlSafe("<p><em>No review text provided</em></p>");
 
     // Escape HTML and convert newlines to <br>
@@ -28,29 +30,21 @@ export default class ReviewableUserFeedback extends Component {
   }
 
   <template>
-    {{! Add the header like ReviewablePost does }}
     <div class="flagged-post-header">
-      <span class="flagged-post-type">{{@reviewable.humanType}}</span>
+      <span class="flagged-feedback-label">{{i18n "reviewables.types.reviewable_user_feedback.title"}}</span>
     </div>
 
-    {{! Follow the same structure as ReviewablePost }}
     <div class="post-contents-wrapper">
-      <ReviewableCreatedBy
-        @user={{@reviewable.target_created_by}}
-        @tagName=""
-      />
-
+      <ReviewableCreatedBy @user={{this.reviewable.target_created_by}} />
       <div class="post-contents">
         <ReviewablePostHeader
-          @reviewable={{@reviewable}}
-          @createdBy={{@reviewable.target_created_by}}
+          @reviewable={{this.reviewable}}
+          @createdBy={{this.reviewable.target_created_by}}
           @tagName=""
         />
-
         <div class="post-body">
           {{this.cooked}}
         </div>
-
         <div class="post-body reviewable-meta-data">
           <table class="reviewable-scores">
             <thead>
@@ -58,7 +52,7 @@ export default class ReviewableUserFeedback extends Component {
                 <th>Rating:</th>
                 <th>Feedback ID:</th>
                 <th>Flag Reason:</th>
-                {{#if @reviewable.payload.message}}
+                {{#if this.reviewable.payload.message}}
                   <th>Additional Details:</th>
                 {{/if}}
               </tr>
@@ -66,27 +60,28 @@ export default class ReviewableUserFeedback extends Component {
             <tbody>
               <tr>
                 <td>
-                  {{#if @reviewable.payload.rating}}
-                    {{@reviewable.payload.rating}}/5 stars
+                  {{#if this.reviewable.payload.rating}}
+                    {{this.reviewable.payload.rating}}/5 stars
                   {{else}}
                     -
                   {{/if}}
                 </td>
-                <td>#{{@reviewable.payload.feedback_id}}</td>
+                <td>#{{this.reviewable.payload.feedback_id}}</td>
                 <td>
-                  {{#if @reviewable.payload.reason}}
+                  {{#if this.reviewable.payload.reason}}
                     <span class="reason-badge">{{this.reasonLabel}}</span>
                   {{else}}
                     -
                   {{/if}}
                 </td>
-                {{#if @reviewable.payload.message}}
-                  <td>{{@reviewable.payload.message}}</td>
+                {{#if this.reviewable.payload.message}}
+                  <td>{{this.reviewable.payload.message}}</td>
                 {{/if}}
               </tr>
             </tbody>
           </table>
         </div>
+        {{yield}}
       </div>
     </div>
   </template>
