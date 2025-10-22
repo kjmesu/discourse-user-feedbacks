@@ -5,6 +5,17 @@ class ReviewableUserFeedback < Reviewable
     { agree_and_keep: :agree_and_restore }
   end
 
+  # Override target to load even soft-deleted feedbacks
+  def target
+    @target ||= begin
+      if target_type == 'DiscourseUserFeedbacks::UserFeedback'
+        DiscourseUserFeedbacks::UserFeedback.unscoped.find_by(id: target_id)
+      else
+        super
+      end
+    end
+  end
+
   def build_actions(actions, guardian, args)
     return unless pending?
 
