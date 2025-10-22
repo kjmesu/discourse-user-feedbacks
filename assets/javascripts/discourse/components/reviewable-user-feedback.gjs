@@ -21,37 +21,39 @@ export default class ReviewableUserFeedback extends Component {
         <div class="reviewable-meta-data">
           {{#if @reviewable.payload.rating}}
             <div class="reviewable-field">
-              <span class="field-label">Rating:</span>
-              <span class="field-value">{{@reviewable.payload.rating}}/5 stars</span>
+              <div class="field-label">Rating:</div>
+              <div class="field-value">{{@reviewable.payload.rating}}/5 stars</div>
             </div>
           {{/if}}
 
           <div class="reviewable-field">
-            <span class="field-label">Feedback ID:</span>
-            <span class="field-value">#{{@reviewable.payload.feedback_id}}</span>
+            <div class="field-label">Feedback ID:</div>
+            <div class="field-value">#{{@reviewable.payload.feedback_id}}</div>
           </div>
 
           <div class="reviewable-field">
-            <span class="field-label">From User ID:</span>
-            <span class="field-value">{{@reviewable.payload.user_id}}</span>
+            <div class="field-label">From User ID:</div>
+            <div class="field-value">{{@reviewable.payload.user_id}}</div>
           </div>
 
           <div class="reviewable-field">
-            <span class="field-label">About User ID:</span>
-            <span class="field-value">{{@reviewable.payload.feedback_to_id}}</span>
+            <div class="field-label">About User ID:</div>
+            <div class="field-value">{{@reviewable.payload.feedback_to_id}}</div>
           </div>
 
           {{#if @reviewable.payload.reason}}
             <div class="reviewable-field">
-              <span class="field-label">Reason:</span>
-              <span class="field-value reason-badge">{{this.reasonLabel}}</span>
+              <div class="field-label">Reason:</div>
+              <div class="field-value">
+                <span class="reason-badge">{{this.reasonLabel}}</span>
+              </div>
             </div>
           {{/if}}
 
           {{#if @reviewable.payload.message}}
             <div class="reviewable-field">
-              <span class="field-label">Additional details:</span>
-              <span class="field-value">{{@reviewable.payload.message}}</span>
+              <div class="field-label">Additional details:</div>
+              <div class="field-value">{{@reviewable.payload.message}}</div>
             </div>
           {{/if}}
         </div>
