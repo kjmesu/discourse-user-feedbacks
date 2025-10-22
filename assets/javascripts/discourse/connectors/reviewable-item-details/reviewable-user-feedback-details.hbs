@@ -1,3 +1,11 @@
+<div style="background: yellow; padding: 10px; margin: 10px 0;">
+  <h4>DEBUG INFO:</h4>
+  <div>outletArgs keys: {{#each-in @outletArgs as |key value|}}{{key}}, {{/each-in}}</div>
+  <div>reviewable exists: {{if @outletArgs.reviewable "YES" "NO"}}</div>
+  <div>reviewable.type: {{@outletArgs.reviewable.type}}</div>
+  <div>reviewable.payload exists: {{if @outletArgs.reviewable.payload "YES" "NO"}}</div>
+</div>
+
 {{#if (eq @outletArgs.reviewable.type "ReviewableUserFeedback")}}
   <div class="post-contents-wrapper">
     <div class="reviewable-user-feedback-info">
