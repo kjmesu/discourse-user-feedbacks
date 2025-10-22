@@ -255,6 +255,61 @@
 }
 
 // ==========================
+// REVIEWABLE DISPLAY
+// ==========================
+.reviewable-user-feedback-info {
+  padding: 1em;
+  background: var(--primary-very-low);
+  border-radius: 4px;
+  margin: 0.5em 0;
+
+  > div {
+    margin-bottom: 0.75em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .feedback-meta {
+    font-size: $font-0;
+    color: var(--primary-medium);
+  }
+
+  .feedback-rating {
+    font-size: $font-0;
+    color: var(--quaternary);
+    font-weight: 500;
+  }
+
+  .feedback-review-text,
+  .flag-message-text {
+    margin-top: 0.5em;
+    padding: 0.75em;
+    background: var(--secondary);
+    border-left: 3px solid var(--tertiary);
+    border-radius: 3px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .reason-badge {
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    background: var(--danger);
+    color: var(--secondary);
+    border-radius: 3px;
+    font-size: $font-down-1;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  strong {
+    color: var(--primary);
+  }
+}
+
+// ==========================
 // FLAG MODAL
 // ==========================
 .flag-feedback-modal {

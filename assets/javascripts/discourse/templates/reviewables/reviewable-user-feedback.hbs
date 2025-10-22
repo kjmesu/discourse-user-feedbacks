@@ -1,0 +1,51 @@
+<div class="post-contents-wrapper">
+  <div class="reviewable-user-feedback-info">
+    <div class="feedback-meta">
+      <strong>Feedback from:</strong>
+      {{#if this.reviewable.target_created_by}}
+        {{this.reviewable.target_created_by.username}}
+      {{else}}
+        Unknown
+      {{/if}}
+      →
+      <strong>About:</strong>
+      {{#if this.reviewable.target_feedback_to}}
+        {{this.reviewable.target_feedback_to.username}}
+      {{else}}
+        User
+      {{/if}}
+    </div>
+
+    {{#if this.reviewable.target.rating}}
+      <div class="feedback-rating">
+        <strong>Rating:</strong>
+        {{this.reviewable.target.rating}}/5 stars
+      </div>
+    {{/if}}
+
+    {{#if this.reviewable.target.review}}
+      <div class="feedback-review">
+        <strong>Review:</strong>
+        <div class="feedback-review-text">
+          {{this.reviewable.target.review}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if this.reviewable.payload.reason}}
+      <div class="flag-reason">
+        <strong>Flag Reason:</strong>
+        <span class="reason-badge">{{this.reviewable.payload.reason}}</span>
+      </div>
+    {{/if}}
+
+    {{#if this.reviewable.payload.message}}
+      <div class="flag-message">
+        <strong>Additional Details:</strong>
+        <div class="flag-message-text">
+          {{this.reviewable.payload.message}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</div>
