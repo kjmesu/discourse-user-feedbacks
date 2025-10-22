@@ -9,7 +9,9 @@ class ReviewableUserFeedback < Reviewable
   def target
     @target ||= begin
       return nil unless target_id
-      DiscourseUserFeedbacks::UserFeedback.unscoped.find_by(id: target_id)
+      feedback = DiscourseUserFeedbacks::UserFeedback.unscoped.find_by(id: target_id)
+      Rails.logger.info("ReviewableUserFeedback#target - Found feedback #{feedback&.id} for reviewable #{id}")
+      feedback
     end
   rescue => e
     Rails.logger.error("Error loading target for ReviewableUserFeedback #{id}: #{e.message}")
@@ -19,6 +21,8 @@ class ReviewableUserFeedback < Reviewable
 
   def build_actions(actions, guardian, args)
     return unless pending?
+
+    Rails.logger.info("ReviewableUserFeedback#build_actions - Building actions for reviewable #{id}, target: #{target&.id}")
 
     agree = actions.add_bundle("#{id}-agree", icon: 'thumbs-up', label: 'reviewables.actions.agree.title')
 
@@ -42,6 +46,10 @@ class ReviewableUserFeedback < Reviewable
     if guardian.is_staff?
       build_action(actions, :ignore, icon: 'external-link-alt')
     end
+  rescue => e
+    Rails.logger.error("Error building actions for ReviewableUserFeedback #{id}: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    raise
   end
 
   def perform_agree_and_delete(performed_by, args)
