@@ -37,29 +37,20 @@ export default class FlagFeedbackModal extends Component {
 
   @action
   async submitFlag() {
-    console.log("=== FLAG MODAL: submitFlag called ===");
-    console.log("Feedback ID:", this.args.model.feedbackId);
-    console.log("Selected reason:", this.selectedReason);
-    console.log("Message:", this.message);
-
     if (this.isSubmitting) {
-      console.log("Already submitting, returning");
       return;
     }
 
     // Validate that "other" reason has a message
     if (this.selectedReason === "other" && !this.message.trim()) {
-      alert(I18n.t("js.flag_modal.other_requires_message"));
+      alert("Please provide details when selecting 'Other' as the reason.");
       return;
     }
 
     this.isSubmitting = true;
 
     try {
-      const url = `/user_feedbacks/${this.args.model.feedbackId}/flag`;
-      console.log("Making POST request to:", url);
-
-      const response = await ajax(url, {
+      await ajax(`/user_feedbacks/${this.args.model.feedbackId}/flag`, {
         type: "POST",
         data: {
           reason: this.selectedReason,
@@ -67,12 +58,9 @@ export default class FlagFeedbackModal extends Component {
         }
       });
 
-      console.log("Flag response:", response);
       this.args.model.onSuccess?.();
       this.modal.close();
     } catch (error) {
-      console.error("=== FLAG MODAL ERROR ===");
-      console.error(error);
       popupAjaxError(error);
     } finally {
       this.isSubmitting = false;
@@ -81,49 +69,67 @@ export default class FlagFeedbackModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_user_feedbacks.flag_modal.title"}}
+      @title="Flag Feedback"
       @closeModal={{@closeModal}}
-      class="flag-feedback-modal"
+      class="flag-modal"
     >
       <:body>
-        <p class="flag-modal-description">
-          {{i18n "discourse_user_feedbacks.flag_modal.description"}}
-        </p>
+        <p>{{i18n "flagging.notify_staff"}}</p>
 
-        <div class="flag-reasons">
-          <label class="flag-reason-label">{{i18n "discourse_user_feedbacks.flag_modal.reason_label"}}</label>
+        <div class="flag-types">
           {{#each this.flagReasons as |reason|}}
-            <div class="flag-reason-option">
+            <div class="radio-item">
+              <RadioButton
+                @value={{reason.id}}
+                @name="flag-reason"
+                @selection={{this.selectedReason}}
+                {{on "click" (fn this.updateReason reason.id)}}
+              />
               <label>
-                <RadioButton
-                  @value={{reason.id}}
-                  @name="flag-reason"
-                  @selection={{this.selectedReason}}
-                  {{on "click" (fn this.updateReason reason.id)}}
-                />
-                <span class="reason-text">{{i18n reason.labelKey}}</span>
+                <strong>{{i18n reason.labelKey}}</strong>
+                {{#if (eq reason.id "inappropriate")}}
+                  <div class="description">This feedback contains content that a reasonable person would consider offensive, abusive, or a violation of our community guidelines.</div>
+                {{else if (eq reason.id "fraudulent_transaction")}}
+                  <div class="description">This feedback appears to be related to a fraudulent or suspicious transaction.</div>
+                {{else if (eq reason.id "other")}}
+                  <div class="description">This feedback requires staff attention for another reason not listed above.</div>
+                {{/if}}
               </label>
             </div>
           {{/each}}
         </div>
 
-        <div class="flag-message">
-          <label for="flag-message-input">{{i18n "discourse_user_feedbacks.flag_modal.message_label"}}</label>
-          <textarea
-            id="flag-message-input"
-            class="flag-message-input"
-            placeholder={{i18n "discourse_user_feedbacks.flag_modal.message_placeholder"}}
-            value={{this.message}}
-            {{on "input" this.updateMessage}}
-            rows="4"
-          ></textarea>
-        </div>
+        {{#if (eq this.selectedReason "other")}}
+          <div class="flag-message-area">
+            <label for="flag-message-input">Additional information:</label>
+            <textarea
+              id="flag-message-input"
+              class="flag-message-input"
+              placeholder="Please provide more details..."
+              value={{this.message}}
+              {{on "input" this.updateMessage}}
+              rows="4"
+            ></textarea>
+          </div>
+        {{else}}
+          <div class="flag-message-area">
+            <label for="flag-message-input">Optional additional information:</label>
+            <textarea
+              id="flag-message-input"
+              class="flag-message-input"
+              placeholder="Optionally, provide more details..."
+              value={{this.message}}
+              {{on "input" this.updateMessage}}
+              rows="4"
+            ></textarea>
+          </div>
+        {{/if}}
       </:body>
 
       <:footer>
         <DButton
           @action={{this.submitFlag}}
-          @label="discourse_user_feedbacks.flag_modal.submit"
+          @label="flagging.action"
           @disabled={{this.isSubmitting}}
           class="btn-primary"
         />

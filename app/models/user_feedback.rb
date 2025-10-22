@@ -21,38 +21,20 @@ module DiscourseUserFeedbacks
     def flag_for_review!(created_by_user, reason: nil, message: nil)
       return reviewable if flagged?
 
-      payload_data = {
-        'feedback_id' => id,
-        'user_id' => user_id,
-        'feedback_to_id' => feedback_to_id,
-        'rating' => rating,
-        'review' => review,
-        'reason' => reason || 'inappropriate',
-        'message' => message
-      }
-
-      Rails.logger.info("=== Creating ReviewableUserFeedback ===")
-      Rails.logger.info("Payload data: #{payload_data.inspect}")
-
-      reviewable = ::ReviewableUserFeedback.needs_review!(
+      ::ReviewableUserFeedback.needs_review!(
         target: self,
         created_by: created_by_user,
         reviewable_by_moderator: true,
-        payload: payload_data
+        payload: {
+          'feedback_id' => id,
+          'user_id' => user_id,
+          'feedback_to_id' => feedback_to_id,
+          'rating' => rating,
+          'review' => review,
+          'reason' => reason || 'inappropriate',
+          'message' => message
+        }
       )
-
-      Rails.logger.info("Created reviewable ID: #{reviewable.id}")
-      Rails.logger.info("Reviewable payload after save: #{reviewable.payload.inspect}")
-
-      # Force reload and check again
-      reviewable.reload
-      Rails.logger.info("Reviewable payload after reload: #{reviewable.payload.inspect}")
-
-      # Check the database directly
-      db_reviewable = ::ReviewableUserFeedback.find(reviewable.id)
-      Rails.logger.info("DB reviewable payload: #{db_reviewable.payload.inspect}")
-
-      reviewable
     end
   end
 end

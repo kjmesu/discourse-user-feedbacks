@@ -257,107 +257,112 @@
 // ==========================
 // REVIEWABLE DISPLAY
 // ==========================
-.reviewable-user-feedback-info {
-  padding: 1em;
-  background: var(--primary-very-low);
-  border-radius: 4px;
-  margin: 0.5em 0;
+.reviewable-user-feedback {
+  .post-contents {
+    margin-bottom: 1em;
 
-  > div {
-    margin-bottom: 0.75em;
-
-    &:last-child {
-      margin-bottom: 0;
+    p {
+      margin: 0;
+      padding: 0.5em 0;
+      font-size: $font-0;
+      line-height: 1.5;
     }
   }
 
-  .feedback-meta {
-    font-size: $font-0;
-    color: var(--primary-medium);
-  }
+  .reviewable-meta-data {
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    padding: 1em;
+    margin-top: 1em;
 
-  .feedback-rating {
-    font-size: $font-0;
-    color: var(--quaternary);
-    font-weight: 500;
-  }
+    .reviewable-field {
+      display: flex;
+      padding: 0.5em 0;
+      border-bottom: 1px solid var(--primary-low);
 
-  .feedback-review-text,
-  .flag-message-text {
-    margin-top: 0.5em;
-    padding: 0.75em;
-    background: var(--secondary);
-    border-left: 3px solid var(--tertiary);
-    border-radius: 3px;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
+      &:last-child {
+        border-bottom: none;
+      }
 
-  .reason-badge {
-    display: inline-block;
-    padding: 0.25em 0.5em;
-    background: var(--danger);
-    color: var(--secondary);
-    border-radius: 3px;
-    font-size: $font-down-1;
-    font-weight: 600;
-    text-transform: capitalize;
-  }
+      .field-label {
+        flex: 0 0 140px;
+        font-weight: 600;
+        color: var(--primary-medium);
+        font-size: $font-down-1;
+      }
 
-  strong {
-    color: var(--primary);
+      .field-value {
+        flex: 1;
+        color: var(--primary);
+        font-size: $font-0;
+
+        &.reason-badge {
+          display: inline-block;
+          padding: 0.25em 0.75em;
+          background: var(--danger);
+          color: var(--secondary);
+          border-radius: 3px;
+          font-size: $font-down-1;
+          font-weight: 600;
+        }
+      }
+    }
   }
 }
 
 // ==========================
 // FLAG MODAL
 // ==========================
-.flag-feedback-modal {
-  .flag-modal-description {
-    margin-bottom: 1em;
-    color: var(--primary-medium);
+.flag-modal {
+  .modal-body {
+    p {
+      margin-bottom: 1.5em;
+      color: var(--primary-high);
+    }
   }
 
-  .flag-reasons {
-    margin-bottom: 1.5em;
+  .flag-types {
+    .radio-item {
+      margin-bottom: 1.5em;
+      display: flex;
+      align-items: flex-start;
 
-    .flag-reason-label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 0.75em;
-    }
-
-    .flag-reason-option {
-      margin-bottom: 0.5em;
+      input[type="radio"] {
+        margin-top: 0.25em;
+        margin-right: 0.75em;
+        flex-shrink: 0;
+      }
 
       label {
-        display: flex;
-        align-items: center;
+        flex: 1;
         cursor: pointer;
-        padding: 0.5em;
-        border-radius: 4px;
-        transition: background-color 0.15s ease;
 
-        &:hover {
-          background-color: var(--primary-very-low);
-        }
-
-        input[type="radio"] {
-          margin-right: 0.5em;
-        }
-
-        .reason-text {
+        strong {
+          display: block;
+          margin-bottom: 0.25em;
           font-size: $font-0;
+          color: var(--primary);
+        }
+
+        .description {
+          font-size: $font-down-1;
+          color: var(--primary-medium);
+          line-height: 1.4;
         }
       }
     }
   }
 
-  .flag-message {
+  .flag-message-area {
+    margin-top: 1.5em;
+    padding-top: 1.5em;
+    border-top: 1px solid var(--primary-low);
+
     label {
       display: block;
-      font-weight: bold;
+      font-weight: 600;
       margin-bottom: 0.5em;
+      font-size: $font-0;
     }
 
     .flag-message-input {
@@ -368,7 +373,8 @@
       font-family: inherit;
       font-size: $font-0;
       resize: vertical;
-      min-height: 80px;
+      background: var(--secondary);
+      color: var(--primary);
 
       &:focus {
         outline: none;

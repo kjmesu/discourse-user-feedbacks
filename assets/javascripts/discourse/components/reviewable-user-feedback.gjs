@@ -1,43 +1,57 @@
 import Component from "@glimmer/component";
 
 export default class ReviewableUserFeedback extends Component {
+  get reasonLabel() {
+    const reason = this.args.reviewable?.payload?.reason;
+    if (reason === "inappropriate") return "Inappropriate";
+    if (reason === "fraudulent_transaction") return "Fraudulent Transaction";
+    if (reason === "other") return "Other";
+    return reason;
+  }
+
   <template>
-    <div class="post-contents-wrapper">
-      <div class="reviewable-user-feedback-info">
-        <div class="feedback-meta">
-          <div><strong>Feedback ID:</strong> #{{@reviewable.payload.feedback_id}}</div>
-          <div><strong>User ID:</strong> {{@reviewable.payload.user_id}}</div>
-          <div><strong>About User ID:</strong> {{@reviewable.payload.feedback_to_id}}</div>
+    <div class="post-body">
+      <div class="reviewable-user-feedback">
+        {{#if @reviewable.payload.review}}
+          <div class="post-contents">
+            <p>{{@reviewable.payload.review}}</p>
+          </div>
+        {{/if}}
 
+        <div class="reviewable-meta-data">
           {{#if @reviewable.payload.rating}}
-            <div class="feedback-rating">
-              <strong>Rating:</strong>
-              {{@reviewable.payload.rating}}/5 stars
+            <div class="reviewable-field">
+              <span class="field-label">Rating:</span>
+              <span class="field-value">{{@reviewable.payload.rating}}/5 stars</span>
             </div>
           {{/if}}
 
-          {{#if @reviewable.payload.review}}
-            <div class="feedback-review">
-              <strong>Review:</strong>
-              <div class="feedback-review-text">
-                {{@reviewable.payload.review}}
-              </div>
-            </div>
-          {{/if}}
+          <div class="reviewable-field">
+            <span class="field-label">Feedback ID:</span>
+            <span class="field-value">#{{@reviewable.payload.feedback_id}}</span>
+          </div>
+
+          <div class="reviewable-field">
+            <span class="field-label">From User ID:</span>
+            <span class="field-value">{{@reviewable.payload.user_id}}</span>
+          </div>
+
+          <div class="reviewable-field">
+            <span class="field-label">About User ID:</span>
+            <span class="field-value">{{@reviewable.payload.feedback_to_id}}</span>
+          </div>
 
           {{#if @reviewable.payload.reason}}
-            <div class="flag-reason">
-              <strong>Flag Reason:</strong>
-              <span class="reason-badge">{{@reviewable.payload.reason}}</span>
+            <div class="reviewable-field">
+              <span class="field-label">Reason:</span>
+              <span class="field-value reason-badge">{{this.reasonLabel}}</span>
             </div>
           {{/if}}
 
           {{#if @reviewable.payload.message}}
-            <div class="flag-message">
-              <strong>Additional Details:</strong>
-              <div class="flag-message-text">
-                {{@reviewable.payload.message}}
-              </div>
+            <div class="reviewable-field">
+              <span class="field-label">Additional details:</span>
+              <span class="field-value">{{@reviewable.payload.message}}</span>
             </div>
           {{/if}}
         </div>

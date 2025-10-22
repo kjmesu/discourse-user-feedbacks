@@ -86,23 +86,11 @@ module DiscourseUserFeedbacks
     end
 
     def flag
-      # Add debug response in the JSON to see if we're reaching this code
       params.require(:id)
       params.permit(:reason, :message)
 
       feedback = DiscourseUserFeedbacks::UserFeedback.unscoped.find(params[:id])
       guardian.ensure_can_flag_user_feedback!(feedback)
-
-      # Create with string keys for JSON compatibility
-      payload_data = {
-        'feedback_id' => feedback.id,
-        'user_id' => feedback.user_id,
-        'feedback_to_id' => feedback.feedback_to_id,
-        'rating' => feedback.rating,
-        'review' => feedback.review,
-        'reason' => params[:reason] || 'inappropriate',
-        'message' => params[:message]
-      }
 
       reviewable = feedback.flag_for_review!(
         current_user,
@@ -110,16 +98,10 @@ module DiscourseUserFeedbacks
         message: params[:message]
       )
 
-      # Check what was actually saved
-      reviewable.reload
-      actual_payload = reviewable.payload
-
       render_json_dump(
         success: true,
         reviewable_id: reviewable.id,
-        message: I18n.t('user_feedbacks.flag.success'),
-        debug_payload_sent: payload_data,
-        debug_payload_saved: actual_payload
+        message: I18n.t('user_feedbacks.flag.success')
       )
     rescue Discourse::InvalidAccess => e
       render_json_error(e.message, status: 403)
