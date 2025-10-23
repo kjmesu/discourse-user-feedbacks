@@ -16,48 +16,12 @@ export default class ReviewableUserFeedback extends Component {
           @tagName=""
         />
 
-        {{#if this.reviewable.payload.review}}
-          <div class="post-body">
-            <p>{{this.reviewable.payload.review}}</p>
-          </div>
-        {{/if}}
-
         <div class="post-body">
-          <div class="reviewable-feedback-metadata">
-            <div class="field">
-              <span class="label">Rating:</span>
-              <span class="value">
-                {{#if this.reviewable.payload.rating}}
-                  {{this.reviewable.payload.rating}}/5 stars
-                {{else}}
-                  -
-                {{/if}}
-              </span>
-            </div>
-            <div class="field">
-              <span class="label">Feedback ID:</span>
-              <span class="value">{{this.reviewable.payload.feedback_id}}</span>
-            </div>
-            <div class="field">
-              <span class="label">Flag Reason:</span>
-              <span class="value">
-                {{#if this.reviewable.payload.reason}}
-                  {{this.reviewable.payload.reason}}
-                {{else}}
-                  -
-                {{/if}}
-              </span>
-            </div>
-            {{#if this.reviewable.payload.message}}
-              <div class="field">
-                <span class="label">Additional Details:</span>
-                <span class="value">{{this.reviewable.payload.message}}</span>
-              </div>
-            {{/if}}
-          </div>
+          {{#if this.reviewable.payload.review}}
+              <p>{{this.reviewable.payload.review}}</p>
+          {{/if}}
         </div>
-
-        <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
+        {{yield}}
       </div>
     </div>
   </template>
