@@ -83,6 +83,34 @@ module DiscourseUserFeedbacks
       render_serialized(feedback, UserFeedbackSerializer)
     end
 
+    def notice
+      params.require(:id)
+      params.permit(:notice)
+
+      feedback = DiscourseUserFeedbacks::UserFeedback.find(params[:id])
+      guardian.ensure_can_edit_user_feedback!(feedback)
+
+      if params[:notice].present?
+        # Cook the notice text (convert markdown to HTML)
+        cooked = PrettyText.cook(params[:notice])
+
+        feedback.update!(
+          notice: {
+            type: "custom",
+            raw: params[:notice],
+            cooked: cooked
+          },
+          notice_created_by_id: current_user.id
+        )
+
+        render json: { success: true, cooked_notice: cooked }
+      else
+        # Delete the notice
+        feedback.update!(notice: nil, notice_created_by_id: nil)
+        render json: { success: true }
+      end
+    end
+
     def index
       raise Discourse::InvalidParameters.new(:feedback_to_id) if params.has_key?(:feedback_to_id) && params[:feedback_to_id].to_i <= 0
 

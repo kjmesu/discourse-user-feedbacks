@@ -21,6 +21,7 @@ import I18n from "I18n";
 import { later } from "@ember/runloop";
 import FlagFeedbackModal from "discourse/plugins/discourse-user-feedbacks/discourse/components/flag-feedback-modal";
 import AdminFeedbackMenu from "discourse/plugins/discourse-user-feedbacks/discourse/components/admin-feedback-menu";
+import ChangePostNotice from "discourse/components/modal/change-post-notice";
 
 export default class FeedbackListItem extends Component {
   @service router;
@@ -33,6 +34,7 @@ export default class FeedbackListItem extends Component {
   @tracked canDelete = false;
   @tracked canRecover = false;
   @tracked collapsed = true;
+  @tracked isHidden = false;
 
   constructor() {
     super(...arguments);
@@ -45,10 +47,9 @@ export default class FeedbackListItem extends Component {
     this.deletedBy = this.args.feedback?.deleted_by;
     this.canDelete = this.args.feedback?.can_delete || false;
     this.canRecover = this.args.feedback?.can_recover || false;
-  }
 
-  get isHidden() {
-    return this.args.feedback?.hidden || false;
+    // Initialize tracked hidden state
+    this.isHidden = this.args.feedback?.hidden || false;
   }
 
   get isDeleted() {
@@ -136,8 +137,8 @@ export default class FeedbackListItem extends Component {
       await ajax(`/user_feedbacks/${this.args.feedback.id}/unhide`, {
         type: "PUT",
       });
-      // Refresh the page or update the state
-      window.location.reload();
+      // Update tracked state reactively
+      this.isHidden = false;
     } catch (error) {
       popupAjaxError(error);
     }
@@ -145,8 +146,36 @@ export default class FeedbackListItem extends Component {
 
   @action
   async changeNotice() {
-    // For now, just show an alert - we'll implement the full modal later
-    alert("Change notice functionality coming soon");
+    const feedback = this.args.feedback;
+
+    // Add the updatePostField method that the modal expects
+    if (!feedback.updatePostField) {
+      feedback.updatePostField = async (field, value) => {
+        if (field !== "notice") {
+          throw new Error(`Unsupported field: ${field}`);
+        }
+
+        const response = await ajax(`/user_feedbacks/${feedback.id}/notice`, {
+          type: "PUT",
+          data: { notice: value },
+        });
+
+        return response;
+      };
+    }
+
+    // Add the set method for updating properties
+    if (!feedback.set) {
+      feedback.set = (key, value) => {
+        feedback[key] = value;
+      };
+    }
+
+    this.modal.show(ChangePostNotice, {
+      model: {
+        post: feedback, // The modal expects a "post" property
+      }
+    });
   }
 
   @action
