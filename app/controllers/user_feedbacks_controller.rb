@@ -77,7 +77,12 @@ module DiscourseUserFeedbacks
 
       page = params[:page].to_i || 1
 
-      feedbacks = DiscourseUserFeedbacks::UserFeedback.order(created_at: :desc)
+      # Staff can see deleted feedback, regular users cannot (Trashable default_scope)
+      feedbacks = if current_user&.staff?
+        DiscourseUserFeedbacks::UserFeedback.with_deleted.order(created_at: :desc)
+      else
+        DiscourseUserFeedbacks::UserFeedback.order(created_at: :desc)
+      end
 
       feedbacks = feedbacks.where(feedback_to_id: params[:feedback_to_id]) if params[:feedback_to_id]
 
@@ -93,7 +98,12 @@ module DiscourseUserFeedbacks
     def show
       params.require(:id)
 
-      feedback = DiscourseUserFeedbacks::UserFeedback.find(params[:id])
+      # Staff can view deleted feedback
+      feedback = if current_user&.staff?
+        DiscourseUserFeedbacks::UserFeedback.with_deleted.find(params[:id])
+      else
+        DiscourseUserFeedbacks::UserFeedback.find(params[:id])
+      end
 
       render_serialized(feedback, UserFeedbackSerializer)
     end

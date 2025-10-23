@@ -81,9 +81,7 @@ export default class FeedbackListItem extends Component {
 
   @action
   deleteFeedback(id) {
-    if (!confirm(I18n.t("discourse_user_feedbacks.user_feedbacks.delete_confirm"))) {
-      return;
-    }
+    // No confirmation modal - delete immediately like posts
     ajax(`/user_feedbacks/${id}`, { type: "DELETE" }).then(() => {
       // Update feedback state to show as deleted
       this.args.feedback.deleted_at = new Date();
