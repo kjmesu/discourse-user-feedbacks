@@ -57,7 +57,7 @@ export default class ReviewableUserFeedback extends Component {
           </div>
         </div>
 
-        <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
+        <ReviewableScores @reviewable={{this.reviewable}} />
       </div>
     </div>
   </template>
