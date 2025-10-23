@@ -41,6 +41,9 @@ en:
       additional_details: "Additional Details"
       flag_reasons:
         fraudulent_transaction: "Fraudulent Transaction"
+    reviewable_score_types:
+      fraudulent_transaction:
+        title: "Fraudulent Transaction"
     review:
       types:
         reviewable_user_feedback:
