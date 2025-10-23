@@ -1,25 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
-import ReviewableField from "discourse/components/reviewable-field";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
-import { htmlSafe } from "@ember/template";
+import ReviewableScores from "discourse/components/reviewable-scores";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewableUserFeedback extends Component {
-  get reasonLabel() {
-    const reason = this.reviewable?.payload?.reason;
-    if (reason === "inappropriate") return i18n("flagging.inappropriate.title");
-    if (reason === "fraudulent_transaction") return i18n("user_feedbacks.flag_reasons.fraudulent_transaction");
-    if (reason === "other") return i18n("flagging.notify_action");
-    return reason;
-  }
-
-  get ratingDisplay() {
-    const rating = this.reviewable?.payload?.rating;
-    return rating ? `${rating}/5 stars` : "-";
-  }
-
   <template>
     <div class="post-contents-wrapper">
       <ReviewableCreatedBy @user={{this.reviewable.target_created_by}} />
@@ -36,35 +22,42 @@ export default class ReviewableUserFeedback extends Component {
           </div>
         {{/if}}
 
-        <div class="reviewable-user-feedback-fields">
-          <ReviewableField
-            @classes="reviewable-feedback-details rating"
-            @name={{i18n "user_feedbacks.rating"}}
-            @value={{this.ratingDisplay}}
-          />
-
-          <ReviewableField
-            @classes="reviewable-feedback-details feedback-id"
-            @name={{i18n "user_feedbacks.feedback_id"}}
-            @value={{this.reviewable.payload.feedback_id}}
-          />
-
-          <ReviewableField
-            @classes="reviewable-feedback-details flag-reason"
-            @name={{i18n "user_feedbacks.flag_reason"}}
-            @value={{this.reasonLabel}}
-          />
-
-          {{#if this.reviewable.payload.message}}
-            <ReviewableField
-              @classes="reviewable-feedback-details additional-details"
-              @name={{i18n "user_feedbacks.additional_details"}}
-              @value={{this.reviewable.payload.message}}
-            />
-          {{/if}}
+        <div class="post-body">
+          <div class="reviewable-feedback-metadata">
+            <div class="field">
+              <span class="label">Rating:</span>
+              <span class="value">
+                {{#if this.reviewable.payload.rating}}
+                  {{this.reviewable.payload.rating}}/5 stars
+                {{else}}
+                  -
+                {{/if}}
+              </span>
+            </div>
+            <div class="field">
+              <span class="label">Feedback ID:</span>
+              <span class="value">{{this.reviewable.payload.feedback_id}}</span>
+            </div>
+            <div class="field">
+              <span class="label">Flag Reason:</span>
+              <span class="value">
+                {{#if this.reviewable.payload.reason}}
+                  {{this.reviewable.payload.reason}}
+                {{else}}
+                  -
+                {{/if}}
+              </span>
+            </div>
+            {{#if this.reviewable.payload.message}}
+              <div class="field">
+                <span class="label">Additional Details:</span>
+                <span class="value">{{this.reviewable.payload.message}}</span>
+              </div>
+            {{/if}}
+          </div>
         </div>
 
-        {{yield}}
+        <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
       </div>
     </div>
   </template>
