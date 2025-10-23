@@ -123,5 +123,10 @@ after_initialize do
     def can_delete_user_feedback?(feedback)
       user&.staff?
     end
+
+    def can_edit_user_feedback?(feedback)
+      # Staff members can edit any feedback
+      user&.staff?
+    end
   end
 end

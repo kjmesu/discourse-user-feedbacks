@@ -14,6 +14,30 @@ module DiscourseUserFeedbacks
       update!(deleted_at: Time.zone.now)
     end
 
+    def hide!(reason_id = nil)
+      return if hidden?
+
+      update!(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: reason_id
+      )
+    end
+
+    def unhide!
+      return unless hidden?
+
+      update!(
+        hidden: false,
+        hidden_at: nil,
+        hidden_reason_id: nil
+      )
+    end
+
+    def hidden?
+      hidden
+    end
+
     def flagged?
       reviewable.present? && reviewable.pending?
     end
