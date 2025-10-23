@@ -11,6 +11,9 @@ en:
       success: "Feedback has been flagged for moderator review"
     flag_reasons:
       fraudulent: "Fraudulent"
+    hidden:
+      you_must_edit: "Your feedback was flagged by the community and has been hidden."
+      user_must_edit: "This feedback has been hidden by the community."
   reviewable_score_types:
     fraudulent:
       title: "Fraudulent"

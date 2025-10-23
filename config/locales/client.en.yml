@@ -19,6 +19,10 @@ en:
         feedback_date: "Feedback date"
         flag_tooltip: "Flag this feedback for moderator review"
         flag_confirm: "Are you sure you want to flag this feedback as inappropriate?"
+        flagged_as: "You flagged this as %{reason}"
+      hidden:
+        you_must_edit: "Your feedback was flagged by the community and has been hidden."
+        user_must_edit: "This feedback has been hidden by the community."
       flag_modal:
         title: "Flag Feedback"
         description: "Why are you flagging this feedback?"

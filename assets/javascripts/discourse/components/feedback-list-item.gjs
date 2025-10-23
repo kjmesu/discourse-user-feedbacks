@@ -28,6 +28,23 @@ export default class FeedbackListItem extends Component {
     this.createdAtDate = createdAt ? new Date(createdAt) : null;
     this.isFlagged = this.args.feedback?.flagged || false;
   }
+
+  get isHidden() {
+    return this.args.feedback?.hidden || false;
+  }
+
+  get feedbackClasses() {
+    let classes = "topic-post clearfix post--sticky-avatar sticky-avatar post--regular regular";
+    if (this.isHidden) {
+      classes += " post--hidden post-hidden";
+    }
+    return classes;
+  }
+
+  get showFlaggedMessage() {
+    // Show "You flagged this" message if current user flagged it
+    return this.isFlagged && this.currentUser;
+  }
   
   @action
   deleteFeedback(id) {
@@ -103,7 +120,7 @@ export default class FeedbackListItem extends Component {
   }
   
   <template>
-    <div class="topic-post clearfix post--sticky-avatar sticky-avatar post--regular regular">
+    <div class={{this.feedbackClasses}}>
       <article
         id="feedback_{{@feedback.id}}"
         class="boxed onscreen-post feedback-post"
@@ -163,6 +180,14 @@ export default class FeedbackListItem extends Component {
                 <p>{{htmlSafe @feedback.review}}</p>
                 <div class="cooked-selection-barrier" aria-hidden="true"><br></div>
               </div>
+              {{#if this.showFlaggedMessage}}
+                <div class="post-info post-action-feedback">
+                  <p class="post-action">
+                    {{dIcon "flag"}}
+                    <span>{{i18n "discourse_user_feedbacks.user_feedbacks.flagged_as" reason=(i18n "discourse_user_feedbacks.reviewables.reasons.inappropriate")}}</span>
+                  </p>
+                </div>
+              {{/if}}
               {{! Action bar }}
               <section class="post__menu-area post-menu-area clearfix">
                 <nav class="post-controls collapsed">

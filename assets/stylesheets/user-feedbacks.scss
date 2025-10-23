@@ -415,3 +415,42 @@
     }
   }
 }
+
+// ==========================
+// HIDDEN FEEDBACK STYLING
+// ==========================
+// Match the post-hidden styling from Discourse core
+.post-hidden {
+  .topic-avatar,
+  .cooked,
+  .topic-meta-data,
+  .post-actions {
+    opacity: 0.5;
+  }
+}
+
+// Post action feedback (e.g., "You flagged this as...")
+.post-action-feedback {
+  background: var(--primary-very-low);
+  border-left: 3px solid var(--tertiary);
+  padding: 0.5em 1em;
+  margin: 1em 0;
+  border-radius: 3px;
+
+  .post-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0;
+    font-size: $font-down-1;
+    color: var(--primary-high);
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+}
