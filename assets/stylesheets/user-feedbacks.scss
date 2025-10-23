@@ -417,6 +417,46 @@
 }
 
 // ==========================
+// FLAG COUNT BUTTON STYLING
+// ==========================
+// Match native Discourse post flag count pattern
+.feedback-post .post__menu-area {
+  .double-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+
+    .button-count {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: 1px solid var(--primary-low);
+      min-width: auto;
+      padding: 0.4em 0.5em;
+
+      span {
+        font-size: $font-down-1;
+        font-weight: 600;
+        color: var(--primary-high);
+      }
+
+      &.has-pending span {
+        background-color: var(--danger);
+        color: var(--secondary);
+        padding: 0.15em 0.3em 0.2em;
+        display: inline-block;
+        font-size: $font-down-2;
+        border-radius: var(--d-button-border-radius);
+      }
+    }
+
+    .flag-feedback-button {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+// ==========================
 // HIDDEN FEEDBACK STYLING
 // ==========================
 // Match the post-hidden styling from Discourse core

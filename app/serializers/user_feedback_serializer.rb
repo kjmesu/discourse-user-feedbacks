@@ -12,7 +12,10 @@ class UserFeedbackSerializer < ApplicationSerializer
              :hidden,
              :hidden_reason_id,
              :hidden_at,
-             :review_hidden
+             :review_hidden,
+             :reviewable_id,
+             :reviewable_score_count,
+             :reviewable_score_pending_count
 
   has_one :user, serializer: GroupPostUserSerializer, embed: :object
   has_one :feedback_to, serializer: GroupPostUserSerializer, embed: :object
@@ -23,6 +26,31 @@ class UserFeedbackSerializer < ApplicationSerializer
 
   def hidden
     object.hidden?
+  end
+
+  def reviewable_id
+    object.reviewable&.id
+  end
+
+  def include_reviewable_id?
+    scope.is_staff? && object.reviewable.present?
+  end
+
+  def reviewable_score_count
+    object.reviewable&.reviewable_scores&.count || 0
+  end
+
+  def include_reviewable_score_count?
+    include_reviewable_id?
+  end
+
+  def reviewable_score_pending_count
+    return 0 unless object.reviewable
+    object.reviewable.reviewable_scores.select(&:pending?).count
+  end
+
+  def include_reviewable_score_pending_count?
+    include_reviewable_id?
   end
 
   def review_hidden

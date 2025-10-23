@@ -22,7 +22,7 @@ en:
         flagged_as: "You flagged this as %{reason}"
       hidden:
         you_must_edit: "Your feedback was flagged by the community and has been hidden."
-        user_must_edit: "This feedback has been hidden by the community."
+        user_must_edit: "This feedback was flagged by the community and is temporarily hidden."
       flag_modal:
         title: "Flag Feedback"
         description: "Why are you flagging this feedback?"

@@ -6,13 +6,16 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
+import { gt } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import concatClass from "discourse/helpers/concat-class";
 import RelativeDate from "discourse/components/relative-date";
 import RatingInput from "discourse/plugins/discourse-user-feedbacks/discourse/components/rating-input";
-import FlagFeedbackModal from "discourse/plugins/discourse-user-feedbacks/discourse/components/flag-feedback-modal";
+import DButton from "discourse/components/d-button";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
 
@@ -43,9 +46,24 @@ export default class FeedbackListItem extends Component {
 
   get showFlaggedMessage() {
     // Show "You flagged this" message if current user flagged it
-    return this.isFlagged && this.currentUser;
+    return this.isFlagged && this.currentUser && !this.args.feedback.reviewable_id;
   }
-  
+
+  get showFlagCount() {
+    return this.currentUser?.staff && this.args.feedback.reviewable_id;
+  }
+
+  get hasPendingFlags() {
+    return this.args.feedback.reviewable_score_pending_count > 0;
+  }
+
+  @action
+  navigateToReview() {
+    if (this.args.feedback.reviewable_id) {
+      DiscourseURL.routeTo(`/review/${this.args.feedback.reviewable_id}`);
+    }
+  }
+
   @action
   deleteFeedback(id) {
     if (!confirm(I18n.t("discourse_user_feedbacks.user_feedbacks.delete_confirm"))) {
@@ -91,32 +109,28 @@ export default class FeedbackListItem extends Component {
 
   @action
   showFlagModal(id) {
-    if (this.isFlagged) {
-      return;
-    }
-
-    this.modal.show(FlagFeedbackModal, {
-      model: {
-        feedbackId: id,
-        onSuccess: () => {
-          this.isFlagged = true;
-        }
-      }
-    });
+    // Staff can view the flag modal even if already flagged (shows "can't flag" message)
+    // Non-staff should not see the flag button at all if feedback is hidden
+    this.router.transitionTo("review.show", this.args.feedback.reviewable_id || id);
   }
 
-  get canFlag() {
+  get canShowFlagButton() {
     if (!this.currentUser) {
       return false;
     }
-    if (this.isFlagged) {
+
+    // Non-staff cannot flag hidden feedback
+    if (!this.currentUser.staff && this.isHidden) {
       return false;
     }
+
     // Can't flag own feedback
     if (this.args.feedback.user.id === this.currentUser.id) {
       return false;
     }
-    return true;
+
+    // Show flag button/count for staff, or flag button for non-staff if not already flagged
+    return this.currentUser.staff || !this.isFlagged;
   }
   
   <template>
@@ -209,17 +223,30 @@ export default class FeedbackListItem extends Component {
                         {{i18n "discourse_user_feedbacks.user_feedbacks.link_copied"}}
                       </div>
                     </div>
-                    {{#if this.canFlag}}
-                      <button
-                        type="button"
-                        class="btn no-text btn-flat btn-icon flag-feedback-button {{if this.isFlagged 'flagged'}}"
-                        title={{i18n "discourse_user_feedbacks.user_feedbacks.flag_tooltip"}}
-                        {{on "click" (fn this.showFlagModal @feedback.id)}}
-                        disabled={{this.isFlagged}}
-                      >
-                        {{dIcon "flag"}}
-                        <span aria-hidden="true">&#8203;</span>
-                      </button>
+                    {{#if this.canShowFlagButton}}
+                      <div class="double-button">
+                        {{#if this.showFlagCount}}
+                          <DButton
+                            class={{concatClass
+                              "btn-flat btn-icon button-count"
+                              (if this.hasPendingFlags "has-pending")
+                            }}
+                            @action={{this.navigateToReview}}
+                            @title="reviewables.view_all"
+                          >
+                            <span>{{@feedback.reviewable_score_count}}</span>
+                          </DButton>
+                        {{/if}}
+                        <button
+                          type="button"
+                          class="btn no-text btn-flat btn-icon flag-feedback-button"
+                          title={{i18n "discourse_user_feedbacks.user_feedbacks.flag_tooltip"}}
+                          {{on "click" (fn this.showFlagModal @feedback.id)}}
+                        >
+                          {{dIcon "flag"}}
+                          <span aria-hidden="true">&#8203;</span>
+                        </button>
+                      </div>
                     {{/if}}
                     {{#if this.currentUser.staff}}
                       <button
