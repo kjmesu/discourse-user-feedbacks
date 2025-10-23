@@ -32,21 +32,6 @@ module DiscourseUserFeedbacks
         ReviewableScore.types[:notify_moderators]
       end
 
-      # Build the reason text that will appear in the review queue
-      reason_text = case reason
-      when 'inappropriate'
-        I18n.t('flagging.inappropriate.title')
-      when 'fraudulent_transaction'
-        I18n.t('user_feedbacks.flag_reasons.fraudulent_transaction')
-      when 'other'
-        I18n.t('flagging.notify_action')
-      else
-        'Flagged for review'
-      end
-
-      # Add the custom message if provided
-      reason_text = [reason_text, message].compact.join(': ') if message.present?
-
       ::ReviewableUserFeedback.needs_review!(
         target: self,
         created_by: created_by_user,
@@ -64,7 +49,7 @@ module DiscourseUserFeedbacks
         reviewable.add_score(
           created_by_user,
           score_type,
-          reason: reason_text,
+          reason: message.to_s.presence,
           force_review: true
         )
       end
