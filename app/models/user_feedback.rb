@@ -9,6 +9,7 @@ module DiscourseUserFeedbacks
     belongs_to :user
     belongs_to :feedback_to, class_name: 'User'
     # belongs_to :deleted_by is provided by Trashable module
+    belongs_to :notice_created_by, class_name: 'User', optional: true
     has_one :reviewable, as: :target, class_name: '::ReviewableUserFeedback', dependent: :destroy
 
     # default_scope is provided by Trashable module

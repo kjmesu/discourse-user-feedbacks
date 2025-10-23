@@ -18,7 +18,10 @@ class UserFeedbackSerializer < ApplicationSerializer
              :reviewable_score_count,
              :reviewable_score_pending_count,
              :can_delete,
-             :can_recover
+             :can_recover,
+             :can_edit,
+             :notice,
+             :notice_created_by_user
 
   has_one :user, serializer: GroupPostUserSerializer, embed: :object
   has_one :feedback_to, serializer: GroupPostUserSerializer, embed: :object
@@ -41,6 +44,18 @@ class UserFeedbackSerializer < ApplicationSerializer
 
   def can_recover
     scope.can_recover_user_feedback?(object)
+  end
+
+  def can_edit
+    scope.can_edit_user_feedback?(object)
+  end
+
+  def notice_created_by_user
+    BasicUserSerializer.new(object.notice_created_by, root: false).as_json if object.notice_created_by
+  end
+
+  def include_notice_created_by_user?
+    object.notice_created_by.present?
   end
 
   def hidden

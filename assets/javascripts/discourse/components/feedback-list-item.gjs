@@ -20,16 +20,19 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
 import FlagFeedbackModal from "discourse/plugins/discourse-user-feedbacks/discourse/components/flag-feedback-modal";
+import AdminFeedbackMenu from "discourse/plugins/discourse-user-feedbacks/discourse/components/admin-feedback-menu";
 
 export default class FeedbackListItem extends Component {
   @service router;
   @service currentUser;
   @service modal;
+  @service menu;
   @tracked isFlagged = false;
   @tracked deletedAt = null;
   @tracked deletedBy = null;
   @tracked canDelete = false;
   @tracked canRecover = false;
+  @tracked collapsed = true;
 
   constructor() {
     super(...arguments);
@@ -109,7 +112,43 @@ export default class FeedbackListItem extends Component {
       this.canRecover = false;
     }).catch(popupAjaxError);
   }
-  
+
+  @action
+  showMoreActions() {
+    this.collapsed = false;
+  }
+
+  @action
+  openAdminMenu(event) {
+    this.menu.show(event.currentTarget, {
+      component: AdminFeedbackMenu,
+      data: {
+        feedback: this.args.feedback,
+        unhideFeedback: this.unhideFeedback,
+        changeNotice: this.changeNotice,
+      },
+    });
+  }
+
+  @action
+  async unhideFeedback() {
+    try {
+      await ajax(`/user_feedbacks/${this.args.feedback.id}/unhide`, {
+        type: "PUT",
+      });
+      // Refresh the page or update the state
+      window.location.reload();
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async changeNotice() {
+    // For now, just show an alert - we'll implement the full modal later
+    alert("Change notice functionality coming soon");
+  }
+
   @action
   async copyPermalink(id, event) {
     event.preventDefault();
@@ -194,6 +233,25 @@ export default class FeedbackListItem extends Component {
     // 1. Can show flag button (unflagged items for all users)
     // 2. Can show flag count (flagged items for staff)
     return this.canShowFlagButton || this.showFlagCount;
+  }
+
+  get canManageFeedback() {
+    // Staff can manage feedback items
+    return this.currentUser?.staff;
+  }
+
+  get showMoreButton() {
+    // Show the "show more" button (3 dots) when:
+    // 1. Menu is in collapsed state
+    // 2. There are moderator buttons to show (delete/recover/wrench)
+    return this.collapsed && this.canManageFeedback;
+  }
+
+  get showModeratorButtons() {
+    // Show moderator buttons (delete/recover/wrench) when:
+    // 1. Menu is expanded OR
+    // 2. User is not staff (non-staff always sees available buttons)
+    return !this.collapsed || !this.canManageFeedback;
   }
   
   <template>
@@ -313,26 +371,47 @@ export default class FeedbackListItem extends Component {
                         {{/if}}
                       </div>
                     {{/if}}
-                    {{#if this.canRecover}}
+                    {{#if this.showMoreButton}}
                       <button
-                        class="btn no-text btn-flat btn-icon recover-feedback-button"
-                        title={{i18n "discourse_user_feedbacks.user_feedbacks.recover_tooltip"}}
-                        {{on "click" (fn this.recoverFeedback @feedback.id)}}
                         type="button"
+                        class="btn no-text btn-flat btn-icon show-more-actions"
+                        title={{i18n "show_more"}}
+                        {{on "click" this.showMoreActions}}
                       >
-                        {{dIcon "arrow-rotate-left"}}
+                        {{dIcon "ellipsis"}}
                         <span aria-hidden="true">&#8203;</span>
                       </button>
-                    {{else if this.canDelete}}
-                      <button
-                        class="btn no-text btn-flat btn-icon btn-danger delete-feedback-button"
-                        title={{i18n "discourse_user_feedbacks.user_feedbacks.delete_tooltip"}}
-                        {{on "click" (fn this.deleteFeedback @feedback.id)}}
-                        type="button"
-                      >
-                        {{dIcon "trash-can"}}
-                        <span aria-hidden="true">&#8203;</span>
-                      </button>
+                    {{/if}}
+                    {{#if this.showModeratorButtons}}
+                      {{#if this.canManageFeedback}}
+                        <DButton
+                          class="btn-flat btn-icon show-feedback-admin-menu"
+                          @icon="wrench"
+                          @title="post.controls.admin"
+                          @action={{this.openAdminMenu}}
+                        />
+                      {{/if}}
+                      {{#if this.canRecover}}
+                        <button
+                          class="btn no-text btn-flat btn-icon recover-feedback-button"
+                          title={{i18n "discourse_user_feedbacks.user_feedbacks.recover_tooltip"}}
+                          {{on "click" (fn this.recoverFeedback @feedback.id)}}
+                          type="button"
+                        >
+                          {{dIcon "arrow-rotate-left"}}
+                          <span aria-hidden="true">&#8203;</span>
+                        </button>
+                      {{else if this.canDelete}}
+                        <button
+                          class="btn no-text btn-flat btn-icon btn-danger delete-feedback-button"
+                          title={{i18n "discourse_user_feedbacks.user_feedbacks.delete_tooltip"}}
+                          {{on "click" (fn this.deleteFeedback @feedback.id)}}
+                          type="button"
+                        >
+                          {{dIcon "trash-can"}}
+                          <span aria-hidden="true">&#8203;</span>
+                        </button>
+                      {{/if}}
                     {{/if}}
                   </div>
                 </nav>

@@ -6,6 +6,7 @@ DiscourseUserFeedbacks::Engine.routes.draw do
       get :show
       post :flag
       put :recover
+      put :unhide
     end
   end
 end

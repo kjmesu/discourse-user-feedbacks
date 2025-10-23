@@ -72,6 +72,17 @@ module DiscourseUserFeedbacks
       render_serialized(feedback, UserFeedbackSerializer)
     end
 
+    def unhide
+      params.require(:id)
+
+      feedback = DiscourseUserFeedbacks::UserFeedback.find(params[:id])
+      guardian.ensure_can_edit_user_feedback!(feedback)
+
+      feedback.unhide!
+
+      render_serialized(feedback, UserFeedbackSerializer)
+    end
+
     def index
       raise Discourse::InvalidParameters.new(:feedback_to_id) if params.has_key?(:feedback_to_id) && params[:feedback_to_id].to_i <= 0
 
