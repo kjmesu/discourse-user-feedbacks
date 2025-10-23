@@ -47,7 +47,7 @@ module DiscourseUserFeedbacks
         reviewable.add_score(
           created_by_user,
           score_type,
-          reason: message,
+          reason: message.to_s.presence,
           force_review: true
         )
       end
