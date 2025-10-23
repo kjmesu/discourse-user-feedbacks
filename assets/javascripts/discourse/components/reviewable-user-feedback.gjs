@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
+import ReviewableField from "discourse/components/reviewable-field";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import { htmlSafe } from "@ember/template";
 import { i18n } from "discourse-i18n";
@@ -8,32 +9,18 @@ import { i18n } from "discourse-i18n";
 export default class ReviewableUserFeedback extends Component {
   get reasonLabel() {
     const reason = this.reviewable?.payload?.reason;
-    if (reason === "inappropriate") return "Inappropriate";
-    if (reason === "fraudulent_transaction") return "Fraudulent Transaction";
-    if (reason === "other") return "Other";
+    if (reason === "inappropriate") return i18n("flagging.inappropriate.title");
+    if (reason === "fraudulent_transaction") return i18n("user_feedbacks.flag_reasons.fraudulent_transaction");
+    if (reason === "other") return i18n("flagging.notify_action");
     return reason;
   }
 
-  get cooked() {
-    // Convert the plain text review to safe HTML
-    const review = this.reviewable?.payload?.review;
-    if (!review) return htmlSafe("<p><em>No review text provided</em></p>");
-
-    // Escape HTML and convert newlines to <br>
-    const escaped = review
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\n/g, "<br>");
-
-    return htmlSafe(`<p>${escaped}</p>`);
+  get ratingDisplay() {
+    const rating = this.reviewable?.payload?.rating;
+    return rating ? `${rating}/5 stars` : "-";
   }
 
   <template>
-    <div class="flagged-post-header">
-      <span class="flagged-feedback-label">{{i18n "reviewables.types.reviewable_user_feedback.title"}}</span>
-    </div>
-
     <div class="post-contents-wrapper">
       <ReviewableCreatedBy @user={{this.reviewable.target_created_by}} />
       <div class="post-contents">
@@ -42,45 +29,41 @@ export default class ReviewableUserFeedback extends Component {
           @createdBy={{this.reviewable.target_created_by}}
           @tagName=""
         />
-        <div class="post-body">
-          {{this.cooked}}
+
+        {{#if this.reviewable.payload.review}}
+          <div class="post-body">
+            <p>{{this.reviewable.payload.review}}</p>
+          </div>
+        {{/if}}
+
+        <div class="reviewable-user-feedback-fields">
+          <ReviewableField
+            @classes="reviewable-feedback-details rating"
+            @name={{i18n "user_feedbacks.rating"}}
+            @value={{this.ratingDisplay}}
+          />
+
+          <ReviewableField
+            @classes="reviewable-feedback-details feedback-id"
+            @name={{i18n "user_feedbacks.feedback_id"}}
+            @value={{this.reviewable.payload.feedback_id}}
+          />
+
+          <ReviewableField
+            @classes="reviewable-feedback-details flag-reason"
+            @name={{i18n "user_feedbacks.flag_reason"}}
+            @value={{this.reasonLabel}}
+          />
+
+          {{#if this.reviewable.payload.message}}
+            <ReviewableField
+              @classes="reviewable-feedback-details additional-details"
+              @name={{i18n "user_feedbacks.additional_details"}}
+              @value={{this.reviewable.payload.message}}
+            />
+          {{/if}}
         </div>
-        <div class="post-body reviewable-meta-data">
-          <table class="reviewable-scores">
-            <thead>
-              <tr>
-                <th>Rating:</th>
-                <th>Feedback ID:</th>
-                <th>Flag Reason:</th>
-                {{#if this.reviewable.payload.message}}
-                  <th>Additional Details:</th>
-                {{/if}}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  {{#if this.reviewable.payload.rating}}
-                    {{this.reviewable.payload.rating}}/5 stars
-                  {{else}}
-                    -
-                  {{/if}}
-                </td>
-                <td>#{{this.reviewable.payload.feedback_id}}</td>
-                <td>
-                  {{#if this.reviewable.payload.reason}}
-                    <span class="reason-badge">{{this.reasonLabel}}</span>
-                  {{else}}
-                    -
-                  {{/if}}
-                </td>
-                {{#if this.reviewable.payload.message}}
-                  <td>{{this.reviewable.payload.message}}</td>
-                {{/if}}
-              </tr>
-            </tbody>
-          </table>
-        </div>
+
         {{yield}}
       </div>
     </div>

@@ -34,10 +34,17 @@ en:
           inappropriate: "Inappropriate"
           fraudulent_transaction: "Fraudulent Transaction"
           other: "Other (please specify)"
-    reviewables:
+    user_feedbacks:
+      rating: "Rating"
+      feedback_id: "Feedback ID"
+      flag_reason: "Flag Reason"
+      additional_details: "Additional Details"
+      flag_reasons:
+        fraudulent_transaction: "Fraudulent Transaction"
+    review:
       types:
         reviewable_user_feedback:
-          title: "Flagged User Feedback"
+          title: "Flagged Feedback"
       actions:
         agree_and_delete:
           title: "Agree and Delete"
