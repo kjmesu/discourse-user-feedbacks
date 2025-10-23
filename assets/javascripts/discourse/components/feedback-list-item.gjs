@@ -384,12 +384,15 @@ export default class FeedbackListItem extends Component {
                     {{/if}}
                     {{#if this.showModeratorButtons}}
                       {{#if this.canManageFeedback}}
-                        <DButton
-                          class="btn-flat btn-icon show-feedback-admin-menu"
-                          @icon="wrench"
-                          @title="post.controls.admin"
-                          @action={{this.openAdminMenu}}
-                        />
+                        <button
+                          type="button"
+                          class="btn no-text btn-flat btn-icon show-feedback-admin-menu"
+                          title={{i18n "post.controls.admin"}}
+                          {{on "click" this.openAdminMenu}}
+                        >
+                          {{dIcon "wrench"}}
+                          <span aria-hidden="true">&#8203;</span>
+                        </button>
                       {{/if}}
                       {{#if this.canRecover}}
                         <button
