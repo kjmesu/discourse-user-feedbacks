@@ -19,6 +19,7 @@ import DButton from "discourse/components/d-button";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
+import FlagFeedbackModal from "discourse/plugins/discourse-user-feedbacks/discourse/components/flag-feedback-modal";
 
 export default class FeedbackListItem extends Component {
   @service router;
@@ -143,19 +144,21 @@ export default class FeedbackListItem extends Component {
   }
 
   @action
-  showFlagModal(id) {
-    // Staff can view the flag modal even if already flagged (shows "can't flag" message)
-    // Non-staff should not see the flag button at all if feedback is hidden
-    this.router.transitionTo("review.show", this.args.feedback.reviewable_id || id);
+  showFlagModal() {
+    // Open the flag modal for items not currently under review
+    this.modal.show(FlagFeedbackModal, {
+      model: {
+        feedbackId: this.args.feedback.id,
+        onSuccess: () => {
+          // Update the flagged state after successful flag submission
+          this.isFlagged = true;
+        }
+      }
+    });
   }
 
   get canShowFlagButton() {
     if (!this.currentUser) {
-      return false;
-    }
-
-    // Non-staff cannot flag hidden feedback
-    if (!this.currentUser.staff && this.isHidden) {
       return false;
     }
 
@@ -164,8 +167,27 @@ export default class FeedbackListItem extends Component {
       return false;
     }
 
-    // Show flag button/count for staff, or flag button for non-staff if not already flagged
-    return this.currentUser.staff || !this.isFlagged;
+    // Non-staff cannot flag hidden feedback
+    if (!this.currentUser.staff && this.isHidden) {
+      return false;
+    }
+
+    // For items under review (have reviewable_id):
+    // - Staff: show flag count button only (not regular flag button)
+    // - Non-staff: hide entirely
+    if (this.args.feedback.reviewable_id) {
+      return false; // Hide the flag button, count button will show for staff via showFlagCount
+    }
+
+    // For items not under review: show flag button for everyone (except own feedback)
+    return true;
+  }
+
+  get canShowFlagSection() {
+    // Show the flag section if:
+    // 1. Can show flag button (unflagged items for all users)
+    // 2. Can show flag count (flagged items for staff)
+    return this.canShowFlagButton || this.showFlagCount;
   }
   
   <template>
@@ -258,7 +280,7 @@ export default class FeedbackListItem extends Component {
                         {{i18n "discourse_user_feedbacks.user_feedbacks.link_copied"}}
                       </div>
                     </div>
-                    {{#if this.canShowFlagButton}}
+                    {{#if this.canShowFlagSection}}
                       <div class="double-button">
                         {{#if this.showFlagCount}}
                           <DButton
@@ -272,15 +294,17 @@ export default class FeedbackListItem extends Component {
                             <span>{{@feedback.reviewable_score_count}}</span>
                           </DButton>
                         {{/if}}
-                        <button
-                          type="button"
-                          class="btn no-text btn-flat btn-icon flag-feedback-button"
-                          title={{i18n "discourse_user_feedbacks.user_feedbacks.flag_tooltip"}}
-                          {{on "click" (fn this.showFlagModal @feedback.id)}}
-                        >
-                          {{dIcon "flag"}}
-                          <span aria-hidden="true">&#8203;</span>
-                        </button>
+                        {{#if this.canShowFlagButton}}
+                          <button
+                            type="button"
+                            class="btn no-text btn-flat btn-icon flag-feedback-button"
+                            title={{i18n "discourse_user_feedbacks.user_feedbacks.flag_tooltip"}}
+                            {{on "click" this.showFlagModal}}
+                          >
+                            {{dIcon "flag"}}
+                            <span aria-hidden="true">&#8203;</span>
+                          </button>
+                        {{/if}}
                       </div>
                     {{/if}}
                     {{#if this.canRecover}}
