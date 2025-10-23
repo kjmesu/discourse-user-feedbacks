@@ -257,6 +257,37 @@
 // ==========================
 // REVIEWABLE DISPLAY
 // ==========================
+
+// Header badge styling for "FLAGGED FEEDBACK"
+.reviewable-type.-flagged-feedback {
+  background-color: var(--danger);
+  color: var(--secondary);
+  padding: 0.25em 0.5em;
+  border-radius: 3px;
+  font-size: $font-down-1;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+// ReviewableField styling for feedback details
+.reviewable-user-feedback-fields {
+  margin-top: 1em;
+
+  .reviewable-feedback-details {
+    margin-bottom: 0.5em;
+
+    .name {
+      font-weight: 700;
+      color: var(--primary-medium);
+      margin-bottom: 0.25em;
+    }
+
+    .value {
+      color: var(--primary);
+    }
+  }
+}
+
 .reviewable-meta-data {
   background: var(--primary-very-low);
   padding: 1em;
