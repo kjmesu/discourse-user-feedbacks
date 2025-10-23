@@ -9,6 +9,8 @@ en:
   user_feedbacks:
     flag:
       success: "Feedback has been flagged for moderator review"
+    flag_reasons:
+      fraudulent_transaction: "Fraudulent Transaction"
   reviewables:
     types:
       reviewable_user_feedback:
