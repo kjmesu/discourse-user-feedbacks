@@ -8,6 +8,7 @@ class UserFeedbackSerializer < ApplicationSerializer
              :rating,
              :created_at,
              :deleted_at,
+             :deleted_by,
              :flagged,
              :hidden,
              :hidden_reason_id,
@@ -15,13 +16,31 @@ class UserFeedbackSerializer < ApplicationSerializer
              :review_hidden,
              :reviewable_id,
              :reviewable_score_count,
-             :reviewable_score_pending_count
+             :reviewable_score_pending_count,
+             :can_delete,
+             :can_recover
 
   has_one :user, serializer: GroupPostUserSerializer, embed: :object
   has_one :feedback_to, serializer: GroupPostUserSerializer, embed: :object
 
   def flagged
     object.flagged?
+  end
+
+  def deleted_by
+    BasicUserSerializer.new(object.deleted_by, root: false).as_json if object.deleted_by
+  end
+
+  def include_deleted_by?
+    scope.is_staff? && object.deleted_by.present?
+  end
+
+  def can_delete
+    scope.can_delete_user_feedback?(object)
+  end
+
+  def can_recover
+    scope.can_recover_user_feedback?(object)
   end
 
   def hidden

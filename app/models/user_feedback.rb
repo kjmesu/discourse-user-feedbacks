@@ -2,17 +2,17 @@
 
 module DiscourseUserFeedbacks
   class UserFeedback < ActiveRecord::Base
+    include Trashable
+
     self.table_name = 'discourse_user_feedbacks'
 
     belongs_to :user
     belongs_to :feedback_to, class_name: 'User'
+    # belongs_to :deleted_by is provided by Trashable module
     has_one :reviewable, as: :target, class_name: '::ReviewableUserFeedback', dependent: :destroy
 
-    default_scope { where(deleted_at: nil) }
-
-    def soft_delete!
-      update!(deleted_at: Time.zone.now)
-    end
+    # default_scope is provided by Trashable module
+    # trash! and recover! methods are provided by Trashable module
 
     def hide!(reason_id = nil)
       return if hidden?

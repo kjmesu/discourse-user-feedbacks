@@ -50,13 +50,26 @@ module DiscourseUserFeedbacks
 
     def destroy
       params.require(:id)
-      guardian.ensure_can_delete_feedback!
 
       feedback = DiscourseUserFeedbacks::UserFeedback.find(params[:id])
+      guardian.ensure_can_delete_user_feedback!(feedback)
 
-      feedback.update!(deleted_at: Time.zone.now)
+      # Use Discourse's native Trashable method
+      feedback.trash!(current_user)
 
       render_json_dump(success: true)
+    end
+
+    def recover
+      params.require(:id)
+
+      feedback = DiscourseUserFeedbacks::UserFeedback.with_deleted.find(params[:id])
+      guardian.ensure_can_recover_user_feedback!(feedback)
+
+      # Use Discourse's native Trashable method
+      feedback.recover!
+
+      render_serialized(feedback, UserFeedbackSerializer)
     end
 
     def index

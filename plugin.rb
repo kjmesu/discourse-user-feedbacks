@@ -128,5 +128,28 @@ after_initialize do
       # Staff members can edit any feedback
       user&.staff?
     end
+
+    def can_recover_user_feedback?(feedback)
+      return false unless feedback
+      return false unless feedback.deleted_at
+
+      # Staff can always recover deleted feedback
+      return true if user&.staff?
+
+      # Users can recover their own deleted feedback
+      return true if is_my_own_feedback?(feedback)
+
+      false
+    end
+
+    def ensure_can_recover_user_feedback!(feedback)
+      raise Discourse::InvalidAccess.new unless can_recover_user_feedback?(feedback)
+    end
+
+    private
+
+    def is_my_own_feedback?(feedback)
+      user && feedback.user_id == user.id
+    end
   end
 end

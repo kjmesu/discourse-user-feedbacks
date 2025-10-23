@@ -5,6 +5,7 @@ DiscourseUserFeedbacks::Engine.routes.draw do
     member do
       get :show
       post :flag
+      put :recover
     end
   end
 end

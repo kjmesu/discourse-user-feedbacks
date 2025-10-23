@@ -36,12 +36,27 @@ export default class FeedbackListItem extends Component {
     return this.args.feedback?.hidden || false;
   }
 
+  get isDeleted() {
+    return this.args.feedback?.deleted_at || false;
+  }
+
   get feedbackClasses() {
     let classes = "topic-post clearfix post--sticky-avatar sticky-avatar post--regular regular";
     if (this.isHidden) {
       classes += " post--hidden post-hidden";
     }
+    if (this.isDeleted) {
+      classes += " post--deleted deleted";
+    }
     return classes;
+  }
+
+  get deletedBy() {
+    return this.args.feedback?.deleted_by;
+  }
+
+  get deletedAt() {
+    return this.args.feedback?.deleted_at ? new Date(this.args.feedback.deleted_at) : null;
   }
 
   get showFlaggedMessage() {
@@ -70,8 +85,27 @@ export default class FeedbackListItem extends Component {
       return;
     }
     ajax(`/user_feedbacks/${id}`, { type: "DELETE" }).then(() => {
-      this.args.onDelete?.(id);
-    });
+      // Update feedback state to show as deleted
+      this.args.feedback.deleted_at = new Date();
+      this.args.feedback.deleted_by = {
+        id: this.currentUser.id,
+        username: this.currentUser.username,
+        avatar_template: this.currentUser.avatar_template
+      };
+      this.args.feedback.can_delete = false;
+      this.args.feedback.can_recover = true;
+    }).catch(popupAjaxError);
+  }
+
+  @action
+  recoverFeedback(id) {
+    ajax(`/user_feedbacks/${id}/recover`, { type: "PUT" }).then((result) => {
+      // Update feedback state to show as recovered
+      this.args.feedback.deleted_at = null;
+      this.args.feedback.deleted_by = null;
+      this.args.feedback.can_delete = result.user_feedback.can_delete;
+      this.args.feedback.can_recover = false;
+    }).catch(popupAjaxError);
   }
   
   @action
@@ -194,6 +228,18 @@ export default class FeedbackListItem extends Component {
                 <p>{{htmlSafe @feedback.review}}</p>
                 <div class="cooked-selection-barrier" aria-hidden="true"><br></div>
               </div>
+              {{#if this.isDeleted}}
+                {{#if this.deletedBy}}
+                  <div class="post-info post-deleted-info">
+                    <p>
+                      {{i18n "discourse_user_feedbacks.user_feedbacks.deleted_by"
+                        username=this.deletedBy.username
+                      }}
+                      <RelativeDate @date={{this.deletedAt}} />
+                    </p>
+                  </div>
+                {{/if}}
+              {{/if}}
               {{#if this.showFlaggedMessage}}
                 <div class="post-info post-action-feedback">
                   <p class="post-action">
@@ -248,7 +294,17 @@ export default class FeedbackListItem extends Component {
                         </button>
                       </div>
                     {{/if}}
-                    {{#if this.currentUser.staff}}
+                    {{#if @feedback.can_recover}}
+                      <button
+                        class="btn no-text btn-flat btn-icon recover-feedback-button"
+                        title={{i18n "discourse_user_feedbacks.user_feedbacks.recover_tooltip"}}
+                        {{on "click" (fn this.recoverFeedback @feedback.id)}}
+                        type="button"
+                      >
+                        {{dIcon "arrow-rotate-left"}}
+                        <span aria-hidden="true">&#8203;</span>
+                      </button>
+                    {{else if @feedback.can_delete}}
                       <button
                         class="btn no-text btn-flat btn-icon btn-danger delete-feedback-button"
                         title={{i18n "discourse_user_feedbacks.user_feedbacks.delete_tooltip"}}
