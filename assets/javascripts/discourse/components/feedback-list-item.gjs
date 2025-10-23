@@ -25,12 +25,22 @@ export default class FeedbackListItem extends Component {
   @service currentUser;
   @service modal;
   @tracked isFlagged = false;
+  @tracked deletedAt = null;
+  @tracked deletedBy = null;
+  @tracked canDelete = false;
+  @tracked canRecover = false;
 
   constructor() {
     super(...arguments);
     const createdAt = this.args.feedback?.created_at;
     this.createdAtDate = createdAt ? new Date(createdAt) : null;
     this.isFlagged = this.args.feedback?.flagged || false;
+
+    // Initialize tracked deletion state
+    this.deletedAt = this.args.feedback?.deleted_at ? new Date(this.args.feedback.deleted_at) : null;
+    this.deletedBy = this.args.feedback?.deleted_by;
+    this.canDelete = this.args.feedback?.can_delete || false;
+    this.canRecover = this.args.feedback?.can_recover || false;
   }
 
   get isHidden() {
@@ -38,7 +48,7 @@ export default class FeedbackListItem extends Component {
   }
 
   get isDeleted() {
-    return this.args.feedback?.deleted_at || false;
+    return this.deletedAt !== null;
   }
 
   get feedbackClasses() {
@@ -50,14 +60,6 @@ export default class FeedbackListItem extends Component {
       classes += " post--deleted deleted";
     }
     return classes;
-  }
-
-  get deletedBy() {
-    return this.args.feedback?.deleted_by;
-  }
-
-  get deletedAt() {
-    return this.args.feedback?.deleted_at ? new Date(this.args.feedback.deleted_at) : null;
   }
 
   get showFlaggedMessage() {
@@ -84,26 +86,26 @@ export default class FeedbackListItem extends Component {
   deleteFeedback(id) {
     // No confirmation modal - delete immediately like posts
     ajax(`/user_feedbacks/${id}`, { type: "DELETE" }).then(() => {
-      // Update feedback state to show as deleted - use set() for reactivity
-      set(this.args.feedback, "deleted_at", new Date());
-      set(this.args.feedback, "deleted_by", {
+      // Update tracked properties - triggers reactive re-render
+      this.deletedAt = new Date();
+      this.deletedBy = {
         id: this.currentUser.id,
         username: this.currentUser.username,
         avatar_template: this.currentUser.avatar_template
-      });
-      set(this.args.feedback, "can_delete", false);
-      set(this.args.feedback, "can_recover", true);
+      };
+      this.canDelete = false;
+      this.canRecover = true;
     }).catch(popupAjaxError);
   }
 
   @action
   recoverFeedback(id) {
     ajax(`/user_feedbacks/${id}/recover`, { type: "PUT" }).then((result) => {
-      // Update feedback state to show as recovered - use set() for reactivity
-      set(this.args.feedback, "deleted_at", null);
-      set(this.args.feedback, "deleted_by", null);
-      set(this.args.feedback, "can_delete", result.user_feedback.can_delete);
-      set(this.args.feedback, "can_recover", false);
+      // Update tracked properties - triggers reactive re-render
+      this.deletedAt = null;
+      this.deletedBy = null;
+      this.canDelete = result.user_feedback.can_delete;
+      this.canRecover = false;
     }).catch(popupAjaxError);
   }
   
@@ -281,7 +283,7 @@ export default class FeedbackListItem extends Component {
                         </button>
                       </div>
                     {{/if}}
-                    {{#if @feedback.can_recover}}
+                    {{#if this.canRecover}}
                       <button
                         class="btn no-text btn-flat btn-icon recover-feedback-button"
                         title={{i18n "discourse_user_feedbacks.user_feedbacks.recover_tooltip"}}
@@ -291,7 +293,7 @@ export default class FeedbackListItem extends Component {
                         {{dIcon "arrow-rotate-left"}}
                         <span aria-hidden="true">&#8203;</span>
                       </button>
-                    {{else if @feedback.can_delete}}
+                    {{else if this.canDelete}}
                       <button
                         class="btn no-text btn-flat btn-icon btn-danger delete-feedback-button"
                         title={{i18n "discourse_user_feedbacks.user_feedbacks.delete_tooltip"}}
