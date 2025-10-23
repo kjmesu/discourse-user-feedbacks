@@ -22,7 +22,7 @@ export default class FlagFeedbackModal extends Component {
 
   flagReasons = [
     { id: "inappropriate", labelKey: "discourse_user_feedbacks.reviewables.reasons.inappropriate" },
-    { id: "fraudulent_transaction", labelKey: "discourse_user_feedbacks.reviewables.reasons.fraudulent_transaction" },
+    { id: "fraudulent", labelKey: "discourse_user_feedbacks.reviewables.reasons.fraudulent" },
     { id: "other", labelKey: "discourse_user_feedbacks.reviewables.reasons.other" }
   ];
 
@@ -90,7 +90,7 @@ export default class FlagFeedbackModal extends Component {
                 <strong>{{i18n reason.labelKey}}</strong>
                 {{#if (eq reason.id "inappropriate")}}
                   <div class="description">This feedback contains content that a reasonable person would consider offensive, abusive, or a violation of our community guidelines.</div>
-                {{else if (eq reason.id "fraudulent_transaction")}}
+                {{else if (eq reason.id "fraudulent")}}
                   <div class="description">This feedback appears to be related to a fraudulent or suspicious transaction.</div>
                 {{else if (eq reason.id "other")}}
                   <div class="description">This feedback requires staff attention for another reason not listed above.</div>

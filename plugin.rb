@@ -35,7 +35,7 @@ after_initialize do
   ].each { |path| require File.expand_path(path, __FILE__) }
 
   # Register custom reviewable score types for feedback flags
-  ReviewableScore.add_new_types([:fraudulent_transaction])
+  ReviewableScore.add_new_types([:fraudulent])
 
   # Register the reviewable type with this plugin
   register_reviewable_type ReviewableUserFeedback

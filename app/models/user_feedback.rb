@@ -25,8 +25,8 @@ module DiscourseUserFeedbacks
       score_type = case reason
       when 'inappropriate'
         ReviewableScore.types[:inappropriate]
-      when 'fraudulent_transaction'
-        ReviewableScore.types[:fraudulent_transaction]
+      when 'fraudulent'
+        ReviewableScore.types[:fraudulent]
       else
         # Use notify_moderators for 'other' and unknown reasons
         ReviewableScore.types[:notify_moderators]
