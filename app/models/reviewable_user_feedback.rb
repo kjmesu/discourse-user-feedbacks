@@ -24,6 +24,13 @@ class ReviewableUserFeedback < Reviewable
     nil
   end
 
+  # Required by the base Reviewable class for update_flag_stats
+  # The base class uses post&.user_id to exclude self-flags from stats
+  # For user feedback, we return the target (UserFeedback) which has a user_id
+  def post
+    target
+  end
+
   def build_actions(actions, guardian, args)
     return unless pending?
     return unless target
