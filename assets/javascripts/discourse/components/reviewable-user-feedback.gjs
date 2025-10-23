@@ -57,7 +57,11 @@ export default class ReviewableUserFeedback extends Component {
           </div>
         </div>
 
-        <ReviewableScores @reviewable={{this.reviewable}} />
+        <div style="background: yellow; padding: 10px;">
+          DEBUG: reviewable_scores count = {{this.reviewable.reviewable_scores.length}}
+        </div>
+
+        <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
       </div>
     </div>
   </template>
