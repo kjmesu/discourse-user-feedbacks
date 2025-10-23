@@ -85,10 +85,11 @@ module DiscourseUserFeedbacks
 
     def notice
       params.require(:id)
-      params.permit(:notice)
 
       feedback = DiscourseUserFeedbacks::UserFeedback.find(params[:id])
       guardian.ensure_can_edit_user_feedback!(feedback)
+
+      notice_text = params[:notice]
 
       if params[:notice].present?
         # Cook the notice text (convert markdown to HTML)
