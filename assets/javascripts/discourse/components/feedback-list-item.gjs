@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
+import { set } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
@@ -83,26 +84,26 @@ export default class FeedbackListItem extends Component {
   deleteFeedback(id) {
     // No confirmation modal - delete immediately like posts
     ajax(`/user_feedbacks/${id}`, { type: "DELETE" }).then(() => {
-      // Update feedback state to show as deleted
-      this.args.feedback.deleted_at = new Date();
-      this.args.feedback.deleted_by = {
+      // Update feedback state to show as deleted - use set() for reactivity
+      set(this.args.feedback, "deleted_at", new Date());
+      set(this.args.feedback, "deleted_by", {
         id: this.currentUser.id,
         username: this.currentUser.username,
         avatar_template: this.currentUser.avatar_template
-      };
-      this.args.feedback.can_delete = false;
-      this.args.feedback.can_recover = true;
+      });
+      set(this.args.feedback, "can_delete", false);
+      set(this.args.feedback, "can_recover", true);
     }).catch(popupAjaxError);
   }
 
   @action
   recoverFeedback(id) {
     ajax(`/user_feedbacks/${id}/recover`, { type: "PUT" }).then((result) => {
-      // Update feedback state to show as recovered
-      this.args.feedback.deleted_at = null;
-      this.args.feedback.deleted_by = null;
-      this.args.feedback.can_delete = result.user_feedback.can_delete;
-      this.args.feedback.can_recover = false;
+      // Update feedback state to show as recovered - use set() for reactivity
+      set(this.args.feedback, "deleted_at", null);
+      set(this.args.feedback, "deleted_by", null);
+      set(this.args.feedback, "can_delete", result.user_feedback.can_delete);
+      set(this.args.feedback, "can_recover", false);
     }).catch(popupAjaxError);
   }
   
@@ -226,18 +227,6 @@ export default class FeedbackListItem extends Component {
                 <p>{{htmlSafe @feedback.review}}</p>
                 <div class="cooked-selection-barrier" aria-hidden="true"><br></div>
               </div>
-              {{#if this.isDeleted}}
-                {{#if this.deletedBy}}
-                  <div class="post-info post-deleted-info">
-                    <p>
-                      {{i18n "discourse_user_feedbacks.user_feedbacks.deleted_by"
-                        username=this.deletedBy.username
-                      }}
-                      <RelativeDate @date={{this.deletedAt}} />
-                    </p>
-                  </div>
-                {{/if}}
-              {{/if}}
               {{#if this.showFlaggedMessage}}
                 <div class="post-info post-action-feedback">
                   <p class="post-action">
@@ -317,7 +306,18 @@ export default class FeedbackListItem extends Component {
                 </nav>
               </section>
             </div>
-            <section class="post__actions post-actions"></section>
+            {{! Deleted post info - OUTSIDE post__contents, matching Discourse post structure }}
+            <section class="post__actions post-actions">
+              {{#if this.isDeleted}}
+                {{#if this.deletedBy}}
+                  <div class="post-action deleted-post">
+                    {{dIcon "trash-can"}}
+                    {{avatar this.deletedBy imageSize="tiny"}}
+                    <RelativeDate @date={{this.deletedAt}} @format="tiny" />
+                  </div>
+                {{/if}}
+              {{/if}}
+            </section>
           </div>
         </div>
       </article>

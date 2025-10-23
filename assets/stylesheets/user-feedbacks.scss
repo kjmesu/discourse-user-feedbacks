@@ -459,26 +459,59 @@
 // ==========================
 // DELETED FEEDBACK STYLING
 // ==========================
-// Match native Discourse post deletion styling
-.feedback-post {
-  &.deleted {
-    .regular > .cooked {
-      background-color: var(--danger-low-mid);  // Red background for deleted content
+// Match native Discourse post deletion styling EXACTLY
+.deleted {
+  // Red background for the cooked content
+  .regular > .cooked {
+    background-color: var(--danger-low-mid);
+  }
+
+  // Color the metadata (username, date, rating) in red
+  .topic-meta-data:not(.embedded-reply) {
+    color: var(--danger);
+
+    .post-info a,
+    a {
+      color: currentcolor;
     }
 
-    .post-deleted-info {
-      background: var(--danger-low);
-      border-left: 3px solid var(--danger);
-      padding: 0.5em 1em;
-      margin: 0.5em 0;
-      border-radius: 3px;
+    .d-icon {
+      color: currentcolor;
+    }
+  }
 
-      p {
-        margin: 0;
-        font-size: $font-down-1;
-        color: var(--danger-high);
+  // Color the post controls (menu buttons) in red
+  nav.post-controls {
+    color: var(--danger);
+
+    .show-replies,
+    button.reply.create {
+      color: var(--danger);
+
+      .d-icon {
+        color: var(--danger);
       }
     }
+
+    .btn {
+      &:hover {
+        color: currentcolor;
+        background: var(--danger-low);
+
+        .d-icon {
+          color: currentcolor;
+        }
+      }
+    }
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  // Color the deleted action message in red
+  .post-action {
+    color: var(--danger);
   }
 }
 
