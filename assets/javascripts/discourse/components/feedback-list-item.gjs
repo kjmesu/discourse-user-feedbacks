@@ -145,7 +145,13 @@ export default class FeedbackListItem extends Component {
 
   @action
   showFlagModal() {
-    // Open the flag modal for items not currently under review
+    // If already under review (has reviewable_id), route to review queue
+    if (this.args.feedback.reviewable_id) {
+      this.navigateToReview();
+      return;
+    }
+
+    // Otherwise, open the flag modal for items not currently under review
     this.modal.show(FlagFeedbackModal, {
       model: {
         feedbackId: this.args.feedback.id,
@@ -173,10 +179,10 @@ export default class FeedbackListItem extends Component {
     }
 
     // For items under review (have reviewable_id):
-    // - Staff: show flag count button only (not regular flag button)
+    // - Staff: show flag button (routes to review)
     // - Non-staff: hide entirely
     if (this.args.feedback.reviewable_id) {
-      return false; // Hide the flag button, count button will show for staff via showFlagCount
+      return this.currentUser.staff;
     }
 
     // For items not under review: show flag button for everyone (except own feedback)
