@@ -51,6 +51,24 @@ export default class FeedbackListItem extends Component {
 
     // Initialize tracked hidden state
     this.isHidden = this.args.feedback?.hidden || false;
+
+    // Shim the feedback object to work with the standard PostNotice and ChangePostNotice components
+    const feedback = this.args.feedback;
+    if (feedback) {
+      feedback.updatePostField = async (field, value) => {
+        if (field !== "notice") {
+          throw new Error(`Unsupported field for feedback: ${field}`);
+        }
+        return ajax(`/user_feedbacks/${feedback.id}`, {
+          type: "PUT",
+          data: { notice: value },
+        });
+      };
+
+      feedback.set = (key, value) => {
+        set(this.args.feedback, key, value);
+      };
+    }
   }
 
   get isDeleted() {
@@ -147,27 +165,9 @@ export default class FeedbackListItem extends Component {
 
   @action
   async changeNotice() {
-    const feedback = this.args.feedback;
-
-    // The standard ChangePostNotice modal expects these methods to exist on the object.
-    // We are shimming them here to call our standard `update` action.
-    feedback.updatePostField = async (field, value) => {
-      if (field !== "notice") {
-        throw new Error(`Unsupported field for feedback: ${field}`);
-      }
-      return ajax(`/user_feedbacks/${feedback.id}`, {
-        type: "PUT",
-        data: { notice: value },
-      });
-    };
-
-    feedback.set = (key, value) => {
-      set(this.args.feedback, key, value);
-    };
-
     this.modal.show(ChangePostNotice, {
       model: {
-        post: feedback,
+        post: this.args.feedback,
       },
     });
   }
