@@ -2,16 +2,17 @@
 
 class DiscourseUserFeedbacks::UserFeedbacksConstraint
   def matches?(request)
+    # Always allow non-GET requests (POST, PUT, DELETE)
     return true if request.request_method != "GET"
 
+    # For GET requests, just check if user is logged in
     current_user = CurrentUser.lookup_from_env(request.env)
 
-    return true if !SiteSetting.user_feedbacks_hide_feedbacks_from_user
+    # Allow if user is logged in
+    return true if current_user.present?
 
-    return false if !current_user
-    return false if request.query_parameters["feedback_to_id"].to_i == current_user.id && current_user.admin == false
-
-    true
+    # Block anonymous users
+    false
   rescue Discourse::InvalidAccess, Discourse::ReadOnly
     false
   end
