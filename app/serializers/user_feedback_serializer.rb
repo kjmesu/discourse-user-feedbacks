@@ -20,42 +20,29 @@ class UserFeedbackSerializer < ApplicationSerializer
              :can_delete,
              :can_recover,
              :can_edit,
-             :notice,
-             :notice_created_by_user
+             :notice
 
   has_one :user, serializer: GroupPostUserSerializer, embed: :object
   has_one :feedback_to, serializer: GroupPostUserSerializer, embed: :object
+  has_one :notice_created_by_user, serializer: BasicUserSerializer, embed: :object
 
-  def flagged
-    object.flagged?
+  def notice
+    object.custom_fields["feedback_notice"]
   end
 
-  def deleted_by
-    BasicUserSerializer.new(object.deleted_by, root: false).as_json if object.deleted_by
-  end
-
-  def include_deleted_by?
-    scope.is_staff? && object.deleted_by.present?
-  end
-
-  def can_delete
-    scope.can_delete_user_feedback?(object)
-  end
-
-  def can_recover
-    scope.can_recover_user_feedback?(object)
-  end
-
-  def can_edit
-    scope.can_edit_user_feedback?(object)
+  def include_notice?
+    notice.present?
   end
 
   def notice_created_by_user
-    BasicUserSerializer.new(object.notice_created_by, root: false).as_json if object.notice_created_by
+    return if notice.blank?
+    return if notice["created_by_user_id"].blank?
+    User.find_by(id: notice["created_by_user_id"])
   end
 
   def include_notice_created_by_user?
-    object.notice_created_by.present?
+    scope.is_staff? && notice.present? && notice_created_by_user.present?
+  end
   end
 
   def hidden
