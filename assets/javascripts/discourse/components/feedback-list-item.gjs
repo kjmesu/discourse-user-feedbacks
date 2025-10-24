@@ -59,7 +59,7 @@ export default class FeedbackListItem extends Component {
         if (field !== "notice") {
           throw new Error(`Unsupported field for feedback: ${field}`);
         }
-        return ajax(`/user_feedbacks/${feedback.id}`, {
+        return ajax(`/user_feedbacks/${feedback.id}/notice`, {
           type: "PUT",
           data: { notice: value },
         });

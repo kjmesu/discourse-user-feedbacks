@@ -29,7 +29,7 @@ module DiscourseUserFeedbacks
 
     def update
       params.require(:id)
-      params.permit(:rating, :feedback_to_id, :review, :notice)
+      params.permit(:rating, :feedback_to_id, :review)
 
       feedback = DiscourseUserFeedbacks::UserFeedback.find(params[:id])
 
@@ -44,21 +44,30 @@ module DiscourseUserFeedbacks
         opts[:review] = params[:review]
       end
 
-      if params.has_key?(:notice)
-        guardian.ensure_can_edit_user_feedback!(feedback)
-        if params[:notice].present?
-          cooked = PrettyText.cook(params[:notice])
-          opts[:notice] = { type: "custom", raw: params[:notice], cooked: cooked }
-          opts[:notice_created_by_id] = current_user.id
-        else
-          opts[:notice] = nil
-          opts[:notice_created_by_id] = nil
-        end
-      end
-
       feedback.update!(opts)
 
       render_serialized(feedback, UserFeedbackSerializer)
+    end
+
+    def notice
+      feedback = DiscourseUserFeedbacks::UserFeedback.find(params[:id])
+      guardian.ensure_can_edit_user_feedback!(feedback)
+
+      if params[:notice].present?
+        cooked_notice = PrettyText.cook(params[:notice])
+        feedback.custom_fields["feedback_notice"] = {
+          type: "custom",
+          raw: params[:notice],
+          cooked: cooked_notice,
+          created_by_user_id: current_user.id,
+        }
+      else
+        feedback.custom_fields.delete("feedback_notice")
+      end
+
+      feedback.save_custom_fields
+
+      render json: { cooked_notice: feedback.custom_fields["feedback_notice"]&.[]("cooked") }
     end
 
     def destroy
