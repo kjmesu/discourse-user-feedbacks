@@ -29,6 +29,9 @@ en:
         title: "Leave Feedback for @%{username}"
         submit: "Submit Feedback"
         cancel: "Cancel"
+      errors:
+        rating_required: "Please select a rating"
+      feedback_submitted: "Feedback submitted successfully!"
       hidden:
         you_must_edit: "Your feedback was flagged by the community and has been hidden."
         user_must_edit: "This feedback was flagged by the community and is temporarily hidden."

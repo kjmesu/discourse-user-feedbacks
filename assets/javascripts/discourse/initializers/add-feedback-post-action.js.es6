@@ -1,77 +1,85 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
+import { apiInitializer } from "discourse/lib/api";
+import CreateFeedbackModal from "../components/modal/create-feedback-modal";
 
-function initializeFeedbackPostAction(api) {
-  // Add a post action button for leaving feedback
-  api.addPostMenuButton("feedback", (post) => {
+export default apiInitializer("1.14.0", (api) => {
+  api.registerValueTransformer("post-menu-buttons", ({ value: buttons, context }) => {
     const currentUser = api.getCurrentUser();
-    if (!currentUser) return;
+    if (!currentUser) {
+      return buttons;
+    }
 
-    const topic = post.topic;
-    if (!topic) return;
+    const post = context.post;
+    const topic = context.topic || post?.topic;
+
+    if (!post || !topic) {
+      console.log("Feedback button: missing post or topic", { post, topic, context });
+      return buttons;
+    }
 
     // Don't show feedback button for own posts
-    if (post.user_id === currentUser.id) return;
+    if (post.user_id === currentUser.id) {
+      console.log("Feedback button: own post, skipping");
+      return buttons;
+    }
 
     // Topic must be valid (not deleted, hidden, or closed)
-    if (!topic.visible || topic.closed) return;
+    if (!topic.visible || topic.closed) {
+      console.log("Feedback button: topic not visible or closed", { visible: topic.visible, closed: topic.closed });
+      return buttons;
+    }
 
     const isTopicCreator = topic.user_id === currentUser.id;
     const isFirstPost = post.post_number === 1;
+
+    console.log("Feedback button check:", {
+      postNumber: post.post_number,
+      postUserId: post.user_id,
+      topicUserId: topic.user_id,
+      currentUserId: currentUser.id,
+      isTopicCreator,
+      isFirstPost
+    });
 
     let shouldShow = false;
 
     if (isTopicCreator && !isFirstPost) {
       // Topic creator can leave feedback on any post except post #1
       shouldShow = true;
+      console.log("Feedback button: showing for topic creator on reply");
     } else if (!isTopicCreator && isFirstPost) {
       // Non-creators can only leave feedback on post #1 (for the topic creator)
       shouldShow = true;
+      console.log("Feedback button: showing for non-creator on post #1");
     }
 
-    if (!shouldShow) return;
+    if (!shouldShow) {
+      console.log("Feedback button: not showing based on rules");
+      return buttons;
+    }
 
-    return {
-      action: "leaveFeedback",
+    // Add the feedback button
+    buttons.push({
+      id: "leave-feedback",
       icon: "star",
-      title: "user_feedbacks.leave_feedback",
-      label: "user_feedbacks.leave_feedback_button",
+      label: "discourse_user_feedbacks.leave_feedback_button",
+      title: "discourse_user_feedbacks.leave_feedback",
       className: "leave-feedback",
-      position: "first"
-    };
-  });
+      position: "first",
+      action: (clickedPost) => {
+        // Get modal service from the container
+        const modal = api.container.lookup("service:modal");
 
-  // Handle the leave feedback action
-  api.attachWidgetAction("post", "leaveFeedback", function() {
-    const post = this.model;
-    const currentUser = api.getCurrentUser();
-
-    if (!currentUser) return;
-
-    // Show modal for creating feedback
-    const controller = showModal("create-feedback", {
-      model: {
-        post: post,
-        topic: post.topic,
-        feedbackToUserId: post.user_id,
-        feedbackToUsername: post.username
+        modal.show(CreateFeedbackModal, {
+          model: {
+            post: clickedPost,
+            topic: clickedPost.topic,
+            feedbackToUserId: clickedPost.user_id,
+            feedbackToUsername: clickedPost.username
+          }
+        });
       }
     });
 
-    controller.setProperties({
-      post: post,
-      topic: post.topic,
-      feedbackToUserId: post.user_id,
-      feedbackToUsername: post.username
-    });
+    return buttons;
   });
-}
-
-export default {
-  name: "add-feedback-post-action",
-  initialize() {
-    withPluginApi("0.8.31", initializeFeedbackPostAction);
-  }
-};
+});

@@ -25,6 +25,11 @@ export default Component.extend({
     } else {
       this.set("value", this.value);
     }
+
+    // Call onChange callback if provided
+    if (this.onChange) {
+      this.onChange(this.value);
+    }
   }),
 
   @discourseComputed("value")
