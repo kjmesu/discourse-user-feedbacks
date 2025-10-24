@@ -20,6 +20,7 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { later } from "@ember/runloop";
 import FlagFeedbackModal from "discourse/plugins/discourse-user-feedbacks/discourse/components/flag-feedback-modal";
+import PostNotice from "discourse/components/post/notice";
 import AdminFeedbackMenu from "discourse/plugins/discourse-user-feedbacks/discourse/components/admin-feedback-menu";
 import ChangePostNotice from "discourse/components/modal/change-post-notice";
 
@@ -303,6 +304,9 @@ export default class FeedbackListItem extends Component {
           </div>
           {{! Body }}
           <div class="post__body topic-body clearfix">
+            {{#if @feedback.notice}}
+              <Post::Notice @post={{@feedback}} />
+            {{/if}}
             {{! Meta header }}
             <div class="topic-meta-data" role="heading" aria-level="2">
               <div class="names trigger-user-card">
