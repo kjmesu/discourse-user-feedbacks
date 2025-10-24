@@ -3,6 +3,7 @@
 module DiscourseUserFeedbacks
   class UserFeedback < ActiveRecord::Base
     include Trashable
+    include HasCustomFields
 
     self.table_name = 'discourse_user_feedbacks'
 
