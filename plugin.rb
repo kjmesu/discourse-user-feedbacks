@@ -273,6 +273,19 @@ after_initialize do
 
     def ensure_can_create_feedback_for_user_in_topic!(feedback_to_user, topic, post = nil)
       unless can_create_feedback_for_user_in_topic?(feedback_to_user, topic, post)
+        # Build diagnostic message
+        diagnostic = []
+        diagnostic << "Current user: #{user&.id}"
+        diagnostic << "Feedback to: #{feedback_to_user&.id}"
+        diagnostic << "Topic ID: #{topic&.id}, Creator: #{topic&.user_id}"
+        diagnostic << "Post ID: #{post&.id}, Post #: #{post&.post_number}"
+        diagnostic << "User authenticated: #{authenticated?}"
+        diagnostic << "Is topic creator: #{topic&.user_id == user&.id}"
+        diagnostic << "User has posted: #{Post.exists?(topic_id: topic&.id, user_id: user&.id)}"
+        diagnostic << "Target has posted: #{Post.exists?(topic_id: topic&.id, user_id: feedback_to_user&.id)}"
+
+        Rails.logger.error "PERMISSION DENIED: #{diagnostic.join(' | ')}"
+
         raise Discourse::InvalidAccess.new(
           "not permitted to create feedback",
           nil,
