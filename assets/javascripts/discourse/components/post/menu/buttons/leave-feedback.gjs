@@ -40,9 +40,14 @@ export default class PostMenuLeaveFeedbackButton extends Component {
     }
 
     // Participants can leave feedback on ANY post by the topic creator
-    // (They must have posted in the topic - enforced by backend Guardian)
+    // BUT they must have posted in the topic first
     if (!isTopicCreator && isPostByTopicCreator) {
-      return true;
+      // Check if current user has posted in this topic
+      const currentUserHasPosted = topic.postStream?.posts?.some(
+        (p) => p.user_id === helper.currentUser.id
+      );
+
+      return currentUserHasPosted === true;
     }
 
     return false;
