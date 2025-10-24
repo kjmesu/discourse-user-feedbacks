@@ -257,16 +257,19 @@ after_initialize do
           return false
         end
       else
-        # Non-creators can only give feedback to the topic creator on post #1
+        # Non-creators can give feedback to the topic creator on ANY of the topic creator's posts
         unless topic.user_id == feedback_to_user.id
           Rails.logger.info "FAIL: Non-creator trying to rate non-OP (target=#{feedback_to_user.id}, OP=#{topic.user_id})"
           return false
         end
-        unless post.nil? || post.post_number == 1
-          Rails.logger.info "FAIL: Non-creator trying to rate on non-first post (post_number=#{post&.post_number})"
+
+        # Verify the post being rated belongs to the topic creator
+        if post && post.user_id != topic.user_id
+          Rails.logger.info "FAIL: Post does not belong to topic creator (post.user_id=#{post.user_id}, topic.user_id=#{topic.user_id})"
           return false
         end
-        Rails.logger.info "SUCCESS: Non-creator can rate OP on post #1"
+
+        Rails.logger.info "SUCCESS: Non-creator can rate OP on their post"
         true
       end
     end

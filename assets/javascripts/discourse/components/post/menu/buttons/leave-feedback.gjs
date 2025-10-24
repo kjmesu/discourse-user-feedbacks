@@ -32,14 +32,19 @@ export default class PostMenuLeaveFeedbackButton extends Component {
 
     const isTopicCreator = topic.user_id === helper.currentUser.id;
     const isFirstPost = post.post_number === 1;
+    const isPostByTopicCreator = post.user_id === topic.user_id;
 
-    // ONLY topic creators see feedback buttons on posts
-    // They can leave feedback on any participant's post except post #1
+    // Topic creators can leave feedback on any participant's post (except post #1)
     if (isTopicCreator && !isFirstPost) {
       return true;
     }
 
-    // Participants will use the topic-level button instead
+    // Participants can leave feedback on ANY post by the topic creator
+    // (They must have posted in the topic - enforced by backend Guardian)
+    if (!isTopicCreator && isPostByTopicCreator) {
+      return true;
+    }
+
     return false;
   }
 
