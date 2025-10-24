@@ -157,7 +157,7 @@ export default class FeedbackListItem extends Component {
       }
       return ajax(`/user_feedbacks/${feedback.id}`, {
         type: "PUT",
-        data: { notice: value },
+        data: { notice: value ?? "" },
       });
     };
 
