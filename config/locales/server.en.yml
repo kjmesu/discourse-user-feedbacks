@@ -6,3 +6,43 @@ en:
     user_feedbacks_display_average_ratings_on_profile: "Display average user rating on user's profile"
     user_feedbacks_display_average_ratings_on_user_card: "Display average user rating on user card"
     user_feedbacks_hide_feedbacks_from_user: "Hide feedbacks from the user"
+  user_feedbacks:
+    flag:
+      success: "Feedback has been flagged for moderator review"
+    flag_reasons:
+      fraudulent: "Fraudulent"
+    hidden:
+      you_must_edit: "Your feedback was flagged by the community and has been hidden."
+      user_must_edit: "This feedback has been hidden by the community."
+  reviewable_score_types:
+    fraudulent:
+      title: "Fraudulent"
+  reviewables:
+    types:
+      reviewable_user_feedback:
+        title: "Flagged Feedback"
+        flagged_by: "Flagged by"
+    actions:
+      agree_and_hide:
+        title: "Hide Feedback"
+        description: "Agree with the flag and hide this feedback"
+      agree_and_keep:
+        title: "Agree and Keep"
+        description: "Agree with the flag but keep the feedback"
+      agree_and_edit:
+        title: "Agree and Edit Feedback"
+        description: "Agree with the flag and open a composer window to edit the feedback"
+      delete_feedback:
+        title: "Delete Feedback"
+        description: "Agree with the flag and delete this feedback"
+        confirm: "Are you sure you want to delete this feedback?"
+      disagree:
+        title: "No"
+        description: "Disagree with the flag"
+      ignore:
+        title: "Do Nothing"
+        description: "Ignore the flag by removing it from the queue without taking any action. Hidden feedback will stay hidden and be handled by the auto-tools."
+      ignore_and_delete_feedback:
+        title: "Ignore Flag and Delete Feedback"
+        description: "Ignore the flag by removing it from the queue and delete the feedback"
+        confirm: "Are you sure you want to delete this feedback?"

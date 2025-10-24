@@ -2,6 +2,8 @@
 
 class DiscourseUserFeedbacks::UserFeedbacksConstraint
   def matches?(request)
+    return true if request.request_method != "GET"
+
     current_user = CurrentUser.lookup_from_env(request.env)
 
     return true if !SiteSetting.user_feedbacks_hide_feedbacks_from_user

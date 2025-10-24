@@ -26,11 +26,19 @@ after_initialize do
   [
     "../app/controllers/user_feedbacks_controller.rb",
     "../app/serializers/user_feedback_serializer.rb",
+    "../app/serializers/reviewable_user_feedback_serializer.rb",
     "../app/models/user_feedback.rb",
+    "../app/models/reviewable_user_feedback.rb",
     "../lib/discourse_user_feedbacks/user_extension.rb",
     "../lib/discourse_user_feedbacks/user_feedbacks_constraint.rb",
     "../config/routes"
   ].each { |path| require File.expand_path(path, __FILE__) }
+
+  # Register custom reviewable score types for feedback flags
+  ReviewableScore.add_new_types([:fraudulent])
+
+  # Register the reviewable type with this plugin
+  register_reviewable_type ReviewableUserFeedback
 
   Discourse::Application.routes.append do
     %w{users u}.each do |root_path|
@@ -66,6 +74,8 @@ after_initialize do
     count = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
     count = 1 if count <= 0
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).sum(:rating) / count.to_f
+    return 0.0 if count == 0
+    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).average(:rating).to_f
   end
 
   add_to_serializer(:basic_user, :rating_count) do
@@ -83,6 +93,7 @@ after_initialize do
     count = 1 if count <= 0
 
     DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).sum(:rating) / count.to_f
+    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: object.user_id).average(:rating).to_f
   end
 
   add_to_serializer(:post, :user_rating_count) do
@@ -96,6 +107,49 @@ after_initialize do
 
     def ensure_can_delete_feedback!
       raise Discourse::InvalidAccess.new unless can_delete_feedback?
+    end
+
+    def can_flag_user_feedback?(feedback)
+      return false unless authenticated?
+      return false if feedback.user_id == user.id # Can't flag own feedback
+      return false if feedback.flagged? # Already flagged
+      true
+    end
+
+    def ensure_can_flag_user_feedback!(feedback)
+      raise Discourse::InvalidAccess.new unless can_flag_user_feedback?(feedback)
+    end
+
+    def can_delete_user_feedback?(feedback)
+      user&.staff?
+    end
+
+    def can_edit_user_feedback?(feedback)
+      # Staff members can edit any feedback
+      user&.staff?
+    end
+
+    def can_recover_user_feedback?(feedback)
+      return false unless feedback
+      return false unless feedback.deleted_at
+
+      # Staff can always recover deleted feedback
+      return true if user&.staff?
+
+      # Users can recover their own deleted feedback
+      return true if is_my_own_feedback?(feedback)
+
+      false
+    end
+
+    def ensure_can_recover_user_feedback!(feedback)
+      raise Discourse::InvalidAccess.new unless can_recover_user_feedback?(feedback)
+    end
+
+    private
+
+    def is_my_own_feedback?(feedback)
+      user && feedback.user_id == user.id
     end
   end
 end

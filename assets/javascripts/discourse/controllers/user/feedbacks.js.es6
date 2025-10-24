@@ -20,6 +20,7 @@ export default Controller.extend({
   @discourseComputed("rating")
   disabled(rating) {
     return !parseInt(rating) > 0;
+    return this.rating <= 0;
   },
 
   createFeedback: action(function() {

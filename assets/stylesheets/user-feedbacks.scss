@@ -246,5 +246,380 @@
         }
       }
     }
+
+    .flag-feedback-button.flagged {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ==========================
+// REVIEWABLE DISPLAY
+// ==========================
+
+// Header badge styling for "FLAGGED FEEDBACK"
+.reviewable-type.-flagged-feedback {
+  background-color: var(--danger);
+  color: var(--secondary);
+  padding: 0.25em 0.5em;
+  border-radius: 3px;
+  font-size: $font-down-1;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+// ReviewableField styling for feedback details
+.reviewable-user-feedback-fields {
+  margin-top: 1em;
+
+  .reviewable-feedback-details {
+    margin-bottom: 0.5em;
+
+    .name {
+      font-weight: 700;
+      color: var(--primary-medium);
+      margin-bottom: 0.25em;
+    }
+
+    .value {
+      color: var(--primary);
+    }
+  }
+}
+
+.reviewable-meta-data {
+  background: var(--primary-very-low);
+  padding: 1em;
+  margin-top: 0.5em;
+
+  .reviewable-scores {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: $font-down-1;
+
+    th {
+      text-align: left;
+      font-weight: 700;
+      color: var(--primary-medium);
+      padding: 0.5em 0.75em 0.5em 0;
+      border-bottom: 2px solid var(--primary-low);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.75em 0.75em 0.75em 0;
+      color: var(--primary);
+      vertical-align: top;
+
+      .reason-badge {
+        display: inline-block;
+        padding: 0.25em 0.5em;
+        background: var(--danger);
+        color: var(--secondary);
+        border-radius: 3px;
+        font-size: $font-down-2;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+
+// ==========================
+// FLAG MODAL
+// ==========================
+.flag-modal {
+  .modal-body {
+    p {
+      margin-bottom: 1.5em;
+      color: var(--primary);
+      font-size: $font-0;
+    }
+  }
+
+  .flag-types {
+    margin-bottom: 1em;
+
+    .radio-item {
+      margin-bottom: 1.25em;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75em;
+      align-items: start;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      input[type="radio"] {
+        margin-top: 0.2em;
+      }
+
+      label {
+        cursor: pointer;
+        margin: 0;
+
+        strong {
+          display: block;
+          margin-bottom: 0.35em;
+          font-size: $font-0;
+          color: var(--primary);
+          font-weight: 700;
+        }
+
+        .description {
+          font-size: $font-down-1;
+          color: var(--primary-medium);
+          line-height: 1.5;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .flag-message-area {
+    margin-top: 1.5em;
+    padding-top: 1.5em;
+    border-top: 1px solid var(--primary-low);
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.5em;
+      font-size: $font-0;
+      color: var(--primary);
+    }
+
+    .flag-message-input {
+      width: 100%;
+      padding: 0.75em;
+      border: 1px solid var(--primary-medium);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: $font-0;
+      resize: vertical;
+      background: var(--secondary);
+      color: var(--primary);
+      box-sizing: border-box;
+
+      &:focus {
+        outline: none;
+        border-color: var(--tertiary);
+        box-shadow: 0 0 0 1px var(--tertiary);
+      }
+
+      &::placeholder {
+        color: var(--primary-low-mid);
+      }
+    }
+  }
+}
+
+// ==========================
+// FLAG COUNT BUTTON STYLING
+// ==========================
+// Match native Discourse post flag count pattern
+.feedback-post .post__menu-area {
+  .double-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+
+    .button-count {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: 1px solid var(--primary-low);
+      min-width: auto;
+      padding: 0.4em 0.5em;
+
+      span {
+        font-size: $font-down-1;
+        font-weight: 600;
+        color: var(--primary-high);
+      }
+
+      &.has-pending span {
+        background-color: var(--danger);
+        color: var(--secondary);
+        padding: 0.15em 0.3em 0.2em;
+        display: inline-block;
+        font-size: $font-down-2;
+        border-radius: var(--d-button-border-radius);
+      }
+    }
+
+    .flag-feedback-button {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+// ==========================
+// DELETED FEEDBACK STYLING
+// ==========================
+// Match native Discourse post deletion styling EXACTLY
+.deleted {
+  // Red background for the cooked content
+  .regular > .cooked {
+    background-color: var(--danger-low-mid);
+  }
+
+  // Color the metadata (username, date, rating) in red
+  .topic-meta-data:not(.embedded-reply) {
+    color: var(--danger);
+
+    .post-info a,
+    a {
+      color: currentcolor;
+    }
+
+    .d-icon {
+      color: currentcolor;
+    }
+  }
+
+  // Color the post controls (menu buttons) in red
+  nav.post-controls {
+    color: var(--danger);
+
+    .show-replies,
+    button.reply.create {
+      color: var(--danger);
+
+      .d-icon {
+        color: var(--danger);
+      }
+    }
+
+    .btn {
+      &:hover {
+        color: currentcolor;
+        background: var(--danger-low);
+
+        .d-icon {
+          color: currentcolor;
+        }
+      }
+    }
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  // Color the deleted action message in red
+  .post-action {
+    color: var(--danger);
+  }
+}
+
+// ==========================
+// HIDDEN FEEDBACK STYLING
+// ==========================
+// Match the post-hidden styling from Discourse core
+.post-hidden {
+  .topic-avatar,
+  .cooked,
+  .topic-meta-data,
+  .post-actions {
+    opacity: 0.5;
+  }
+}
+
+// Post action feedback (e.g., "You flagged this as...")
+.post-action-feedback {
+  background: var(--primary-very-low);
+  border-left: 3px solid var(--tertiary);
+  padding: 0.5em 1em;
+  margin: 1em 0;
+  border-radius: 3px;
+
+  .post-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0;
+    font-size: $font-down-1;
+    color: var(--primary-high);
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+}
+
+// ==========================
+// NOTICE MODAL
+// ==========================
+.change-post-notice-modal {
+  .post-notice-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75em;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: $font-0;
+    resize: vertical;
+    background: var(--secondary);
+    color: var(--primary);
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 1px var(--tertiary);
+    }
+
+    &::placeholder {
+      color: var(--primary-low-mid);
+    }
+  }
+}
+
+// ==========================
+// NOTICE DISPLAY
+// ==========================
+.feedback-notice {
+  background: var(--primary-very-low);
+  border-left: 3px solid var(--tertiary);
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 3px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75em;
+
+  .d-icon {
+    color: var(--tertiary);
+    margin-top: 0.2em;
+    flex-shrink: 0;
+  }
+
+  .notice-content {
+    flex: 1;
+    font-size: $font-0;
+    color: var(--primary-high);
+
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .notice-attribution {
+    font-size: $font-down-1;
+    color: var(--primary-medium);
+    margin-top: 0.5em;
+    font-style: italic;
   }
 }
