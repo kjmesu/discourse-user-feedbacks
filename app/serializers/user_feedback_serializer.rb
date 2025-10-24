@@ -26,6 +26,30 @@ class UserFeedbackSerializer < ApplicationSerializer
   has_one :feedback_to, serializer: GroupPostUserSerializer, embed: :object
   has_one :notice_created_by_user, serializer: BasicUserSerializer, embed: :object
 
+  def flagged
+    object.flagged?
+  end
+
+  def deleted_by
+    BasicUserSerializer.new(object.deleted_by, root: false).as_json if object.deleted_by
+  end
+
+  def include_deleted_by?
+    scope.is_staff? && object.deleted_by.present?
+  end
+
+  def can_delete
+    scope.can_delete_user_feedback?(object)
+  end
+
+  def can_recover
+    scope.can_recover_user_feedback?(object)
+  end
+
+  def can_edit
+    scope.can_edit_user_feedback?(object)
+  end
+
   def notice
     object.custom_fields["feedback_notice"]
   end
@@ -42,7 +66,6 @@ class UserFeedbackSerializer < ApplicationSerializer
 
   def include_notice_created_by_user?
     scope.is_staff? && notice.present? && notice_created_by_user.present?
-  end
   end
 
   def hidden
