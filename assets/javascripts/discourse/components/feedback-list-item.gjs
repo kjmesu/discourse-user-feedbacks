@@ -147,24 +147,28 @@ export default class FeedbackListItem extends Component {
   @action
   async changeNotice() {
     const feedback = this.args.feedback;
-    const newNotice = await this.modal.show(ChangePostNotice, {
+
+    // The standard ChangePostNotice modal expects these methods to exist on the object.
+    // We are shimming them here to call our standard `update` action.
+    feedback.updatePostField = async (field, value) => {
+      if (field !== "notice") {
+        throw new Error(`Unsupported field for feedback: ${field}`);
+      }
+      return ajax(`/user_feedbacks/${feedback.id}`, {
+        type: "PUT",
+        data: { notice: value },
+      });
+    };
+
+    feedback.set = (key, value) => {
+      set(this.args.feedback, key, value);
+    };
+
+    this.modal.show(ChangePostNotice, {
       model: {
         post: feedback,
-      }
+      },
     });
-
-    if (newNotice) {
-      try {
-        await ajax(`/user_feedbacks/${feedback.id}`, {
-          type: "PUT",
-          data: { notice: newNotice.raw },
-        });
-        // Manually update the notice on the frontend
-        set(this.args.feedback, 'notice', newNotice);
-      } catch (error) {
-        popupAjaxError(error);
-      }
-    }
   }
 
   @action
