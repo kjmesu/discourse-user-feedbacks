@@ -40,9 +40,6 @@ after_initialize do
   # Register the reviewable type with this plugin
   register_reviewable_type ReviewableUserFeedback
 
-  # Register notification type for user feedback
-  register_notification_type(:user_feedback_received, priority: Notification.types[:private_message])
-
   Discourse::Application.routes.append do
     %w{users u}.each do |root_path|
       get "#{root_path}/:username/feedbacks" => "users#preferences", constraints: { username: RouteFormat.username }

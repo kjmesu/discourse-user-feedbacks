@@ -58,9 +58,9 @@ module DiscourseUserFeedbacks
       # Choose translation key based on whether reciprocation is needed
       translation_key = reciprocal_feedback_exists ? 'user_feedbacks.notification' : 'user_feedbacks.notification_with_reciprocation'
 
-      # Create notification
+      # Create notification using the 'custom' type
       Notification.create!(
-        notification_type: Notification.types[:user_feedback_received],
+        notification_type: Notification.types[:custom],
         user_id: feedback.feedback_to_id,
         topic_id: feedback.topic_id,
         data: {
