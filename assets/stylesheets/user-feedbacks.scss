@@ -623,3 +623,31 @@
     font-style: italic;
   }
 }
+
+// ==========================
+// TOPIC CONTEXT DISPLAY
+// ==========================
+.feedback-topic-context {
+  margin-top: 1em;
+  padding: 0.75em 1em;
+  background: var(--primary-very-low);
+  border-left: 3px solid var(--tertiary);
+  border-radius: 3px;
+  font-size: $font-down-1;
+
+  .feedback-topic-label {
+    color: var(--primary-medium);
+    font-weight: 600;
+    margin-right: 0.5em;
+  }
+
+  .feedback-topic-link {
+    color: var(--tertiary);
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

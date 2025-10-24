@@ -1,0 +1,28 @@
+<DModalBody @title={{i18n "discourse_user_feedbacks.create_feedback_modal.title" username=this.feedbackToUsername}} @class="create-feedback-modal">
+  <div class="feedback-form">
+    <div class="feedback-rating">
+      <label>{{i18n "discourse_user_feedbacks.user_feedbacks.add_rating"}}</label>
+      {{rating-input rating=this.rating onChange=(action "updateRating")}}
+    </div>
+
+    {{#if siteSettings.user_feedbacks_allow_reviews}}
+      <div class="feedback-review">
+        <label>{{i18n "discourse_user_feedbacks.user_feedbacks.user_review.placeholder"}}</label>
+        <Textarea @value={{this.review}} @placeholder={{i18n "discourse_user_feedbacks.user_feedbacks.user_review.placeholder"}} />
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="modal-footer">
+    <DButton
+      @action={{action "submitFeedback"}}
+      @label="discourse_user_feedbacks.create_feedback_modal.submit"
+      @class="btn-primary"
+    />
+    <DButton
+      @action={{action "cancel"}}
+      @label="discourse_user_feedbacks.create_feedback_modal.cancel"
+      @class="btn-default"
+    />
+  </div>
+</DModalBody>

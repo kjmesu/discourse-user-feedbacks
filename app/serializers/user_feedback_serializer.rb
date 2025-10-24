@@ -21,10 +21,30 @@ class UserFeedbackSerializer < ApplicationSerializer
              :can_recover,
              :can_edit,
              :notice,
-             :notice_created_by_user
+             :notice_created_by_user,
+             :topic_id,
+             :post_id,
+             :topic_title,
+             :topic_slug
 
   has_one :user, serializer: GroupPostUserSerializer, embed: :object
   has_one :feedback_to, serializer: GroupPostUserSerializer, embed: :object
+
+  def topic_title
+    object.topic&.title
+  end
+
+  def include_topic_title?
+    object.topic.present?
+  end
+
+  def topic_slug
+    object.topic&.slug
+  end
+
+  def include_topic_slug?
+    object.topic.present?
+  end
 
   def flagged
     object.flagged?

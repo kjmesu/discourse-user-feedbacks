@@ -339,6 +339,14 @@ export default class FeedbackListItem extends Component {
             <div class="post__regular regular post__contents contents">
               <div class="cooked">
                 <p>{{htmlSafe @feedback.review}}</p>
+                {{#if @feedback.topic_title}}
+                  <div class="feedback-topic-context">
+                    <span class="feedback-topic-label">{{i18n "discourse_user_feedbacks.user_feedbacks.given_in_topic"}}:</span>
+                    <a href="/t/{{@feedback.topic_slug}}/{{@feedback.topic_id}}" class="feedback-topic-link">
+                      {{@feedback.topic_title}}
+                    </a>
+                  </div>
+                {{/if}}
                 <div class="cooked-selection-barrier" aria-hidden="true"><br></div>
               </div>
               {{#if this.showFlaggedMessage}}

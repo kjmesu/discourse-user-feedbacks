@@ -17,3 +17,7 @@ plugins:
   user_feedbacks_hide_feedbacks_from_user:
     client: true
     default: false
+  user_feedbacks_unique_per_topic:
+    client: true
+    default: true
+    description: "Prevent users from leaving multiple feedbacks for the same user in the same topic"

@@ -14,6 +14,13 @@ en:
     hidden:
       you_must_edit: "Your feedback was flagged by the community and has been hidden."
       user_must_edit: "This feedback has been hidden by the community."
+    errors:
+      topic_must_exist: "Topic must exist"
+      topic_cannot_be_deleted: "Cannot leave feedback on deleted topics"
+      topic_cannot_be_hidden: "Cannot leave feedback on hidden topics"
+      topic_cannot_be_closed: "Cannot leave feedback on closed topics"
+      must_have_posted_in_topic: "You must have posted in this topic to leave feedback"
+      already_gave_feedback_in_topic: "You have already left feedback for this user in this topic"
   reviewable_score_types:
     fraudulent:
       title: "Fraudulent"

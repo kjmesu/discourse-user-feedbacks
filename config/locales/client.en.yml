@@ -22,6 +22,13 @@ en:
         flag_tooltip: "Flag this feedback for moderator review"
         flag_confirm: "Are you sure you want to flag this feedback as inappropriate?"
         flagged_as: "You flagged this as %{reason}"
+        given_in_topic: "Given in"
+      leave_feedback: "Leave feedback for this user"
+      leave_feedback_button: "Leave Feedback"
+      create_feedback_modal:
+        title: "Leave Feedback for @%{username}"
+        submit: "Submit Feedback"
+        cancel: "Cancel"
       hidden:
         you_must_edit: "Your feedback was flagged by the community and has been hidden."
         user_must_edit: "This feedback was flagged by the community and is temporarily hidden."

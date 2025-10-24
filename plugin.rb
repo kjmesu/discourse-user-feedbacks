@@ -71,11 +71,11 @@ after_initialize do
 
     return nil if !user
 
-    count = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
-    count = 1 if count <= 0
-    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).sum(:rating) / count.to_f
+    # Only count non-hidden feedbacks
+    feedbacks = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id, hidden: false)
+    count = feedbacks.count
     return 0.0 if count == 0
-    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).average(:rating).to_f
+    feedbacks.average(:rating).to_f
   end
 
   add_to_serializer(:basic_user, :rating_count) do
@@ -84,20 +84,63 @@ after_initialize do
 
     return nil if !user
 
-    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
+    # Only count non-hidden feedbacks
+    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id, hidden: false).count
   end
 
   add_to_serializer(:post, :user_average_rating) do
     user = object.user
-    count = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).count
-    count = 1 if count <= 0
-
-    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).sum(:rating) / count.to_f
-    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: object.user_id).average(:rating).to_f
+    # Only count non-hidden feedbacks
+    feedbacks = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id, hidden: false)
+    count = feedbacks.count
+    return 0.0 if count == 0
+    feedbacks.average(:rating).to_f
   end
 
   add_to_serializer(:post, :user_rating_count) do
-    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: object.user.id).count
+    # Only count non-hidden feedbacks
+    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: object.user.id, hidden: false).count
+  end
+
+  # Auto-hide/show feedbacks when topic state changes
+  on(:topic_status_updated) do |topic, status, enabled|
+    # When a topic is closed, deleted, or made invisible, hide associated feedbacks
+    if ['closed', 'autoclosed', 'archived', 'visible'].include?(status)
+      feedbacks = DiscourseUserFeedbacks::UserFeedback.where(topic_id: topic.id)
+      feedbacks.each do |feedback|
+        if feedback.should_be_hidden? && !feedback.hidden?
+          feedback.hide!
+        elsif !feedback.should_be_hidden? && feedback.hidden?
+          feedback.unhide!
+        end
+      end
+    end
+  end
+
+  # Auto-hide/show feedbacks when user is suspended/unsuspended
+  on(:user_suspended) do |args|
+    user = args[:user]
+    # Hide feedbacks given by suspended user
+    DiscourseUserFeedbacks::UserFeedback.where(user_id: user.id).each do |feedback|
+      feedback.hide! unless feedback.hidden?
+    end
+    # Hide feedbacks received by suspended user
+    DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id).each do |feedback|
+      feedback.hide! unless feedback.hidden?
+    end
+  end
+
+  on(:user_unsuspended) do |args|
+    user = args[:user]
+    # Unhide feedbacks that should no longer be hidden
+    given_feedbacks = DiscourseUserFeedbacks::UserFeedback.where(user_id: user.id)
+    received_feedbacks = DiscourseUserFeedbacks::UserFeedback.where(feedback_to_id: user.id)
+
+    (given_feedbacks + received_feedbacks).uniq.each do |feedback|
+      if !feedback.should_be_hidden? && feedback.hidden?
+        feedback.unhide!
+      end
+    end
   end
 
   Guardian.class_eval do
@@ -144,6 +187,39 @@ after_initialize do
 
     def ensure_can_recover_user_feedback!(feedback)
       raise Discourse::InvalidAccess.new unless can_recover_user_feedback?(feedback)
+    end
+
+    def can_create_feedback_for_user_in_topic?(feedback_to_user, topic, post = nil)
+      return false unless authenticated?
+      return false unless topic
+      return false if feedback_to_user.id == user.id # Can't give feedback to yourself
+
+      # Topic must be valid
+      return false if topic.deleted_at.present?
+      return false if !topic.visible
+      return false if topic.closed
+
+      # User must have posted in the topic
+      return false unless Post.exists?(topic_id: topic.id, user_id: user.id)
+
+      # Check if user is the topic creator
+      is_topic_creator = topic.user_id == user.id
+
+      if is_topic_creator
+        # Topic creator can give feedback to any participant (except themselves)
+        # on any post except post #1
+        return false if post && post.post_number == 1
+        return Post.exists?(topic_id: topic.id, user_id: feedback_to_user.id)
+      else
+        # Non-creators can only give feedback to the topic creator on post #1
+        return false unless topic.user_id == feedback_to_user.id
+        return false unless post.nil? || post.post_number == 1
+        true
+      end
+    end
+
+    def ensure_can_create_feedback_for_user_in_topic!(feedback_to_user, topic, post = nil)
+      raise Discourse::InvalidAccess.new unless can_create_feedback_for_user_in_topic?(feedback_to_user, topic, post)
     end
 
     private

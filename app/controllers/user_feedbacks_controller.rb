@@ -7,24 +7,39 @@ module DiscourseUserFeedbacks
     PAGE_SIZE = 30
 
     def create
-      params.require([:rating, :feedback_to_id])
-      params.permit(:review)
+      params.require([:rating, :feedback_to_id, :topic_id])
+      params.permit(:review, :post_id)
 
       raise Discourse::InvalidParameters.new(:rating) if params[:rating].to_i <= 0
       raise Discourse::InvalidParameters.new(:feedback_to_id) if params[:feedback_to_id].to_i <= 0
+      raise Discourse::InvalidParameters.new(:topic_id) if params[:topic_id].to_i <= 0
+
+      # Fetch the topic and post
+      topic = Topic.find_by(id: params[:topic_id])
+      raise Discourse::NotFound unless topic
+
+      post = params[:post_id] ? Post.find_by(id: params[:post_id]) : nil
+      feedback_to_user = User.find_by(id: params[:feedback_to_id])
+      raise Discourse::NotFound unless feedback_to_user
+
+      # Check permissions using Guardian
+      guardian.ensure_can_create_feedback_for_user_in_topic!(feedback_to_user, topic, post)
 
       opts = {
         rating: params[:rating],
-        feedback_to_id: params[:feedback_to_id]
+        feedback_to_id: params[:feedback_to_id],
+        topic_id: params[:topic_id],
+        user_id: current_user.id
       }
 
       opts[:review] = params[:review] if params.has_key?(:review) && params[:review]
+      opts[:post_id] = params[:post_id] if params[:post_id]
 
-      opts[:user_id] = current_user.id
-
-      feedback = DiscourseUserFeedbacks::UserFeedback.create(opts)
+      feedback = DiscourseUserFeedbacks::UserFeedback.create!(opts)
 
       render_serialized(feedback, UserFeedbackSerializer)
+    rescue ActiveRecord::RecordInvalid => e
+      render_json_error(e.record.errors.full_messages.join(', '), status: 422)
     end
 
     def update
@@ -112,6 +127,12 @@ module DiscourseUserFeedbacks
       feedbacks = feedbacks.where(feedback_to_id: params[:feedback_to_id]) if params[:feedback_to_id]
 
       feedbacks = feedbacks.where(user_id: current_user.id) if SiteSetting.user_feedbacks_hide_feedbacks_from_user && !current_user.admin
+
+      # Filter out feedbacks that should be hidden based on topic/user state
+      # (unless user is staff - they can see everything)
+      unless current_user&.staff?
+        feedbacks = feedbacks.select { |f| !f.should_be_hidden? }
+      end
 
       count = feedbacks.length
 
