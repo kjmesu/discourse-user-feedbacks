@@ -22,8 +22,21 @@ en:
       must_have_posted_in_topic: "You must have posted in this topic to leave feedback"
       already_gave_feedback_in_topic: "You have already left feedback for this user in this topic"
       cannot_create_feedback: "You are not permitted to leave feedback for this user in this topic"
-    notification: "%{display_username} left you %{rating}-star feedback in \"%{topic_title}\""
-    notification_with_reciprocation: "%{display_username} left you %{rating}-star feedback in \"%{topic_title}\". Consider leaving them feedback in return!"
+    pm_title: "Feedback from @%{username}"
+    pm_notification: |
+      Hi there!
+
+      @%{display_username} left you a **%{rating}-star** rating %{stars} in the topic "[%{topic_title}](%{topic_url})".
+
+      Thank you for being a valued member of our community!
+    pm_notification_with_reciprocation: |
+      Hi there!
+
+      @%{display_username} left you a **%{rating}-star** rating %{stars} in the topic "[%{topic_title}](%{topic_url})".
+
+      If you found their contribution helpful, consider leaving them feedback in return!
+
+      Thank you for being a valued member of our community!
   notifications:
     titles:
       user_feedback_received: "New feedback received"

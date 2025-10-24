@@ -67,21 +67,34 @@ module DiscourseUserFeedbacks
         topic_id: feedback.topic_id
       )
 
-      # Choose translation key based on whether reciprocation is needed
-      translation_key = reciprocal_feedback_exists ? 'user_feedbacks.notification' : 'user_feedbacks.notification_with_reciprocation'
-
-      # Create notification using the 'custom' type
-      Notification.create!(
-        notification_type: Notification.types[:custom],
-        user_id: feedback.feedback_to_id,
-        topic_id: feedback.topic_id,
-        data: {
-          message: translation_key,
+      # Build the PM message
+      stars = "⭐" * feedback.rating
+      message_body = if reciprocal_feedback_exists
+        I18n.t('user_feedbacks.pm_notification',
           display_username: feedback.user.username,
-          feedback_id: feedback.id,
+          rating: feedback.rating,
+          stars: stars,
           topic_title: feedback.topic.title,
-          rating: feedback.rating
-        }.to_json
+          topic_url: feedback.topic.url
+        )
+      else
+        I18n.t('user_feedbacks.pm_notification_with_reciprocation',
+          display_username: feedback.user.username,
+          rating: feedback.rating,
+          stars: stars,
+          topic_title: feedback.topic.title,
+          topic_url: feedback.topic.url
+        )
+      end
+
+      # Create a private message using PostCreator
+      PostCreator.create!(
+        Discourse.system_user,
+        title: I18n.t('user_feedbacks.pm_title', username: feedback.user.username),
+        raw: message_body,
+        archetype: Archetype.private_message,
+        target_usernames: User.find(feedback.feedback_to_id).username,
+        skip_validations: true
       )
     end
 
