@@ -15,6 +15,7 @@ import I18n from "I18n";
 export default class CreateFeedbackModal extends Component {
   @service modal;
   @service siteSettings;
+  @service toasts;
   @tracked rating = null;
   @tracked review = "";
 
@@ -69,8 +70,11 @@ export default class CreateFeedbackModal extends Component {
       .then(() => {
         this.modal.close();
 
-        // Show success message
-        alert(I18n.t("discourse_user_feedbacks.user_feedbacks.feedback_submitted") || "Feedback submitted successfully!");
+        // Show success toast notification
+        this.toasts.success({
+          duration: 3000,
+          data: { message: I18n.t("discourse_user_feedbacks.feedback_submitted") }
+        });
       })
       .catch(popupAjaxError);
   }

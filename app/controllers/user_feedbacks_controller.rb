@@ -37,9 +37,40 @@ module DiscourseUserFeedbacks
 
       feedback = DiscourseUserFeedbacks::UserFeedback.create!(opts)
 
+      # Create notification for the user receiving feedback
+      create_feedback_notification(feedback)
+
       render_serialized(feedback, UserFeedbackSerializer)
     rescue ActiveRecord::RecordInvalid => e
       render_json_error(e.record.errors.full_messages.join(', '), status: 422)
+    end
+
+    private
+
+    def create_feedback_notification(feedback)
+      # Check if the feedback receiver has already left feedback for the giver in this topic
+      reciprocal_feedback_exists = DiscourseUserFeedbacks::UserFeedback.exists?(
+        user_id: feedback.feedback_to_id,
+        feedback_to_id: feedback.user_id,
+        topic_id: feedback.topic_id
+      )
+
+      # Choose translation key based on whether reciprocation is needed
+      translation_key = reciprocal_feedback_exists ? 'user_feedbacks.notification' : 'user_feedbacks.notification_with_reciprocation'
+
+      # Create notification
+      Notification.create!(
+        notification_type: Notification.types[:user_feedback_received],
+        user_id: feedback.feedback_to_id,
+        topic_id: feedback.topic_id,
+        data: {
+          message: translation_key,
+          display_username: feedback.user.username,
+          feedback_id: feedback.id,
+          topic_title: feedback.topic.title,
+          rating: feedback.rating
+        }.to_json
+      )
     end
 
     def update

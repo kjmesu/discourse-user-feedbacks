@@ -21,6 +21,11 @@ en:
       topic_cannot_be_closed: "Cannot leave feedback on closed topics"
       must_have_posted_in_topic: "You must have posted in this topic to leave feedback"
       already_gave_feedback_in_topic: "You have already left feedback for this user in this topic"
+    notification: "%{display_username} left you %{rating}-star feedback in \"%{topic_title}\""
+    notification_with_reciprocation: "%{display_username} left you %{rating}-star feedback in \"%{topic_title}\". Consider leaving them feedback in return!"
+  notifications:
+    titles:
+      user_feedback_received: "New feedback received"
   reviewable_score_types:
     fraudulent:
       title: "Fraudulent"

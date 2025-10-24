@@ -1,30 +1,5 @@
 <div class="user-feedbacks-left"></div>
 <div class="user-feedbacks-right">
-  {{#if this.canGiveFeedback}}
-    <div class="ratings-input">
-      <strong>{{i18n "discourse_user_feedbacks.user_feedbacks.add_rating"}}</strong>
-      {{rating-input value=this.rating readOnly=this.readOnly}}
-    </div>
-    <div class="review-input">
-      {{#if this.siteSettings.user_feedbacks_allow_reviews}}
-        {{textarea
-          rows="5"
-          placeholder=this.placeholder
-          value=this.review
-          disabled=this.readOnly
-          class="review-textarea"
-        }}
-      {{/if}}
-      {{d-button
-        label="discourse_user_feedbacks.user_feedbacks.add_user_feedback"
-        action=this.createFeedback
-        disabled=this.disabled
-        type="submit"
-        class="btn-primary create-feedback"
-      }}
-    </div>
-    <hr>
-  {{/if}}
   {{#if this.model.feedbacks.length}}
     {{#each this.model.feedbacks as |feedback index|}}
       {{feedback-list-item feedback=feedback onDelete=this.handleFeedbackDeleted}}
