@@ -305,7 +305,7 @@ export default class FeedbackListItem extends Component {
           {{! Body }}
           <div class="post__body topic-body clearfix">
             {{#if @feedback.notice}}
-              <Post::Notice @post={{@feedback}} />
+              <PostNotice @post={{@feedback}} />
             {{/if}}
             {{! Meta header }}
             <div class="topic-meta-data" role="heading" aria-level="2">
