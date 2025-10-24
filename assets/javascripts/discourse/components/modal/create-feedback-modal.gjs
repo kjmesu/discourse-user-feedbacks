@@ -40,6 +40,11 @@ export default class CreateFeedbackModal extends Component {
   }
 
   @action
+  updateReview(event) {
+    this.review = event.target.value;
+  }
+
+  @action
   submitFeedback() {
     if (!this.rating || this.rating <= 0) {
       alert(I18n.t("discourse_user_feedbacks.user_feedbacks.errors.rating_required") || "Please select a rating");
@@ -93,9 +98,10 @@ export default class CreateFeedbackModal extends Component {
               <label>{{i18n "discourse_user_feedbacks.user_feedbacks.user_review.placeholder"}}</label>
               <textarea
                 class="review-textarea"
+                value={{this.review}}
                 placeholder={{i18n "discourse_user_feedbacks.user_feedbacks.user_review.placeholder"}}
-                {{on "input" (fn (mut this.review) value="target.value")}}
-              >{{this.review}}</textarea>
+                {{on "input" this.updateReview}}
+              ></textarea>
             </div>
           {{/if}}
         </div>
