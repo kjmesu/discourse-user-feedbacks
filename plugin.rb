@@ -281,15 +281,23 @@ after_initialize do
         diagnostic << "Post ID: #{post&.id}, Post #: #{post&.post_number}"
         diagnostic << "User authenticated: #{authenticated?}"
         diagnostic << "Is topic creator: #{topic&.user_id == user&.id}"
-        diagnostic << "User has posted: #{Post.exists?(topic_id: topic&.id, user_id: user&.id)}"
+        user_has_posted = Post.exists?(topic_id: topic&.id, user_id: user&.id)
+        diagnostic << "User has posted: #{user_has_posted}"
         diagnostic << "Target has posted: #{Post.exists?(topic_id: topic&.id, user_id: feedback_to_user&.id)}"
 
         Rails.logger.error "PERMISSION DENIED: #{diagnostic.join(' | ')}"
 
+        # Provide specific error message based on the failure reason
+        custom_message = if !user_has_posted
+          'user_feedbacks.errors.must_have_posted_in_topic'
+        else
+          'user_feedbacks.errors.cannot_create_feedback'
+        end
+
         raise Discourse::InvalidAccess.new(
           "not permitted to create feedback",
           nil,
-          custom_message: 'user_feedbacks.errors.cannot_create_feedback'
+          custom_message: custom_message
         )
       end
     end

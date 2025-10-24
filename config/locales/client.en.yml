@@ -25,6 +25,7 @@ en:
         given_in_topic: "Given in"
       leave_feedback: "Leave feedback for this user"
       leave_feedback_button: "Leave Feedback"
+      leave_feedback_for_creator: "Leave Feedback for Topic Creator"
       create_feedback_modal:
         title: "Leave Feedback for @%{username}"
         submit: "Submit Feedback"

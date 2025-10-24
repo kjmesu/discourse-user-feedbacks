@@ -63,14 +63,6 @@ export default class CreateFeedbackModal extends Component {
       data.review = this.review;
     }
 
-    // Debug logging
-    console.log("=== Submitting Feedback ===");
-    console.log("Data:", data);
-    console.log("Post object:", this.post);
-    console.log("Topic object:", this.topic);
-    console.log("Post number:", this.post?.post_number);
-    console.log("Topic user_id:", this.topic?.user_id);
-
     ajax("/user_feedbacks", {
       type: "POST",
       data: data
