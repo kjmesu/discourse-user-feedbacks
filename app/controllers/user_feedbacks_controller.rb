@@ -7,6 +7,10 @@ module DiscourseUserFeedbacks
     PAGE_SIZE = 30
 
     def create
+      Rails.logger.info "=== UserFeedbacksController#create called ==="
+      Rails.logger.info "Current user: #{current_user&.id} (#{current_user&.username})"
+      Rails.logger.info "Params: rating=#{params[:rating]}, feedback_to_id=#{params[:feedback_to_id]}, topic_id=#{params[:topic_id]}, post_id=#{params[:post_id]}"
+
       params.require([:rating, :feedback_to_id, :topic_id])
       params.permit(:review, :post_id)
 
@@ -22,8 +26,13 @@ module DiscourseUserFeedbacks
       feedback_to_user = User.find_by(id: params[:feedback_to_id])
       raise Discourse::NotFound unless feedback_to_user
 
+      Rails.logger.info "Fetched topic: #{topic.id}, post: #{post&.id}, feedback_to_user: #{feedback_to_user.id}"
+      Rails.logger.info "About to call guardian.ensure_can_create_feedback_for_user_in_topic!"
+
       # Check permissions using Guardian
       guardian.ensure_can_create_feedback_for_user_in_topic!(feedback_to_user, topic, post)
+
+      Rails.logger.info "Guardian check passed!"
 
       opts = {
         rating: params[:rating],
@@ -40,8 +49,11 @@ module DiscourseUserFeedbacks
       # Create notification for the user receiving feedback
       create_feedback_notification(feedback)
 
+      Rails.logger.info "Feedback created successfully! ID: #{feedback.id}"
+
       render_serialized(feedback, UserFeedbackSerializer)
     rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error "Failed to create feedback: #{e.record.errors.full_messages.join(', ')}"
       render_json_error(e.record.errors.full_messages.join(', '), status: 422)
     end
 

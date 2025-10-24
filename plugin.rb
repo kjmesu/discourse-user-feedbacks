@@ -190,36 +190,95 @@ after_initialize do
     end
 
     def can_create_feedback_for_user_in_topic?(feedback_to_user, topic, post = nil)
-      return false unless authenticated?
-      return false unless topic
-      return false if feedback_to_user.id == user.id # Can't give feedback to yourself
+      Rails.logger.info "=== Feedback Permission Check ==="
+      Rails.logger.info "Current user: #{user&.id} (#{user&.username})"
+      Rails.logger.info "Authenticated: #{authenticated?}"
+      Rails.logger.info "Feedback to: #{feedback_to_user&.id} (#{feedback_to_user&.username})"
+      Rails.logger.info "Topic: #{topic&.id} (creator: #{topic&.user_id})"
+      Rails.logger.info "Post: #{post&.id} (number: #{post&.post_number})"
+
+      unless authenticated?
+        Rails.logger.info "FAIL: User not authenticated"
+        return false
+      end
+
+      unless topic
+        Rails.logger.info "FAIL: No topic provided"
+        return false
+      end
+
+      if feedback_to_user.id == user.id
+        Rails.logger.info "FAIL: Cannot give feedback to yourself"
+        return false
+      end
 
       # Topic must be valid
-      return false if topic.deleted_at.present?
-      return false if !topic.visible
-      return false if topic.closed
+      if topic.deleted_at.present?
+        Rails.logger.info "FAIL: Topic is deleted (deleted_at: #{topic.deleted_at})"
+        return false
+      end
+
+      if !topic.visible
+        Rails.logger.info "FAIL: Topic is not visible"
+        return false
+      end
+
+      if topic.closed
+        Rails.logger.info "FAIL: Topic is closed"
+        return false
+      end
 
       # User must have posted in the topic
-      return false unless Post.exists?(topic_id: topic.id, user_id: user.id)
+      user_has_posted = Post.exists?(topic_id: topic.id, user_id: user.id)
+      Rails.logger.info "User has posted in topic: #{user_has_posted}"
+      unless user_has_posted
+        Rails.logger.info "FAIL: User has not posted in this topic"
+        return false
+      end
 
       # Check if user is the topic creator
       is_topic_creator = topic.user_id == user.id
+      Rails.logger.info "Is topic creator: #{is_topic_creator}"
 
       if is_topic_creator
         # Topic creator can give feedback to any participant (except themselves)
         # on any post except post #1
-        return false if post && post.post_number == 1
-        return Post.exists?(topic_id: topic.id, user_id: feedback_to_user.id)
+        if post && post.post_number == 1
+          Rails.logger.info "FAIL: Topic creator cannot rate on post #1"
+          return false
+        end
+        target_has_posted = Post.exists?(topic_id: topic.id, user_id: feedback_to_user.id)
+        Rails.logger.info "Target has posted: #{target_has_posted}"
+        if target_has_posted
+          Rails.logger.info "SUCCESS: Topic creator can rate participant who has posted"
+          return true
+        else
+          Rails.logger.info "FAIL: Target user has not posted in topic"
+          return false
+        end
       else
         # Non-creators can only give feedback to the topic creator on post #1
-        return false unless topic.user_id == feedback_to_user.id
-        return false unless post.nil? || post.post_number == 1
+        unless topic.user_id == feedback_to_user.id
+          Rails.logger.info "FAIL: Non-creator trying to rate non-OP (target=#{feedback_to_user.id}, OP=#{topic.user_id})"
+          return false
+        end
+        unless post.nil? || post.post_number == 1
+          Rails.logger.info "FAIL: Non-creator trying to rate on non-first post (post_number=#{post&.post_number})"
+          return false
+        end
+        Rails.logger.info "SUCCESS: Non-creator can rate OP on post #1"
         true
       end
     end
 
     def ensure_can_create_feedback_for_user_in_topic!(feedback_to_user, topic, post = nil)
-      raise Discourse::InvalidAccess.new unless can_create_feedback_for_user_in_topic?(feedback_to_user, topic, post)
+      unless can_create_feedback_for_user_in_topic?(feedback_to_user, topic, post)
+        raise Discourse::InvalidAccess.new(
+          "not permitted to create feedback",
+          nil,
+          custom_message: 'user_feedbacks.errors.cannot_create_feedback'
+        )
+      end
     end
 
     private
