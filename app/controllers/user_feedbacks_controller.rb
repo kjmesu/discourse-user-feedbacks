@@ -57,47 +57,6 @@ module DiscourseUserFeedbacks
       render_json_error(e.record.errors.full_messages.join(', '), status: 422)
     end
 
-    private
-
-    def create_feedback_notification(feedback)
-      # Check if the feedback receiver has already left feedback for the giver in this topic
-      reciprocal_feedback_exists = DiscourseUserFeedbacks::UserFeedback.exists?(
-        user_id: feedback.feedback_to_id,
-        feedback_to_id: feedback.user_id,
-        topic_id: feedback.topic_id
-      )
-
-      # Build the PM message
-      stars = "⭐" * feedback.rating
-      message_body = if reciprocal_feedback_exists
-        I18n.t('user_feedbacks.pm_notification',
-          display_username: feedback.user.username,
-          rating: feedback.rating,
-          stars: stars,
-          topic_title: feedback.topic.title,
-          topic_url: feedback.topic.url
-        )
-      else
-        I18n.t('user_feedbacks.pm_notification_with_reciprocation',
-          display_username: feedback.user.username,
-          rating: feedback.rating,
-          stars: stars,
-          topic_title: feedback.topic.title,
-          topic_url: feedback.topic.url
-        )
-      end
-
-      # Create a private message using PostCreator
-      PostCreator.create!(
-        Discourse.system_user,
-        title: I18n.t('user_feedbacks.pm_title', username: feedback.user.username),
-        raw: message_body,
-        archetype: Archetype.private_message,
-        target_usernames: User.find(feedback.feedback_to_id).username,
-        skip_validations: true
-      )
-    end
-
     def update
       params.require(:id)
       params.permit(:rating, :feedback_to_id, :review, :notice)
@@ -232,6 +191,47 @@ module DiscourseUserFeedbacks
       render_json_error(e.message, status: 403)
     rescue => e
       render_json_error(e.message, status: 500)
+    end
+
+    private
+
+    def create_feedback_notification(feedback)
+      # Check if the feedback receiver has already left feedback for the giver in this topic
+      reciprocal_feedback_exists = DiscourseUserFeedbacks::UserFeedback.exists?(
+        user_id: feedback.feedback_to_id,
+        feedback_to_id: feedback.user_id,
+        topic_id: feedback.topic_id
+      )
+
+      # Build the PM message
+      stars = "⭐" * feedback.rating
+      message_body = if reciprocal_feedback_exists
+        I18n.t('user_feedbacks.pm_notification',
+          display_username: feedback.user.username,
+          rating: feedback.rating,
+          stars: stars,
+          topic_title: feedback.topic.title,
+          topic_url: feedback.topic.url
+        )
+      else
+        I18n.t('user_feedbacks.pm_notification_with_reciprocation',
+          display_username: feedback.user.username,
+          rating: feedback.rating,
+          stars: stars,
+          topic_title: feedback.topic.title,
+          topic_url: feedback.topic.url
+        )
+      end
+
+      # Create a private message using PostCreator
+      PostCreator.create!(
+        Discourse.system_user,
+        title: I18n.t('user_feedbacks.pm_title', username: feedback.user.username),
+        raw: message_body,
+        archetype: Archetype.private_message,
+        target_usernames: User.find(feedback.feedback_to_id).username,
+        skip_validations: true
+      )
     end
   end
 end
