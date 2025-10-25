@@ -37,9 +37,6 @@ en:
       If you found their contribution helpful, consider leaving them feedback in return!
 
       Thank you for being a valued member of our community!
-  notifications:
-    titles:
-      user_feedback_received: "New feedback received"
   reviewable_score_types:
     fraudulent:
       title: "Fraudulent"

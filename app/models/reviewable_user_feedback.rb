@@ -14,13 +14,9 @@ class ReviewableUserFeedback < Reviewable
   def target
     @target ||= begin
       return nil unless target_id
-      feedback = DiscourseUserFeedbacks::UserFeedback.unscoped.find_by(id: target_id)
-      Rails.logger.info("ReviewableUserFeedback#target - Found feedback #{feedback&.id} for reviewable #{id}")
-      feedback
+      DiscourseUserFeedbacks::UserFeedback.unscoped.find_by(id: target_id)
     end
   rescue => e
-    Rails.logger.error("Error loading target for ReviewableUserFeedback #{id}: #{e.message}")
-    Rails.logger.error(e.backtrace.join("\n"))
     nil
   end
 
@@ -34,8 +30,6 @@ class ReviewableUserFeedback < Reviewable
   def build_actions(actions, guardian, args)
     return unless pending?
     return unless target
-
-    Rails.logger.info("ReviewableUserFeedback#build_actions - Building actions for reviewable #{id}, target: #{target.id}")
 
     # Yes (Agree) bundle
     agree_bundle = actions.add_bundle(
@@ -112,10 +106,6 @@ class ReviewableUserFeedback < Reviewable
         )
       end
     end
-  rescue => e
-    Rails.logger.error("Error building actions for ReviewableUserFeedback #{id}: #{e.message}")
-    Rails.logger.error(e.backtrace.join("\n"))
-    raise
   end
 
   # Perform methods for "Yes" (Agree) actions
@@ -141,7 +131,7 @@ class ReviewableUserFeedback < Reviewable
 
   def perform_agree_and_delete_feedback(performed_by, args)
     agree(performed_by) do
-      target.soft_delete!
+      target.trash!(performed_by)
     end
   end
 
@@ -162,7 +152,7 @@ class ReviewableUserFeedback < Reviewable
 
   def perform_ignore_and_delete_feedback(performed_by, args)
     ignore_result = create_result(:success, :ignored)
-    target.soft_delete!
+    target.trash!(performed_by)
     ignore_result
   end
 

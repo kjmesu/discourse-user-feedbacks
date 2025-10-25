@@ -167,9 +167,16 @@ after_initialize do
       user&.staff?
     end
 
+    def ensure_can_delete_user_feedback!(feedback)
+      raise Discourse::InvalidAccess.new unless can_delete_user_feedback?(feedback)
+    end
+
     def can_edit_user_feedback?(feedback)
-      # Staff members can edit any feedback
       user&.staff?
+    end
+
+    def ensure_can_edit_user_feedback!(feedback)
+      raise Discourse::InvalidAccess.new unless can_edit_user_feedback?(feedback)
     end
 
     def can_recover_user_feedback?(feedback)
@@ -190,112 +197,42 @@ after_initialize do
     end
 
     def can_create_feedback_for_user_in_topic?(feedback_to_user, topic, post = nil)
-      Rails.logger.info "=== Feedback Permission Check ==="
-      Rails.logger.info "Current user: #{user&.id} (#{user&.username})"
-      Rails.logger.info "Authenticated: #{authenticated?}"
-      Rails.logger.info "Feedback to: #{feedback_to_user&.id} (#{feedback_to_user&.username})"
-      Rails.logger.info "Topic: #{topic&.id} (creator: #{topic&.user_id})"
-      Rails.logger.info "Post: #{post&.id} (number: #{post&.post_number})"
-
-      unless authenticated?
-        Rails.logger.info "FAIL: User not authenticated"
-        return false
-      end
-
-      unless topic
-        Rails.logger.info "FAIL: No topic provided"
-        return false
-      end
-
-      if feedback_to_user.id == user.id
-        Rails.logger.info "FAIL: Cannot give feedback to yourself"
-        return false
-      end
+      return false unless authenticated?
+      return false unless topic
+      return false if feedback_to_user.id == user.id
 
       # Topic must be valid
-      if topic.deleted_at.present?
-        Rails.logger.info "FAIL: Topic is deleted (deleted_at: #{topic.deleted_at})"
-        return false
-      end
-
-      if !topic.visible
-        Rails.logger.info "FAIL: Topic is not visible"
-        return false
-      end
-
-      if topic.closed
-        Rails.logger.info "FAIL: Topic is closed"
-        return false
-      end
+      return false if topic.deleted_at.present?
+      return false if !topic.visible
+      return false if topic.closed
 
       # User must have posted in the topic
-      user_has_posted = Post.exists?(topic_id: topic.id, user_id: user.id)
-      Rails.logger.info "User has posted in topic: #{user_has_posted}"
-      unless user_has_posted
-        Rails.logger.info "FAIL: User has not posted in this topic"
-        return false
-      end
+      return false unless Post.exists?(topic_id: topic.id, user_id: user.id)
 
       # Check if user is the topic creator
       is_topic_creator = topic.user_id == user.id
-      Rails.logger.info "Is topic creator: #{is_topic_creator}"
 
       if is_topic_creator
         # Topic creator can give feedback to any participant (except themselves)
         # on any post except post #1
-        if post && post.post_number == 1
-          Rails.logger.info "FAIL: Topic creator cannot rate on post #1"
-          return false
-        end
-        target_has_posted = Post.exists?(topic_id: topic.id, user_id: feedback_to_user.id)
-        Rails.logger.info "Target has posted: #{target_has_posted}"
-        if target_has_posted
-          Rails.logger.info "SUCCESS: Topic creator can rate participant who has posted"
-          return true
-        else
-          Rails.logger.info "FAIL: Target user has not posted in topic"
-          return false
-        end
+        return false if post && post.post_number == 1
+        return Post.exists?(topic_id: topic.id, user_id: feedback_to_user.id)
       else
         # Non-creators can give feedback to the topic creator on ANY of the topic creator's posts
-        unless topic.user_id == feedback_to_user.id
-          Rails.logger.info "FAIL: Non-creator trying to rate non-OP (target=#{feedback_to_user.id}, OP=#{topic.user_id})"
-          return false
-        end
+        return false unless topic.user_id == feedback_to_user.id
 
         # Verify the post being rated belongs to the topic creator
-        if post && post.user_id != topic.user_id
-          Rails.logger.info "FAIL: Post does not belong to topic creator (post.user_id=#{post.user_id}, topic.user_id=#{topic.user_id})"
-          return false
-        end
+        return false if post && post.user_id != topic.user_id
 
-        Rails.logger.info "SUCCESS: Non-creator can rate OP on their post"
         true
       end
     end
 
     def ensure_can_create_feedback_for_user_in_topic!(feedback_to_user, topic, post = nil)
       unless can_create_feedback_for_user_in_topic?(feedback_to_user, topic, post)
-        # Build diagnostic message
-        diagnostic = []
-        diagnostic << "Current user: #{user&.id}"
-        diagnostic << "Feedback to: #{feedback_to_user&.id}"
-        diagnostic << "Topic ID: #{topic&.id}, Creator: #{topic&.user_id}"
-        diagnostic << "Post ID: #{post&.id}, Post #: #{post&.post_number}"
-        diagnostic << "User authenticated: #{authenticated?}"
-        diagnostic << "Is topic creator: #{topic&.user_id == user&.id}"
-        user_has_posted = Post.exists?(topic_id: topic&.id, user_id: user&.id)
-        diagnostic << "User has posted: #{user_has_posted}"
-        diagnostic << "Target has posted: #{Post.exists?(topic_id: topic&.id, user_id: feedback_to_user&.id)}"
-
-        Rails.logger.error "PERMISSION DENIED: #{diagnostic.join(' | ')}"
-
         # Provide specific error message based on the failure reason
-        custom_message = if !user_has_posted
-          'user_feedbacks.errors.must_have_posted_in_topic'
-        else
-          'user_feedbacks.errors.cannot_create_feedback'
-        end
+        user_has_posted = Post.exists?(topic_id: topic&.id, user_id: user&.id)
+        custom_message = user_has_posted ? 'user_feedbacks.errors.cannot_create_feedback' : 'user_feedbacks.errors.must_have_posted_in_topic'
 
         raise Discourse::InvalidAccess.new(
           "not permitted to create feedback",
