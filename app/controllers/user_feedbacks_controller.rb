@@ -126,8 +126,6 @@ module DiscourseUserFeedbacks
 
       feedbacks = feedbacks.where(feedback_to_id: params[:feedback_to_id]) if params[:feedback_to_id]
 
-      feedbacks = feedbacks.where(user_id: current_user.id) if SiteSetting.user_feedbacks_hide_feedbacks_from_user && !current_user.admin
-
       # Filter out feedbacks that should be hidden based on topic/user state
       # (unless user is staff - they can see everything)
       unless current_user&.staff?

@@ -2,9 +2,6 @@ plugins:
   user_feedbacks_enabled:
     client: true
     default: true
-  user_feedbacks_allow_reviews:
-    client: true
-    default: true
   user_feedbacks_display_average_ratings_beside_username_on_post:
     client: true
     default: true
@@ -14,9 +11,6 @@ plugins:
   user_feedbacks_display_average_ratings_on_user_card:
     client: true
     default: true
-  user_feedbacks_hide_feedbacks_from_user:
-    client: true
-    default: false
   user_feedbacks_unique_per_topic:
     client: true
     default: true

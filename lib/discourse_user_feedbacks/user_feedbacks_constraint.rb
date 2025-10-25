@@ -6,12 +6,10 @@ class DiscourseUserFeedbacks::UserFeedbacksConstraint
 
     current_user = CurrentUser.lookup_from_env(request.env)
 
-    return true if !SiteSetting.user_feedbacks_hide_feedbacks_from_user
+    # All logged-in users can view feedback
+    return true if current_user
 
-    return false if !current_user
-    return false if request.query_parameters["feedback_to_id"].to_i == current_user.id && current_user.admin == false
-
-    true
+    false
   rescue Discourse::InvalidAccess, Discourse::ReadOnly
     false
   end

@@ -97,17 +97,15 @@ export default class CreateFeedbackModal extends Component {
             <RatingInput @value={{this.rating}} @onChange={{this.updateRating}} />
           </div>
 
-          {{#if this.siteSettings.user_feedbacks_allow_reviews}}
-            <div class="feedback-review">
-              <label>{{i18n "discourse_user_feedbacks.user_feedbacks.user_review.placeholder"}}</label>
-              <textarea
-                class="review-textarea"
-                value={{this.review}}
-                placeholder={{i18n "discourse_user_feedbacks.user_feedbacks.user_review.placeholder"}}
-                {{on "input" this.updateReview}}
-              ></textarea>
-            </div>
-          {{/if}}
+          <div class="feedback-review">
+            <label>{{i18n "discourse_user_feedbacks.user_feedbacks.user_review.placeholder"}}</label>
+            <textarea
+              class="review-textarea"
+              value={{this.review}}
+              placeholder={{i18n "discourse_user_feedbacks.user_feedbacks.user_review.placeholder"}}
+              {{on "input" this.updateReview}}
+            ></textarea>
+          </div>
         </div>
       </:body>
 
