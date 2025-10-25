@@ -48,7 +48,7 @@ export default class CreateFeedbackModal extends Component {
   @action
   submitFeedback() {
     if (!this.rating || this.rating <= 0) {
-      alert(I18n.t("discourse_user_feedbacks.user_feedbacks.errors.rating_required") || "Please select a rating");
+      alert(I18n.t("discourse_user_feedbacks.errors.rating_required") || "Please select a rating");
       return;
     }
 

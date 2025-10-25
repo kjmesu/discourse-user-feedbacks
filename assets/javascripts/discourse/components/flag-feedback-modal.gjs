@@ -44,7 +44,7 @@ export default class FlagFeedbackModal extends Component {
 
     // Validate that "other" reason has a message
     if (this.selectedReason === "other" && !this.message.trim()) {
-      alert("Please provide details when selecting 'Other' as the reason.");
+      alert(I18n.t("discourse_user_feedbacks.flag_modal.other_requires_message"));
       return;
     }
 
